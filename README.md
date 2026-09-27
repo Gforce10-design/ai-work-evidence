@@ -9,7 +9,7 @@ Claude Code에 일을 시키고 "다 됐다"는 말을 어떻게 확인하는지
 | 파일 | 내용 |
 |---|---|
 | `ch01/reinject_directives_minimal.py` | 최소 버전. 매 턴 지시 파일을 다시 주입하는 `UserPromptSubmit` 훅 |
-| `ch01/reinject_directives.py` | 최종형. 4KB 상한과 경고, 어떤 예외에도 exit 0 |
+| `ch01/reinject_directives.py` | 최종형. 원본 4KB 상한과 경고, main 안에서 잡힌 실행 중 예외는 exit 0 |
 | `ch01/agent-directives.example.md` | 지시 파일 예시 (`~/.claude/agent-directives.md`) |
 | `ch01/settings.example.json` | `settings.json` 훅 배선 |
 
@@ -25,11 +25,11 @@ Threads 에는 복사해도 깨지지 않게 들여쓰기 없는 짧은 형태�
 | `ch02/tools/claude_md_installer.py` | 조각 설치기. 마커 기반, 같은 코너 조각은 동시 설치 거부, 배타 검사는 쓰기 전에 |
 | `ch02/tools/fragments/*/` | 조각 예시 (`meta.json` 라벨·코너·설명 + `fragment.md` 본문) |
 
-> `multi-agent`·`session-handoff` 의 `fragment.md` 는 책에 본문이 없다. 아래 확인 절차를 돌릴 수 있게 `meta.json` 의 설명을 그대로 옮긴 최소 본문을 넣어 뒀다. 자기 규칙으로 바꿔 쓰면 된다.
+> 2026-09-28 기술 검증판과 코드를 맞췄다. `multi-agent`·`session-handoff`의 본문 예시도 포함한다. 핀 검사는 정본을 자동으로 로딩하거나 버전 문자열을 비교하지 않는다. 설치기는 전체 입력을 먼저 검사하고 임시 파일 교체로 저장한다. 동시 설치기 실행은 지원하지 않는다.
 
 ### 직접 확인하는 법
 
-`ch02/` 에서 돌린다. 네 가지가 전부 빨간불을 내야 설치기가 제대로 동작하는 거다.
+`ch02/` 에서 돌린다. 배타 위반과 중복 마커에는 빨간불이 떠야 한다. 정상 재설치는 성공해야 하며 블록은 하나로 남아야 한다.
 
 ```
 python3 tools/claude_md_installer.py --target proj --pick solo-mode --yes

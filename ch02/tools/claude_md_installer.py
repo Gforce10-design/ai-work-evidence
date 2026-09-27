@@ -3,7 +3,7 @@
 
 사용법:
     python3 tools/claude_md_installer.py --list
-    python3 tools/claude_md_installer.py --target . --pick agent-loop,session-handoff --yes
+    python3 tools/claude_md_installer.py --target . --pick solo-mode,session-handoff --yes
     python3 tools/claude_md_installer.py --target . --doctor
 """
 from __future__ import annotations
@@ -29,6 +29,24 @@ def load_catalog() -> dict[str, dict]:
     for meta_path in sorted(FRAGMENTS_DIR.glob("*/meta.json")):
         catalog[meta_path.parent.name] = json.loads(meta_path.read_text(encoding="utf-8"))
     return catalog
+
+
+def validate_markers(text: str) -> None:
+    """중첩·역순·중복·짝 누락을 쓰기 전에 거부한다."""
+    opened = None
+    seen = set()
+    for name, kind in re.findall(r"<!-- store:([a-z0-9-]+):(start|end) -->", text):
+        if kind == "start":
+            if opened is not None or name in seen:
+                raise ValueError(f"중첩 또는 중복 마커: {name}")
+            opened = name
+            seen.add(name)
+        elif opened != name:
+            raise ValueError(f"짝 또는 순서가 잘못된 마커: {name}")
+        else:
+            opened = None
+    if opened is not None:
+        raise ValueError(f"끝 마커 없음: {opened}")
 
 
 def installed_names(instr: Path) -> set[str]:
@@ -70,6 +88,7 @@ def install_fragment(instr: Path, name: str, dry: bool) -> str:
     start, end = marker(name)
     block = f"{start}\n{body}\n{end}"
     text = instr.read_text(encoding="utf-8") if instr.is_file() else ""
+    validate_markers(text)
     if start in text and end in text:
         pattern = re.escape(start) + r".*?" + re.escape(end)
         new = re.sub(pattern, lambda m: block, text, count=1, flags=re.S)
@@ -89,6 +108,11 @@ def doctor(instr: Path, catalog: dict) -> int:
         print(f"  [INFO] {instr.name} 없음 — 설치된 조각 없음")
         return 0
     text = instr.read_text(encoding="utf-8")
+    try:
+        validate_markers(text)
+    except ValueError as exc:
+        print(f"  [FAIL] {exc}")
+        return 1
     tokens = re.findall(r"<!-- store:([a-z0-9-]+):(start|end) -->", text)
     starts = [n for n, k in tokens if k == "start"]
     ends = [n for n, k in tokens if k == "end"]
@@ -109,7 +133,10 @@ def doctor(instr: Path, catalog: dict) -> int:
         src = FRAGMENTS_DIR / n / "fragment.md"
         if n not in catalog:
             print(f"  [WARN] 카탈로그에 없는 조각 마커 '{n}'")
-        elif m and src.is_file() and m.group(1) != src.read_text(encoding="utf-8").strip("\n"):
+        elif not m or not src.is_file():
+            print(f"  [FAIL] '{n}' 본문 또는 카탈로그 파일 없음")
+            fails += 1
+        elif m.group(1) != src.read_text(encoding="utf-8").strip("\n"):
             print(f"  [WARN] '{n}' 블록이 카탈로그 최신본과 다름 — 재설치 권장")
         else:
             print(f"  [OK] '{n}' 정상")
@@ -145,13 +172,17 @@ def main() -> None:
             print(f"  {name} — 코너: {m['corner']} — {m['desc']}")
         return
 
+    if not args.target:
+        ap.error("--doctor/설치에는 --target이 필요합니다")
     target = Path(args.target).expanduser().resolve()
     instr = target / FLAVOR_FILES[args.flavor]
 
     if args.doctor:
         sys.exit(doctor(instr, catalog))
 
-    picks = [p.strip() for p in args.pick.split(",") if p.strip()]
+    picks = list(dict.fromkeys(p.strip() for p in args.pick.split(",") if p.strip()))
+    if not picks:
+        ap.error("--pick이 비어 있습니다")
     unknown = [p for p in picks if p not in catalog]
     if unknown:
         sys.exit(f"[error] 없는 품목: {', '.join(unknown)}")
@@ -168,9 +199,44 @@ def main() -> None:
         if input(f"{target} 에 {', '.join(picks)} 설치할까요? [y/N]: ").strip().lower() not in ("y", "yes"):
             sys.exit("취소됨")
 
-    target.mkdir(parents=True, exist_ok=True)
+    # 입력·마커·조각 파일을 모두 확인한 뒤 메모리에서 한 번에 조립한다.
+    original = instr.read_text(encoding="utf-8") if instr.exists() else ""
+    try:
+        for fname in FLAVOR_FILES.values():
+            path = target / fname
+            if path.exists():
+                validate_markers(path.read_text(encoding="utf-8"))
+        bodies = {p: (FRAGMENTS_DIR / p / "fragment.md").read_text(encoding="utf-8").strip("\n") for p in picks}
+    except (ValueError, OSError) as exc:
+        sys.exit(f"[error] 쓰기 전 검사 실패: {exc}")
+    result = original
+    messages = []
     for p in picks:
-        print(("(dry) " if args.dry_run else "") + install_fragment(instr, p, dry=args.dry_run))
+        start, end = marker(p)
+        block = f"{start}\n{bodies[p]}\n{end}"
+        if start in result:
+            result = re.sub(re.escape(start) + r".*?" + re.escape(end), lambda m: block, result, count=1, flags=re.S)
+            action = "교체"
+        else:
+            result = (result.rstrip("\n") + "\n\n" if result else "") + block + "\n"
+            action = "설치"
+        messages.append(f"{p} {action} → {instr.name}")
+    if not args.dry_run:
+        import os
+        import tempfile
+        target.mkdir(parents=True, exist_ok=True)
+        fd, staged = tempfile.mkstemp(prefix=".instructions-", dir=target)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                handle.write(result)
+            if instr.exists():
+                os.chmod(staged, instr.stat().st_mode & 0o777)
+            os.replace(staged, instr)
+        finally:
+            Path(staged).unlink(missing_ok=True)
+    for message in messages:
+        print(("(dry) " if args.dry_run else "") + message)
+
 
 
 if __name__ == "__main__":

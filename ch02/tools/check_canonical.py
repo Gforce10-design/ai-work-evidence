@@ -33,12 +33,12 @@ def main() -> int:
         return 1
     actual = hashlib.sha256(canonical.read_bytes()).hexdigest()
     if actual != pins["CANONICAL_SHA256"]:
-        print(f"[FAIL] 해시 불일치 — 정본이 v{pins['CANONICAL_VERSION']} 이후로 바뀌었습니다")
+        print(f"[FAIL] 해시 불일치 — 핀에 기록한 바이트와 다릅니다 (버전 라벨 {pins['CANONICAL_VERSION']})")
         print(f"  핀    : {pins['CANONICAL_SHA256']}")
         print(f"  실제  : {actual}")
         print("  → 정본을 읽고 CLAUDE.md의 CANONICAL_VERSION·CANONICAL_SHA256을 갱신하세요")
         return 1
-    print(f"[OK] 정본 v{pins['CANONICAL_VERSION']} 일치 ({canonical})")
+    print(f"[OK] 핀 해시 일치 ({canonical}, 버전 라벨 {pins['CANONICAL_VERSION']})")
     return 0
 
 

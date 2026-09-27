@@ -9,7 +9,8 @@ PATH = os.path.expanduser("~/.claude/agent-directives.md")
 def main():
     if not os.path.exists(PATH):
         sys.exit(0)
-    text = open(PATH, encoding="utf-8").read().strip()
+    with open(PATH, encoding="utf-8") as handle:
+        text = handle.read().strip()
     if not text:
         sys.exit(0)
     print("<active-directives>")
