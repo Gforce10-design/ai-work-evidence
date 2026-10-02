@@ -67,6 +67,28 @@ python3 tools/session_stale_check.py   # [WARN] … 커밋 5개, 종료코드 1
 
 이 저장소에 올리기 전에 위 순서를 실제로 돌려 책에 적힌 출력과 같은지 확인했다.
 
+## 4장 — 직접 할까 위임할까
+
+| 파일 | 내용 |
+|---|---|
+| `ch04/naive_gate.py` | 최소 해법. 물량 하나만 보고 정한다 — 명세가 모호하거나 실패 비용이 높아도 `DELEGATE` 가 나오는 구멍이 있다 |
+| `ch04/route_advisor.py` | 최종형 판정기(표준 라이브러리만). 결과는 `DIRECT` · `PLAN_FIRST` · `DELEGATE` · `NEEDS_PREFERENCE` 네 가지 |
+
+판정 함수는 입력을 검토하는 예제다. 모델을 바꾸거나 워커를 실행하지 않는다. 위임 워커의 모델·effort 가 고정된 저자의 운영 구성을 예로 들며, Claude Code 전체의 제약이 아니다.
+
+### 직접 확인하는 법
+
+`ch04/` 에서 돌린다.
+
+```
+python3 naive_gate.py   # DELEGATE 두 번 — 둘 다 틀린 답
+python3 route_advisor.py --axes "verifiable=yes,failcost=low,volume=high,depth=shallow" --axes-ext "spec_readiness=executable,decomposability=independent,context_dependency=low,verifier_available=yes"   # NEEDS_PREFERENCE
+python3 route_advisor.py --axes "verifiable=yes,failcost=high,volume=high,depth=shallow" --axes-ext "spec_readiness=executable,decomposability=independent,context_dependency=low,verifier_available=yes"   # DELEGATE
+```
+
+`is_mechanical_batch` 의 조건을 `depth`·`verifiable` 둘만 남기면 두 번째 명령도 `NEEDS_PREFERENCE` 로 바뀐다 — 실패 비용이 높다는 신호가 사라진다.
+이 저장소에 올리기 전에 책의 실행 예시 네 개와 깨뜨린 예시를 실제로 돌려 출력이 같은 것을 확인했다(깨뜨린 예시는 `ask:` 줄까지 세 줄).
+
 ## 앞으로
 
 3장부터도 Threads 에 올라가는 순서대로 여기에 코드를 더한다.
