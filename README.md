@@ -42,6 +42,31 @@ python3 tools/claude_md_installer.py --target proj --doctor                     
 
 이 저장소에 올리기 전에 위 네 가지를 실제로 돌려 책에 적힌 출력과 같은지 확인했다.
 
+## 3장 — 세션이 끊겨도 이어지게
+
+| 파일 | 내용 |
+|---|---|
+| `ch03/SESSION.minimal.example.md` | 최소 버전. 칸 다섯 개(목표·현재 상태·다음 단계·결정 기록·파일 흔적)만 둔 인계 파일 |
+| `ch03/SESSION.md.example` | 최종형 템플릿. 섹션마다 갱신 규칙(고정·덮어쓰기·누적)을 주석으로 박아 둔다 |
+| `ch03/SESSION.filled.example.md` | 채운 예시 한 벌(결제 모듈 재시도 로직) |
+| `ch03/tools/session_open.py` | 세션 시작 때 돌린다. 파일이 없으면 템플릿으로 만들고, 있으면 목표·현재 상태·다음 단계 첫 항목을 띄운다 |
+| `ch03/tools/session_stale_check.py` | 방치 감지기. `SESSION.md` 갱신 뒤 커밋이 임계(기본 5개) 이상 쌓이면 `[WARN]`, 종료코드 1 |
+
+`SESSION.md` 는 이 책에서 정한 인계 방식이며 Claude Code 가 자동 관리하는 예약 파일명이 아니다. 출력은 모델이 읽었다는 증거가 아니다.
+
+### 직접 확인하는 법
+
+임시 git 저장소에서 `ch03/` 의 파일을 복사해 돌린다.
+
+```
+cp SESSION.filled.example.md SESSION.md && python3 tools/session_open.py   # 목표·현재 상태·다음 단계 첫 항목이 떠야 한다
+git add SESSION.md && git commit -q -m "session update"
+for i in 1 2 3 4 5; do echo "x" >> notes.txt; git add notes.txt; git commit -q -m "unrelated $i"; done
+python3 tools/session_stale_check.py   # [WARN] … 커밋 5개, 종료코드 1
+```
+
+이 저장소에 올리기 전에 위 순서를 실제로 돌려 책에 적힌 출력과 같은지 확인했다.
+
 ## 앞으로
 
 3장부터도 Threads 에 올라가는 순서대로 여기에 코드를 더한다.
