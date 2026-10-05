@@ -134,6 +134,32 @@ python3 check_selfcert.py                            # 정상판 0, 깨진판 1
 
 이 저장소에 올리기 전에 위 네 명령을 실제로 돌려 책에 적힌 출력과 같은 것을 확인했다.
 
+## 6장 — 위험한 명령을 안전하게 위임하기
+
+| 파일 | 내용 |
+|---|---|
+| `ch06/block_consequential_minimal.py` | 최소 버전. `PreToolUse` 훅 — Bash 명령 중 좁은 하드셋(master/main 푸시, 강제 푸시, 원격 ref 로의 `git reset --hard`, 홈/루트 대상 `rm -rf`)만 정규식으로 막는다 |
+| `ch06/approve_once.py` | 1회성 승인 마커 발급. 정확한 명령 문자열의 SHA256·발급 시각·만료 시각(300초)을 0600 파일로 쓴다 |
+| `ch06/block_consequential.py` | 최종형. 마커를 원자적으로 한 번만 소비하고(무효 마커도 소비), 통과하지 못하면 하드셋을 검사한다 |
+| `ch06/settings.example.json` | `settings.json` 훅 배선 (`matcher: "Bash"`) |
+
+정규식은 단순한 명령 표기만 잡는 보조 검사다. `git -C repo push --force`, 인자 없는 push, 따옴표·변수·별칭·별도 스크립트를 거친 명령은 놓칠 수 있다. 파싱·로직 예외는 허용(exit 0)으로 떨어지는 fail-open 예제라 유일한 승인 게이트로 쓰면 안 된다. 마커 예제는 누가 승인했는지 인증하지 않는다 — 발급은 사람이나 분리된 신뢰 주체만 하고, 에이전트에게 발급 스크립트를 실행하라고 시키지 않는다.
+
+### 직접 확인하는 법
+
+임시 폴더에 `ch06/` 파일을 복사하고, 복사본 두 파일의 `MARKER` 상수를 그 임시 폴더 안의 경로로 바꾼 뒤 돌린다. 실제 `~/.claude` 는 건드리지 않는다. 위험 명령은 JSON 안의 텍스트로만 넘긴다 — 훅은 문자열을 분류할 뿐 실행하지 않는다.
+
+```
+J='{"tool_name":"Bash","tool_input":{"command":"git push --force origin demo"}}'
+echo "$J" | python3 block_consequential.py; echo $?          # BLOCKED …, 2
+python3 approve_once.py "git push --force origin demo"       # 마커 발급 (모드 0600)
+echo "$J" | python3 block_consequential.py; echo $?          # 0 — 마커가 소비되고 파일이 사라진다
+echo "$J" | python3 block_consequential.py; echo $?          # 2 — 재사용 거부
+echo "not json" | python3 block_consequential.py; echo $?    # 0 — fail-open 이 열리는 경우
+```
+
+이 저장소에 올리기 전에 위 순서와 동시 호출 8개(통과 1), 다른 명령 문자열·만료·권한 0644 마커 거부, 문법 오류 복사본(종료코드 1)을 임시 폴더에서 실제로 돌려 책에 적힌 결과와 같은 것을 확인했다. 실제 위험 명령이나 운영 중인 승인 체계를 시험한 것은 아니다.
+
 ## 앞으로
 
 3장부터도 Threads 에 올라가는 순서대로 여기에 코드를 더한다.
