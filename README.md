@@ -89,6 +89,30 @@ python3 route_advisor.py --axes "verifiable=yes,failcost=high,volume=high,depth=
 `is_mechanical_batch` 의 조건을 `depth`·`verifiable` 둘만 남기면 두 번째 명령도 `NEEDS_PREFERENCE` 로 바뀐다 — 실패 비용이 높다는 신호가 사라진다.
 이 저장소에 올리기 전에 책의 실행 예시 네 개와 깨뜨린 예시를 실제로 돌려 출력이 같은 것을 확인했다(깨뜨린 예시는 `ask:` 줄까지 세 줄).
 
+## 5장 — 실패했을 때 무엇을 올릴 것인가
+
+| 파일 | 내용 |
+|---|---|
+| `ch05/naive_escalate.py` | 최소 해법. 실패하면 원인을 묻지 않고 effort 를 한 단계씩 올리고 끝에서 모델 티어를 올린다 — 명세 부실·인프라 장애도 똑같이 올리는 구멍이 있다 |
+| `ch05/failure_diagnosis.py` | 최종형(표준 라이브러리만). 실패 7분류 진단(재시도마다 축 하나만), Wilson 95% 하한, append-only 레지스트리(기록·무효화·유효표본 필터·뒤집기 판정) |
+| `ch05/check_invalidation.py` | 무효화 이벤트가 표본에서 실제로 빠지는지 확인 |
+| `ch05/check_selfcert.py` | 검증자==산출자 조건을 지운 깨진 판이 자기증명을 세는지 확인(빨간불) |
+
+3·10·20건 기준은 책의 보수적인 운영 정책이다. 통계학이 정한 합격선이 아니다. JSONL 예제는 단일 작성자용이며 동시 쓰기 잠금·서명·변조 방지는 없다.
+
+### 직접 확인하는 법
+
+결과 파일이 없는 임시 폴더에 `ch05/` 파일을 복사해서 돌린다.
+
+```
+python3 naive_escalate.py                            # medium / high / raise_model_tier
+python3 failure_diagnosis.py registry_demo.jsonl     # Wilson 하한 20.7% / 43.8% / 72.2% / 83.9%, usable 1
+python3 check_invalidation.py                        # 무효화 전 1, 무효화 후 0, 파일 줄 수 2
+python3 check_selfcert.py                            # 정상판 0, 깨진판 1
+```
+
+이 저장소에 올리기 전에 위 네 명령을 실제로 돌려 책에 적힌 출력과 같은 것을 확인했다.
+
 ## 앞으로
 
 3장부터도 Threads 에 올라가는 순서대로 여기에 코드를 더한다.
