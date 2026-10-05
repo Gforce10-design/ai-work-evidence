@@ -67,6 +67,9 @@ pre code { background: none; padding: 0; font-size: inherit; }
    2026-10-02: 예전엔 pre 전체에 text-indent 를 걸어 맨 첫 줄만 내어 쓰고 나머지
    모든 줄이 들여쓰기된 것처럼 보였다 — 파이썬 들여쓰기를 오해하게 만드는 결함. */
 pre code > span[id^="ln-"] { display: block; padding-left: 1.3em; text-indent: -1.3em; }
+/* 2026-10-06: 위 한 줄은 폭이 고정이라, 깊이 들여쓴 줄이 접히면 이어지는 부분이 그 줄보다
+   왼쪽에서 시작했다. 실제 폭은 hang_indent() 가 줄마다 인라인 스타일로 정한다 — 위 규칙은
+   그게 안 붙은 줄을 위한 기본값이다. */
 table {
   border-collapse: collapse;
   width: 100%;
