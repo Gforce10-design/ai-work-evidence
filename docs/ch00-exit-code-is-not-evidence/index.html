@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0장 — 왜 &quot;exit 0&quot;은 증거가 아닌가 | AI가 일했다는 증거</title>
+<meta name="description" content="워커가 &quot;완료&quot;라고 답했고 종료코드도 0인데, 그 작업이 실제로 일어났는지 확인할 방법이 없다. 붙일 장치: 증거를 7단계로 나누고, 아래 단계가 다 채워져야만 위 단계를 주장할 수 있게 강제하는 검증기.">
+<link rel="canonical" href="https://gforce10-design.github.io/ai-work-evidence/ch00-exit-code-is-not-evidence/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI가 일했다는 증거">
+<meta property="og:title" content="0장 — 왜 &quot;exit 0&quot;은 증거가 아닌가 | AI가 일했다는 증거">
+<meta property="og:description" content="워커가 &quot;완료&quot;라고 답했고 종료코드도 0인데, 그 작업이 실제로 일어났는지 확인할 방법이 없다. 붙일 장치: 증거를 7단계로 나누고, 아래 단계가 다 채워져야만 위 단계를 주장할 수 있게 강제하는 검증기.">
+<meta property="og:url" content="https://gforce10-design.github.io/ai-work-evidence/ch00-exit-code-is-not-evidence/">
+<meta property="og:image" content="https://gforce10-design.github.io/ai-work-evidence/assets/og.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="sitemap" type="application/xml" href="https://gforce10-design.github.io/ai-work-evidence/sitemap.xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://gforce10-design.github.io/ai-work-evidence/ch00-exit-code-is-not-evidence/#article", "headline": "0장 — 왜 \"exit 0\"은 증거가 아닌가", "description": "워커가 \"완료\"라고 답했고 종료코드도 0인데, 그 작업이 실제로 일어났는지 확인할 방법이 없다. 붙일 장치: 증거를 7단계로 나누고, 아래 단계가 다 채워져야만 위 단계를 주장할 수 있게 강제하는 검증기.", "inLanguage": "ko", "mainEntityOfPage": "https://gforce10-design.github.io/ai-work-evidence/ch00-exit-code-is-not-evidence/", "isAccessibleForFree": true, "image": "https://gforce10-design.github.io/ai-work-evidence/assets/og.png", "isPartOf": {"@type": "Book", "@id": "https://gforce10-design.github.io/ai-work-evidence/#book", "name": "AI가 일했다는 증거", "url": "https://gforce10-design.github.io/ai-work-evidence/"}, "author": {"@type": "Person", "@id": "https://gforce10-design.github.io/ai-work-evidence/#author", "name": "subal_i", "url": "https://www.threads.com/@subal_i", "sameAs": ["https://www.threads.com/@subal_i", "https://github.com/Gforce10-design"]}, "datePublished": "2026-09-28", "dateModified": "2026-09-28"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AI가 일했다는 증거", "item": "https://gforce10-design.github.io/ai-work-evidence/"}, {"@type": "ListItem", "position": 2, "name": "0장 — 왜 \"exit 0\"은 증거가 아닌가", "item": "https://gforce10-design.github.io/ai-work-evidence/ch00-exit-code-is-not-evidence/"}]}]}</script>
+</head>
+<body>
+<header class="site"><a class="name" href="../">AI가 일했다는 증거</a><nav><a href="https://www.threads.com/@subal_i">Threads @subal_i</a><a href="https://github.com/Gforce10-design/ai-work-evidence">코드</a><a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF</a></nav></header>
+<nav class="crumb" aria-label="위치"><a href="../">AI가 일했다는 증거</a> › 0장 — 왜 &quot;exit 0&quot;은 증거가 아닌가</nav>
+<main>
+<article>
+<h1 id="0-exit-0">0장 — 왜 "exit 0"은 증거가 아닌가</h1>
+<p class="stamp">기술 검증판 2026-09-28 · 원고 최종 수정 2026-09-28</p>
+<div class="brief"><div><dt>증상</dt><dd>워커가 "완료"라고 답했고 종료코드도 0인데, 그 작업이 실제로 일어났는지 확인할 방법이 없다</dd></div><div><dt>원인</dt><dd>종료코드는 프로그램이 정한 성공 신호다. 그 값만으로 작업의 정확성을 보장하지 않는다. 낮은 단계의 사실로 높은 단계를 주장하게 된다</dd></div><div><dt>붙일 장치</dt><dd>증거를 7단계로 나누고, 아래 단계가 다 채워져야만 위 단계를 주장할 수 있게 강제하는 검증기</dd></div><div><dt>그래도 부족했던 것</dt><dd>사다리를 세워도 옆으로 새는 경로가 셋 더 나왔다. 이 장 후반이 그 이야기다</dd></div></div>
+
+<p>머리말의 사고는 "그 파일을 읽었다는 걸 확인한 적이 없었다"는 이야기였다. 그런데 그 사고를 겪고 검증 절차를 다듬은 뒤에도 전혀 다른 결의 사고가 또 났다. 이번에는 파일을 읽었느냐 이전에 그 워커가 <strong>한 번이라도 실제로 실행된 적이 있는지</strong>부터가 문제였다.</p>
+<h2 id="_1">"완료됐습니다"라는 로그</h2>
+<p>리뷰 라운드 하나를 돌렸다. 오케스트레이터가 워커 하나를 호출했고, CLI 프로세스는 종료코드 0으로 끝났고, 표준출력에는 몇 문단짜리 리뷰 텍스트가 찍혔다. 응답 형식을 검사하는 구조 검증기도 통과 판정을 냈다 — 헤더가 있고, 본문이 비어 있지 않고, JSON이 파싱됐다. 로그에는 "완료"라고 적혔고, 그 결과는 다음 판단의 근거로 채택됐다.</p>
+<p>몇 라운드 뒤, 독립 리뷰가 이 경로 전체를 다시 열어봤다. 그 워커의 자리는 설정 파일에 이름과 실행 경로만 올라 있었다. 실제 디스패처가 그 이름을 호출한 적은 <strong>한 번도 없는</strong> 자리였다. 그 라운드에서는 이름이 비슷한 다른 호환 경로가 그 워커 대신 실행됐다. 종료코드 0과 그럴듯한 텍스트는 그 다른 경로가 만들어냈다. 그런데 로그는 이 둘을 원래 부르려 했던 자리의 성과로 세고 있었다.</p>
+<p>CLI는 분명 실행됐다. 분명 0을 반환했다. 표준출력도 분명 비어 있지 않았다. 그런데 이 세 가지 사실 중 어느 것도 "내가 부르려 한 그 모델이, 내가 원한 그 작업을, 내가 원한 그 자리에서 했다"는 보장이 되지는 않았다.</p>
+<div class="fig"><div class="term"><div class="l muted">$ dispatch --worker reviewer-a --brief brief.md</div><div class="l"><span class="ok">✓</span> 완료 · 리뷰 4건 <span class="muted">(3.2s)</span></div><div class="l muted">$ echo $?</div><div class="l"><span class="ok">0</span></div><div class="l"><span class="bad">✕</span> <span class="strike">디스패처가 reviewer-a 를 호출한 적이 없습니다</span></div><div class="l"><span class="bad">✕</span> <span class="strike">그 출력은 이름이 비슷한 다른 경로가 만든 것입니다</span></div><div class="verdict">종료코드 0만으로 의도한 일이 정확히 끝났다고 할 수 없다</div></div><div class="fig-cap">위 세 줄은 전부 <b>사실</b>이다. 아래 두 줄도 전부 사실이다. 문제는 위 세 줄만 보고 아래 두 줄을 없는 것으로 취급했다는 데 있다.</div></div>
+
+<h2 id="_2">종료코드가 말하지 않는 것</h2>
+<p>이 책은 처음부터 끝까지 한 문장을 붙들고 간다: <strong>CLI의 종료코드 0은 그 프로그램이 성공으로 분류했다는 뜻이다. 의도한 작업이 정확히 끝났는지는 별도 증거로 확인한다.</strong></p>
+<p>종료코드는 프로세스 계약이다. 어떤 조건을 성공으로 취급하는지는 프로그램마다 다르다. 오류를 삼키고 0을 반환할 수도 있으므로 인증 성공이나 요청 전송까지 값 하나로 단정할 수 없다. 그 이상을 읽어내는 순간 사고가 난다. 구체적으로 종료코드 0과 비어있지 않은 표준출력이 보장하지 <strong>않는</strong> 것들:</p>
+<ul>
+<li>내가 의도한 모델·백엔드가 실제로 요청을 받았는지 (설정에만 이름이 있고 실제 경로는 다른 곳으로 샜을 수 있다)</li>
+<li>실행 중에 내가 준 입력(브리프·소스)을 실제로 열어봤는지 (프롬프트만 보고 그럴듯한 답을 지어냈을 수 있다 — 이 이야기는 7장에서 정면으로 다룬다)</li>
+<li>실행이 내가 걸어둔 권한·범위 제약 안에서 돌았는지 (권한이 새서 의도 밖의 것을 건드렸을 수 있다)</li>
+<li>응답이 독립적으로 재검산됐는지 (구조 검사는 모양만 본다 — 헤더가 있는지, 파싱되는지. 내용이 맞는지는 안 본다)</li>
+<li>결과가 최종적으로 채택됐는지 (검증을 통과해도 다른 워커의 상충하는 결과에 밀려 실제로는 안 쓰였을 수 있다)</li>
+</ul>
+<p>"동작했다"는 말은 이 다섯 가지 질문 중 정확히 몇 번째까지 답한 말인지를 명시하지 않으면 아무 의미가 없다. 이 책에서는 이 질문들을 설치·등록·노출·사전점검·실행·검증·수용의 일곱 단계에 나눠 담는다.</p>
+<h2 id="_3">증거의 사다리</h2>
+<p>증거에는 등급이 있다. 아래 표에서 번호가 클수록 더 많은 확인을 요구한다. 높은 번호를 주장하려면 앞 단계의 증거도 갖춰야 한다. 앞 단계만 확인한 상태에서 뒤 단계까지 확인했다고 말하면 안 된다.</p>
+<div class="fig"><div class="ladder"><div class="rung"><span class="n">01</span><span class="t">설치됨</span><span class="d">파일이 거기 있다</span></div><div class="rung"><span class="n">02</span><span class="t">등록됨</span><span class="d">설정에 이름이 있다</span></div><div class="rung"><span class="n">03</span><span class="t">도구로 노출됨</span><span class="d">부를 수 있다</span></div><div class="rung"><span class="n">04</span><span class="t">사전점검 통과</span><span class="d">보낼 준비가 됐다</span></div><div class="rung bad"><span class="n">05</span><span class="t">실행 영수증 통과</span><span class="d">돌긴 돌았다 — 여기서 멈춘다</span></div><div class="rung"><span class="n">06</span><span class="t">결과 검증됨</span><span class="d">내용이 맞다</span></div><div class="rung hi"><span class="n">07</span><span class="t">수용됨</span><span class="d">여기가 완료다</span></div></div><div class="fig-cap">대부분의 파이프라인은 <b>05</b>에서 멈춰 있으면서 그것을 완료라고 부른다. <b>돌았다는 것과 결과가 맞다는 것은 다르다.</b> 아래 표가 각 칸이 보장하는 것과 보장하지 않는 것이다.</div></div>
+
+<div class="tw"><table>
+<thead>
+<tr>
+<th>단계</th>
+<th>무엇을 보장하는가</th>
+<th>무엇을 보장하지 않는가</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 설치됨 (INSTALLED_STATIC)</td>
+<td>실행 파일·패키지가 디스크에 존재한다</td>
+<td>등록조차 안 됐을 수 있다. 버전이 안 맞을 수 있다</td>
+</tr>
+<tr>
+<td>② 등록됨 (REGISTERED)</td>
+<td>설정에 이름과 경로가 올라 있다</td>
+<td>아무도 그 이름을 실제로 호출한 적이 없을 수 있다</td>
+</tr>
+<tr>
+<td>③ 도구로 노출됨 (TOOL_EXPOSED)</td>
+<td>호출자가 그 이름으로 호출을 시도할 스키마·핸들이 생겼다</td>
+<td>그 핸들 뒤에 유효한 실행 경로가 붙어 있는지는 모른다</td>
+</tr>
+<tr>
+<td>④ 디스패치 사전점검 통과 (DISPATCH_PREFLIGHT_PASS)</td>
+<td>정책·권한·경로가 사전조건을 만족해 호출이 허가됐다</td>
+<td>그 허가로 실제 실행까지 이어졌는지는 아직 모른다</td>
+</tr>
+<tr>
+<td>⑤ 실행 영수증 통과 (OPERATION_RECEIPT_PASS)</td>
+<td>프로세스가 실제로 실행되어 응답을 반환했고, 어떤 입력·권한으로 돌았는지가 기록·검증됐다</td>
+<td>그 응답의 <strong>내용</strong>이 맞는지, 작업을 실제로 다뤘는지는 모른다</td>
+</tr>
+<tr>
+<td>⑥ 결과 검증됨 (RESULT_VERIFIED)</td>
+<td>응답 내용이 독립적으로 재검산되어 요구한 형식·근거를 갖췄다고 확인됐다</td>
+<td>그 결과가 최종적으로 다른 작업의 입력이 될 자격까지 얻었는지는 모른다 (상충하는 결과가 있을 수 있다)</td>
+</tr>
+<tr>
+<td>⑦ 수용됨 (FAN_IN_ACCEPTED)</td>
+<td>통합 권한을 가진 쪽이 그 결과를 실제 의사결정에 반영했다</td>
+<td>— (이게 종착점이다)</td>
+</tr>
+</tbody>
+</table></div>
+<p>앞서 본 사고를 이 표에 대 보면 정확히 짚인다. 그 워커는 ①②까지는 사실이었다(파일도 있었고 이름도 등록돼 있었다). ③도 사실이었다(스키마가 노출돼 호출 시도는 가능했다). 그런데 실제 호출은 ④를 거치지 않고 다른 경로로 새 나갔다. 로그는 ⑤⑥을 주장했지만 그 ⑤⑥의 실체는 애초에 부르려던 자리의 것이 아니었다. <strong>낮은 단계의 사실들을 근거로 높은 단계를 참칭한 것</strong>, 이 사다리가 막으려는 실수가 바로 이것이다. 그래서 규칙은 간단하다 — 이전 단계를 나중 단계인 척 재명명할 수 없다.</p>
+<h2 id="_4">사다리도 옆으로 샌다</h2>
+<p>사다리를 정의했다고 사고가 끝나지는 않는다. 실제로 이 사다리를 도입한 뒤에도 옆으로 새는 경로가 세 가지 더 나왔다.</p>
+<div class="fig"><div class="cards one"><div class="card warn"><div class="h"><span class="ix">1</span>사람이 한 번 쳐본 것을 실행 영수증으로</div><div class="sub">사람의 손은 기껏해야 ④ 근처의 예비 점검이다. 인자 조립도, 권한 프로필도, 재시도 로직도 자동 경로와 전부 다르다</div></div><div class="card warn"><div class="h"><span class="ix">2</span>형식 통과를 내용 검증으로</div><div class="sub">JSON 이 파싱되고 헤더가 있으면 통과다. 완벽하게 그럴듯하고 완전히 틀린 응답도 같이 통과한다</div></div><div class="card warn"><div class="h"><span class="ix">3</span>계약이 바뀌었는데 옛 영수증을 재사용</div><div class="sub">발급 당시엔 정당했다. 새 요구조건을 애초에 만족할 수 없는 낡은 것일 뿐이다. 시점 없는 영수증은 영원히 유효해 보인다</div></div></div><div class="fig-cap">세 경우 모두 <b>"급하니까 이번만"</b>이라는 예외였다. 사다리는 예외를 허용하지 않을 때만 사다리다.</div></div>
+
+<p><strong>직접 스모크 테스트를 실행 영수증으로 착각.</strong> 사람이 터미널에서 직접 CLI를 한 번 쳐보고 "된다"를 확인한 뒤, 그 확인을 근거로 자동화 경로도 됐다고 로그에 적은 적이 있다. 사람 손으로 한 번 확인해 봤자 기껏해야 ④ 근처의 예비 점검이다. 디스패처가 실제로 그 요청을 처리했다는 ⑤의 증거가 되지는 않는다. 사람이 됐다고 자동 경로도 되는 게 아니다 — 인자 조립 방식도, 권한 프로필도, 실패 시 재시도 로직도 전부 다르다.</p>
+<p><strong>구조 검증기 통과를 내용 검증으로 착각.</strong> 응답이 JSON으로 파싱되고 필수 헤더가 다 있으면 구조 검증기는 통과 판정을 낸다. 이건 ⑤와 ⑥ 사이 어딘가의 "형식은 맞다"는 확인에 그친다. ⑥이 요구하는 "내용이 맞다"는 확인은 빠져 있다. 형식만 보고 "검증됐다"고 적는 순간, 누가 봐도 그럴듯하지만 완전히 틀린 응답도 통과한다.</p>
+<p><strong>계약이 바뀌었는데 오래된 영수증을 재사용.</strong> 한 번은 검증 계약을 강화한 직후, 강화 전 라운드에서 만든 영수증이 새 게이트를 그대로 통과한 적이 있다. 그 영수증은 발급될 당시엔 정당했다. 하지만 새로 추가된 요구조건(예: 특정 필드, 특정 검증 단계)을 애초에 만족할 수 없는 낡은 것이었다. 아무도 "이 영수증은 옛 계약 것이니 무효"라고 도장을 찍지 않았을 뿐이다. 시점을 적어 두지 않은 영수증은 영원히 유효한 영수증처럼 다뤄지기 쉽다.</p>
+<p>세 경우 모두 <strong>급하니까 이번만</strong>이라는 예외였다. 사다리는 예외를 허용하지 않을 때만 사다리다. 한 칸이라도 "이번엔 건너뛰어도 되지" 하고 넘어가면 다음 사람은 건너뛴 자리가 원래 있던 자리인 줄 안다.</p>
+<h2 id="_5">최소 검증기</h2>
+<p>아래는 영수증(JSON)의 필수 필드와 기본 값 제약을 확인하는 최소 구현이다. 파일 존재·실행 사실·권한·검증자 신원 자체는 신뢰된 실행기가 별도로 확인해야 한다. 입력 JSON을 만든 사람이 거짓말하지 않았다는 사실까지 이 코드가 증명하지는 않는다. 이 구현은 두 가지를 지킨다 — 높은 단계를 주장하려면 그보다 낮은 모든 단계의 필드가 이미 채워져 있어야 한다. 검증자가 실행 주체 자신이면 독립 검증으로 세지 않는다.</p>
+<p>이 파일은 <code>tools/verify_operation_ladder.py</code>에 둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;증거 사다리 7단계를 영수증(JSON) 하나로 강제하는 최소 검증기.&quot;&quot;&quot;</span>
+</span><span id="ln-3"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-4">
+</span><span id="ln-5"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">json</span>
+</span><span id="ln-6"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
+</span><span id="ln-7"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">datetime</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> datetime
+</span><span id="ln-8"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-9"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-10">
+</span><span id="ln-11">LADDER <span style="color: #666">=</span> [
+</span><span id="ln-12">    <span style="color: #BA2121">&quot;INSTALLED_STATIC&quot;</span>,
+</span><span id="ln-13">    <span style="color: #BA2121">&quot;REGISTERED&quot;</span>,
+</span><span id="ln-14">    <span style="color: #BA2121">&quot;TOOL_EXPOSED&quot;</span>,
+</span><span id="ln-15">    <span style="color: #BA2121">&quot;DISPATCH_PREFLIGHT_PASS&quot;</span>,
+</span><span id="ln-16">    <span style="color: #BA2121">&quot;OPERATION_RECEIPT_PASS&quot;</span>,
+</span><span id="ln-17">    <span style="color: #BA2121">&quot;RESULT_VERIFIED&quot;</span>,
+</span><span id="ln-18">    <span style="color: #BA2121">&quot;FAN_IN_ACCEPTED&quot;</span>,
+</span><span id="ln-19">]
+</span><span id="ln-20">
+</span><span id="ln-21"><span style="color: #3D7B7B; font-style: italic"># 각 단계는 그 아래 모든 단계의 필드를 포함한다 — 건너뛴 단계가 있으면 안 되기 때문이다.</span>
+</span><span id="ln-22">REQUIRED_FIELDS <span style="color: #666">=</span> {
+</span><span id="ln-23">    <span style="color: #BA2121">&quot;INSTALLED_STATIC&quot;</span>: {<span style="color: #BA2121">&quot;executable_path&quot;</span>},
+</span><span id="ln-24">    <span style="color: #BA2121">&quot;REGISTERED&quot;</span>: {<span style="color: #BA2121">&quot;executable_path&quot;</span>, <span style="color: #BA2121">&quot;registered_name&quot;</span>},
+</span><span id="ln-25">    <span style="color: #BA2121">&quot;TOOL_EXPOSED&quot;</span>: {<span style="color: #BA2121">&quot;executable_path&quot;</span>, <span style="color: #BA2121">&quot;registered_name&quot;</span>, <span style="color: #BA2121">&quot;call_schema&quot;</span>},
+</span><span id="ln-26">    <span style="color: #BA2121">&quot;DISPATCH_PREFLIGHT_PASS&quot;</span>: {
+</span><span id="ln-27">        <span style="color: #BA2121">&quot;executable_path&quot;</span>, <span style="color: #BA2121">&quot;registered_name&quot;</span>, <span style="color: #BA2121">&quot;call_schema&quot;</span>, <span style="color: #BA2121">&quot;preflight_policy_id&quot;</span>,
+</span><span id="ln-28">    },
+</span><span id="ln-29">    <span style="color: #BA2121">&quot;OPERATION_RECEIPT_PASS&quot;</span>: {
+</span><span id="ln-30">        <span style="color: #BA2121">&quot;executable_path&quot;</span>, <span style="color: #BA2121">&quot;registered_name&quot;</span>, <span style="color: #BA2121">&quot;call_schema&quot;</span>, <span style="color: #BA2121">&quot;preflight_policy_id&quot;</span>,
+</span><span id="ln-31">        <span style="color: #BA2121">&quot;process_exit_code&quot;</span>, <span style="color: #BA2121">&quot;process_stdout_nonempty&quot;</span>, <span style="color: #BA2121">&quot;actual_input_hash&quot;</span>,
+</span><span id="ln-32">    },
+</span><span id="ln-33">    <span style="color: #BA2121">&quot;RESULT_VERIFIED&quot;</span>: {
+</span><span id="ln-34">        <span style="color: #BA2121">&quot;executable_path&quot;</span>, <span style="color: #BA2121">&quot;registered_name&quot;</span>, <span style="color: #BA2121">&quot;call_schema&quot;</span>, <span style="color: #BA2121">&quot;preflight_policy_id&quot;</span>,
+</span><span id="ln-35">        <span style="color: #BA2121">&quot;process_exit_code&quot;</span>, <span style="color: #BA2121">&quot;process_stdout_nonempty&quot;</span>, <span style="color: #BA2121">&quot;actual_input_hash&quot;</span>,
+</span><span id="ln-36">        <span style="color: #BA2121">&quot;independent_verifier_id&quot;</span>, <span style="color: #BA2121">&quot;independent_verifier_verdict&quot;</span>,
+</span><span id="ln-37">    },
+</span><span id="ln-38">    <span style="color: #BA2121">&quot;FAN_IN_ACCEPTED&quot;</span>: {
+</span><span id="ln-39">        <span style="color: #BA2121">&quot;executable_path&quot;</span>, <span style="color: #BA2121">&quot;registered_name&quot;</span>, <span style="color: #BA2121">&quot;call_schema&quot;</span>, <span style="color: #BA2121">&quot;preflight_policy_id&quot;</span>,
+</span><span id="ln-40">        <span style="color: #BA2121">&quot;process_exit_code&quot;</span>, <span style="color: #BA2121">&quot;process_stdout_nonempty&quot;</span>, <span style="color: #BA2121">&quot;actual_input_hash&quot;</span>,
+</span><span id="ln-41">        <span style="color: #BA2121">&quot;independent_verifier_id&quot;</span>, <span style="color: #BA2121">&quot;independent_verifier_verdict&quot;</span>,
+</span><span id="ln-42">        <span style="color: #BA2121">&quot;accepted_by&quot;</span>, <span style="color: #BA2121">&quot;accepted_at&quot;</span>,
+</span><span id="ln-43">    },
+</span><span id="ln-44">}
+</span><span id="ln-45">
+</span><span id="ln-46">
+</span><span id="ln-47"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">verify_receipt</span>(receipt: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">tuple</span>[<span style="color: #008000">bool</span>, <span style="color: #008000">str</span>]:
+</span><span id="ln-48">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(receipt, <span style="color: #008000">dict</span>):
+</span><span id="ln-49">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">&quot;영수증은 JSON 객체여야 한다&quot;</span>
+</span><span id="ln-50">    claimed <span style="color: #666">=</span> receipt<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;stage&quot;</span>)
+</span><span id="ln-51">    <span style="color: #008000; font-weight: bold">if</span> claimed <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> LADDER:
+</span><span id="ln-52">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">f&quot;알 수 없는 단계 이름: </span><span style="color: #A45A77; font-weight: bold">{</span>claimed<span style="color: #A45A77; font-weight: bold">!r}</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-53">
+</span><span id="ln-54">    missing <span style="color: #666">=</span> REQUIRED_FIELDS[claimed] <span style="color: #666">-</span> receipt<span style="color: #666">.</span>keys()
+</span><span id="ln-55">    <span style="color: #008000; font-weight: bold">if</span> missing:
+</span><span id="ln-56">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, (
+</span><span id="ln-57">            <span style="color: #BA2121">f&quot;&#39;</span><span style="color: #A45A77; font-weight: bold">{</span>claimed<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39; 단계를 주장하려면 이전 단계들의 필드까지 모두 있어야 한다. &quot;</span>
+</span><span id="ln-58">            <span style="color: #BA2121">f&quot;빠진 필드: </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">sorted</span>(missing)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-59">        )
+</span><span id="ln-60">
+</span><span id="ln-61">    rank <span style="color: #666">=</span> LADDER<span style="color: #666">.</span>index(claimed)
+</span><span id="ln-62">    <span style="color: #008000; font-weight: bold">for</span> field <span style="color: #A2F; font-weight: bold">in</span> REQUIRED_FIELDS[claimed] <span style="color: #666">-</span> {<span style="color: #BA2121">&quot;process_exit_code&quot;</span>, <span style="color: #BA2121">&quot;process_stdout_nonempty&quot;</span>, <span style="color: #BA2121">&quot;call_schema&quot;</span>}:
+</span><span id="ln-63">        value <span style="color: #666">=</span> receipt[field]
+</span><span id="ln-64">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(value, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> value<span style="color: #666">.</span>strip():
+</span><span id="ln-65">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">f&quot;비어 있거나 문자열이 아닌 필드: </span><span style="color: #A45A77; font-weight: bold">{</span>field<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-66">    <span style="color: #008000; font-weight: bold">if</span> rank <span style="color: #666">&gt;=</span> <span style="color: #666">2</span> <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(receipt[<span style="color: #BA2121">&quot;call_schema&quot;</span>], <span style="color: #008000">dict</span>):
+</span><span id="ln-67">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">&quot;call_schema는 비어 있지 않은 객체여야 한다&quot;</span>
+</span><span id="ln-68">    <span style="color: #008000; font-weight: bold">if</span> rank <span style="color: #666">&gt;=</span> <span style="color: #666">2</span> <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #A2F; font-weight: bold">not</span> receipt[<span style="color: #BA2121">&quot;call_schema&quot;</span>]:
+</span><span id="ln-69">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">&quot;call_schema가 비어 있다&quot;</span>
+</span><span id="ln-70">    <span style="color: #008000; font-weight: bold">if</span> rank <span style="color: #666">&gt;=</span> <span style="color: #666">4</span>:
+</span><span id="ln-71">        code <span style="color: #666">=</span> receipt[<span style="color: #BA2121">&quot;process_exit_code&quot;</span>]
+</span><span id="ln-72">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">type</span>(code) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> code <span style="color: #666">!=</span> <span style="color: #666">0</span>:
+</span><span id="ln-73">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">&quot;이 계약은 정수 종료코드 0을 요구한다&quot;</span>
+</span><span id="ln-74">        <span style="color: #008000; font-weight: bold">if</span> receipt[<span style="color: #BA2121">&quot;process_stdout_nonempty&quot;</span>] <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">True</span>:
+</span><span id="ln-75">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">&quot;이 계약은 비어 있지 않은 출력을 요구한다&quot;</span>
+</span><span id="ln-76">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> re<span style="color: #666">.</span>fullmatch(<span style="color: #BA2121">r&quot;[0-9a-f]</span><span style="color: #A45A77; font-weight: bold">{64}</span><span style="color: #BA2121">&quot;</span>, receipt[<span style="color: #BA2121">&quot;actual_input_hash&quot;</span>]):
+</span><span id="ln-77">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">&quot;입력 SHA256 형식 오류&quot;</span>
+</span><span id="ln-78">    <span style="color: #008000; font-weight: bold">if</span> rank <span style="color: #666">&gt;=</span> <span style="color: #666">5</span>:
+</span><span id="ln-79">        <span style="color: #008000; font-weight: bold">if</span> receipt[<span style="color: #BA2121">&quot;independent_verifier_id&quot;</span>]<span style="color: #666">.</span>strip()<span style="color: #666">.</span>casefold() <span style="color: #666">==</span> receipt[<span style="color: #BA2121">&quot;registered_name&quot;</span>]<span style="color: #666">.</span>strip()<span style="color: #666">.</span>casefold():
+</span><span id="ln-80">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">&quot;검증자가 실행 주체 자신이면 독립 검증이 아니다&quot;</span>
+</span><span id="ln-81">        <span style="color: #008000; font-weight: bold">if</span> receipt[<span style="color: #BA2121">&quot;independent_verifier_verdict&quot;</span>] <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;PASS&quot;</span>:
+</span><span id="ln-82">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">&quot;독립 검증 판정이 PASS가 아니다&quot;</span>
+</span><span id="ln-83">    <span style="color: #008000; font-weight: bold">if</span> rank <span style="color: #666">&gt;=</span> <span style="color: #666">6</span>:
+</span><span id="ln-84">        <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-85">            accepted <span style="color: #666">=</span> datetime<span style="color: #666">.</span>fromisoformat(receipt[<span style="color: #BA2121">&quot;accepted_at&quot;</span>]<span style="color: #666">.</span>replace(<span style="color: #BA2121">&quot;Z&quot;</span>, <span style="color: #BA2121">&quot;+00:00&quot;</span>))
+</span><span id="ln-86">            <span style="color: #008000; font-weight: bold">if</span> accepted<span style="color: #666">.</span>tzinfo <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-87">                <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;timezone missing&quot;</span>)
+</span><span id="ln-88">        <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>:
+</span><span id="ln-89">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>, <span style="color: #BA2121">&quot;accepted_at은 시간대가 있는 ISO 8601 시각이어야 한다&quot;</span>
+</span><span id="ln-90">
+</span><span id="ln-91">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>, <span style="color: #BA2121">f&quot;&#39;</span><span style="color: #A45A77; font-weight: bold">{</span>claimed<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&#39; 단계까지 유효&quot;</span>
+</span><span id="ln-92">
+</span><span id="ln-93">
+</span><span id="ln-94"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-95">    receipt <span style="color: #666">=</span> json<span style="color: #666">.</span>loads(Path(sys<span style="color: #666">.</span>argv[<span style="color: #666">1</span>])<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>))
+</span><span id="ln-96">    ok, message <span style="color: #666">=</span> verify_receipt(receipt)
+</span><span id="ln-97">    <span style="color: #008000">print</span>(message)
+</span><span id="ln-98">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span> <span style="color: #008000; font-weight: bold">if</span> ok <span style="color: #008000; font-weight: bold">else</span> <span style="color: #666">1</span>)
+</span></code></pre></div>
+
+<p>이 검증기는 필드 누락, 실패 종료코드, 빈 출력, 검증 FAIL, 실행자와 같은 검증자 식별자를 거부한다. 값만 그럴듯하게 꾸민 영수증은 통과할 수 있다. 실제 파일·프로세스·검증 결과와 연결하는 절차 및 계약 버전·발급 시각 검사는 운영 파이프라인의 별도 책임이다. 필수 필드를 추가하면 그 필드가 없는 옛 영수증은 거부하지만, 시점만 오래된 영수증까지 자동으로 찾아내지는 않는다.</p>
+<h2 id="_6">스스로 빨간불을 켜보기</h2>
+<p>가드는 통과만 시켜보면 검증한 게 아니다. 일부러 깨뜨려서 빨간불이 켜지는지 봐야 검증한 것이다. 자기 파이프라인에 다음 네 가지를 직접 걸어보라.</p>
+<ol>
+<li><strong>설치만 되고 등록은 안 된 상태</strong>를 만들어라 (설정 파일에서 그 이름을 지운다). 파이프라인이 그걸 "등록됨"이라 부르는지 확인한다 — 부르지 않아야 정상이다.</li>
+<li><strong>등록은 됐지만 실제 실행 경로는 끊긴 상태</strong>를 만들어라 (디스패처가 그 이름을 다른 곳으로 우회하게 하거나, 실행 파일 권한을 지운다). 그런데도 로그가 "실행됨"을 찍는지 확인한다 — 찍으면 그 로그는 못 믿는다.</li>
+<li><strong>실행은 됐지만 검증 단계를 강제로 건너뛰게</strong> 하고, <code>RESULT_VERIFIED</code>가 여전히 찍히는지 확인한다.</li>
+<li><strong><code>REQUIRED_FIELDS</code>에 필드를 하나 추가</strong>해 계약을 강화한 뒤, 강화 이전에 만들어둔 영수증 파일을 그대로 다시 넣어봐라. 위 검증기라면 즉시 거부해야 정상이다.</li>
+</ol>
+<p>넷 중 하나라도 빨간불이 안 켜지면 그 칸은 "통과"가 아니라 "한 번도 실행된 적 없는 검사"다. 이 책의 나머지 장들에서도 — 특히 위임을 다루는 6장과 7장에서 — 매번 이 사다리를 놓고 "어느 칸까지 실제로 올라갔는지"를 묻는다.</p>
+</article>
+<aside class="ask">
+<p>따라 하다 막히면 Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> 에 댓글로 남겨 달라. 하나씩 본다.</p>
+</aside>
+</main>
+<nav class="pager"><a class="prev" href="../">← 첫 쪽</a><a class="next" href="../ch01-directives-fade/">1장 — 지시가 몇 턴 만에 흐려지는 문제 →</a></nav>
+<footer class="site">
+<p>이 책은 무료다. 받은 사람은 누구나 읽고 나눠도 된다. 출처만 밝혀 달라.</p>
+<p>쓴 사람: Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> — 하루 한 편씩 나눠 올린다. 책에 실린 코드는 <a href="https://github.com/Gforce10-design/ai-work-evidence">GitHub</a>에 있고 MIT 라이선스다. <a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF 받기</a></p>
+</footer>
+</body>
+</html>

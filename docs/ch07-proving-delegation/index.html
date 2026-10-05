@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>7장 — 위임 증거 만들기 | AI가 일했다는 증거</title>
+<meta name="description" content="40KB 짜리 파일 셋을 5초 만에 리뷰했다고 답이 왔다. 파일을 연 적이 없었다. 붙일 장치: 워커 스냅샷 격리 · 1회성 nonce · challenge-response · 고정 응답 계약.">
+<link rel="canonical" href="https://gforce10-design.github.io/ai-work-evidence/ch07-proving-delegation/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI가 일했다는 증거">
+<meta property="og:title" content="7장 — 위임 증거 만들기 | AI가 일했다는 증거">
+<meta property="og:description" content="40KB 짜리 파일 셋을 5초 만에 리뷰했다고 답이 왔다. 파일을 연 적이 없었다. 붙일 장치: 워커 스냅샷 격리 · 1회성 nonce · challenge-response · 고정 응답 계약.">
+<meta property="og:url" content="https://gforce10-design.github.io/ai-work-evidence/ch07-proving-delegation/">
+<meta property="og:image" content="https://gforce10-design.github.io/ai-work-evidence/assets/og.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="sitemap" type="application/xml" href="https://gforce10-design.github.io/ai-work-evidence/sitemap.xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://gforce10-design.github.io/ai-work-evidence/ch07-proving-delegation/#article", "headline": "7장 — 위임 증거 만들기", "description": "40KB 짜리 파일 셋을 5초 만에 리뷰했다고 답이 왔다. 파일을 연 적이 없었다. 붙일 장치: 워커 스냅샷 격리 · 1회성 nonce · challenge-response · 고정 응답 계약.", "inLanguage": "ko", "mainEntityOfPage": "https://gforce10-design.github.io/ai-work-evidence/ch07-proving-delegation/", "isAccessibleForFree": true, "image": "https://gforce10-design.github.io/ai-work-evidence/assets/og.png", "isPartOf": {"@type": "Book", "@id": "https://gforce10-design.github.io/ai-work-evidence/#book", "name": "AI가 일했다는 증거", "url": "https://gforce10-design.github.io/ai-work-evidence/"}, "author": {"@type": "Person", "@id": "https://gforce10-design.github.io/ai-work-evidence/#author", "name": "subal_i", "url": "https://www.threads.com/@subal_i", "sameAs": ["https://www.threads.com/@subal_i", "https://github.com/Gforce10-design"]}, "datePublished": "2026-09-28", "dateModified": "2026-09-28"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AI가 일했다는 증거", "item": "https://gforce10-design.github.io/ai-work-evidence/"}, {"@type": "ListItem", "position": 2, "name": "7장 — 위임 증거 만들기", "item": "https://gforce10-design.github.io/ai-work-evidence/ch07-proving-delegation/"}]}]}</script>
+</head>
+<body>
+<header class="site"><a class="name" href="../">AI가 일했다는 증거</a><nav><a href="https://www.threads.com/@subal_i">Threads @subal_i</a><a href="https://github.com/Gforce10-design/ai-work-evidence">코드</a><a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF</a></nav></header>
+<nav class="crumb" aria-label="위치"><a href="../">AI가 일했다는 증거</a> › 7장 — 위임 증거 만들기</nav>
+<main>
+<article>
+<h1 id="7">7장 — 위임 증거 만들기</h1>
+<p class="stamp">기술 검증판 2026-09-28 · 원고 최종 수정 2026-09-28</p>
+<div class="brief"><div><dt>증상</dt><dd>40KB 짜리 파일 셋을 5초 만에 리뷰했다고 답이 왔다. 파일을 연 적이 없었다</dd></div><div><dt>원인</dt><dd>브리프에 적힌 파일명과 맥락만으로 그럴듯한 리뷰를 지어낼 수 있다</dd></div><div><dt>붙일 장치</dt><dd>워커 스냅샷 격리 · 1회성 nonce · challenge-response · 고정 응답 계약</dd></div><div><dt>그래도 부족했던 것</dt><dd>증거를 요구하면 증거를 지어내는 경로가 생긴다. 그래서 검증자를 분리한다</dd></div></div>
+
+<h2 id="_1">프롬프트만으로 통과한 리뷰</h2>
+<p>리뷰를 워커 하나에 맡겼다. 브리프에는 파일 세 개의 경로를 적어줬고 "이 파일들을 읽고 로직 오류를 찾으라"고 썼다. 5초 만에 답이 돌아왔다. "검토 완료. 세 파일 모두 로직 오류 없음. 다만 두 번째 파일의 예외 처리가 다소 느슨함." 문장은 매끄러웠고 지적도 그럴듯했다.</p>
+<div class="fig"><div class="flow"><div class="step src"><b>브리프</b>파일 3개 경로<br>"읽고 오류를 찾으라"</div><span class="arr">→</span><div class="step"><b>워커</b>5초 만에 응답</div><span class="arr">→</span><div class="step hit"><b>파일 열기</b>호출 없음</div><span class="arr">→</span><div class="step src"><b>응답</b>"오류 없음"<br>매끄럽고 그럴듯함</div></div><div class="fig-cap">이 장이 <b>false-PASS</b> 라고 부르는 것 — 리뷰가 실패한 게 아니라, <b>리뷰를 하지 않고도 실패하지 않은 것처럼 보이는 응답</b>이 나온 것이다. 파이프라인의 어느 검사도 세 번째 칸을 보지 않았다.</div></div>
+
+<p>세 파일은 합쳐서 40KB가 넘었다. 사람이 제대로 읽으면 최소 몇 분은 걸릴 분량이었다. 시간만으로 읽기 여부를 판정할 수는 없었다. 나중에 로그를 뜯어보니 워커는 파일을 여는 도구를 호출한 적이 없었다. 브리프에 적힌 파일명과 프로젝트 맥락만 보고 "이런 종류의 코드는 대개 이런 지적을 받는다"는 패턴을 그럴듯하게 채워 넣었던 것이다. 이 장에서는 이것을 <strong>false-PASS</strong>라 부른다 — 리뷰가 실패한 게 아니라, 리뷰를 하지 않고도 실패하지 않은 것처럼 보이는 응답이 나온 것.</p>
+<p>0장에서 세운 사다리로 보면 이 사고는 ⑤와 ⑥ 사이에서 났다. 프로세스는 실행됐고 응답도 받았다(⑤). 그런데 응답 내용이 정말 지시받은 입력에 근거했는지는 아무도 확인하지 않았다(⑥ 미달). 이 장은 이 틈을 메우는 장치들의 역사다 — 그리고 그 장치들이 하나씩 뚫렸던 기록이다.</p>
+<h2 id="_2">최소 해법 — 라이브 저장소 대신 스냅샷</h2>
+<p>가장 먼저 워커가 볼 수 있는 것부터 줄였다. 워커에게 프로젝트 전체 저장소를 열어주면 워커가 정말 지시받은 파일을 읽었는지 아니면 근처의 다른 파일·다른 워커의 이전 결과·승인 로그를 곁눈질해서 답을 짜맞췄는지 구분할 방법이 없다. 그래서 호출마다 새 <strong>스냅샷</strong>을 만들고 워커의 작업 디렉터리(cwd)를 그곳으로 정했다. cwd 변경은 파일 배치일 뿐 접근 제한이 아니다. 상위 경로·절대경로·네트워크로 나가지 못하게 하려면 별도 샌드박스나 OS 권한이 필요하다.</p>
+<p>이 스냅샷에는 딱 두 가지만 들어간다 — 워커 자신의 브리프 파일 하나, 그리고 <code>sources/</code> 디렉터리. 다른 워커의 브리프, 이미 나온 다른 워커의 결과, 승인 상태, 작업 로그는 전부 스냅샷 밖에 남는다. 워커가 "다른 리뷰어는 이미 통과시켰던데" 같은 답을 내놓을 수 없도록 그런 정보는 스냅샷에 넣지 않는다. 스냅샷 밖의 정보를 읽지 못하는지는 별도 격리 설정으로 검증해야 한다.</p>
+<p>이 파일은 <code>tools/build_worker_snapshot.py</code>에 둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;워커 스냅샷을 만든다: brief.md + sources/ 만 담고, 검증용 1회성 문자열을 심는다.&quot;&quot;&quot;</span>
+</span><span id="ln-3"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-4">
+</span><span id="ln-5"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">secrets</span>
+</span><span id="ln-6"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">shutil</span>
+</span><span id="ln-7"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-8"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-9">
+</span><span id="ln-10">
+</span><span id="ln-11"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">build_snapshot</span>(snapshot_root: Path, brief_text: <span style="color: #008000">str</span>, source_files: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">str</span>]) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+</span><span id="ln-12"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;snapshot_root 아래에 brief.md와 sources/를 만들고, 심어 넣은 nonce 값을 돌려준다.</span>
+</span><span id="ln-13">
+</span><span id="ln-14"><span style="color: #BA2121; font-style: italic">    source_files: {&quot;파일명&quot;: &quot;내용&quot;} — 워커에게 보여줄 원본만 여기 담는다.</span>
+</span><span id="ln-15"><span style="color: #BA2121; font-style: italic">    다른 워커의 결과·로그·승인 상태는 이 함수의 인자로도 받지 않는다.</span>
+</span><span id="ln-16"><span style="color: #BA2121; font-style: italic">    &quot;&quot;&quot;</span>
+</span><span id="ln-17">    reserved <span style="color: #666">=</span> <span style="color: #BA2121">&quot;source-access-proof.txt&quot;</span>
+</span><span id="ln-18">    <span style="color: #008000; font-weight: bold">for</span> name <span style="color: #A2F; font-weight: bold">in</span> source_files:
+</span><span id="ln-19">        rel <span style="color: #666">=</span> Path(name)
+</span><span id="ln-20">        <span style="color: #008000; font-weight: bold">if</span> rel<span style="color: #666">.</span>is_absolute() <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #BA2121">&quot;..&quot;</span> <span style="color: #A2F; font-weight: bold">in</span> rel<span style="color: #666">.</span>parts <span style="color: #A2F; font-weight: bold">or</span> name <span style="color: #A2F; font-weight: bold">in</span> {<span style="color: #BA2121">&quot;&quot;</span>, <span style="color: #BA2121">&quot;.&quot;</span>, reserved}:
+</span><span id="ln-21">            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">f&quot;허용되지 않는 소스 경로: </span><span style="color: #A45A77; font-weight: bold">{</span>name<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-22">    snapshot_root<span style="color: #666">.</span>mkdir(mode<span style="color: #666">=0o700</span>, parents<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, exist_ok<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>)
+</span><span id="ln-23">    sources_dir <span style="color: #666">=</span> snapshot_root <span style="color: #666">/</span> <span style="color: #BA2121">&quot;sources&quot;</span>
+</span><span id="ln-24">    sources_dir<span style="color: #666">.</span>mkdir(parents<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+</span><span id="ln-25">    snapshot_root<span style="color: #666">.</span>chmod(<span style="color: #666">0o700</span>)
+</span><span id="ln-26">
+</span><span id="ln-27">    nonce <span style="color: #666">=</span> secrets<span style="color: #666">.</span>token_hex(<span style="color: #666">16</span>)
+</span><span id="ln-28">    (snapshot_root <span style="color: #666">/</span> <span style="color: #BA2121">&quot;brief.md&quot;</span>)<span style="color: #666">.</span>write_text(brief_text, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-29">    <span style="color: #008000; font-weight: bold">for</span> name, content <span style="color: #A2F; font-weight: bold">in</span> source_files<span style="color: #666">.</span>items():
+</span><span id="ln-30">        target <span style="color: #666">=</span> sources_dir <span style="color: #666">/</span> name
+</span><span id="ln-31">        target<span style="color: #666">.</span>parent<span style="color: #666">.</span>mkdir(parents<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, exist_ok<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+</span><span id="ln-32">        target<span style="color: #666">.</span>write_text(content, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-33">    (sources_dir <span style="color: #666">/</span> <span style="color: #BA2121">&quot;source-access-proof.txt&quot;</span>)<span style="color: #666">.</span>write_text(nonce <span style="color: #666">+</span> <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-34">
+</span><span id="ln-35">    _assert_nonce_unique(snapshot_root, nonce)
+</span><span id="ln-36">    <span style="color: #008000; font-weight: bold">return</span> nonce
+</span><span id="ln-37">
+</span><span id="ln-38">
+</span><span id="ln-39"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_assert_nonce_unique</span>(snapshot_root: Path, nonce: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-40">    hits <span style="color: #666">=</span> <span style="color: #666">0</span>
+</span><span id="ln-41">    <span style="color: #008000; font-weight: bold">for</span> path <span style="color: #A2F; font-weight: bold">in</span> snapshot_root<span style="color: #666">.</span>rglob(<span style="color: #BA2121">&quot;*&quot;</span>):
+</span><span id="ln-42">        <span style="color: #008000; font-weight: bold">if</span> path<span style="color: #666">.</span>is_file():
+</span><span id="ln-43">            hits <span style="color: #666">+=</span> path<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>, errors<span style="color: #666">=</span><span style="color: #BA2121">&quot;replace&quot;</span>)<span style="color: #666">.</span>count(nonce)
+</span><span id="ln-44">    <span style="color: #008000; font-weight: bold">if</span> hits <span style="color: #666">!=</span> <span style="color: #666">1</span>:
+</span><span id="ln-45">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">f&quot;nonce가 스냅샷 전체에서 </span><span style="color: #A45A77; font-weight: bold">{</span>hits<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">번 발견됨 — 정확히 1번이어야 한다&quot;</span>)
+</span><span id="ln-46">
+</span><span id="ln-47">
+</span><span id="ln-48"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-49">    root <span style="color: #666">=</span> Path(sys<span style="color: #666">.</span>argv[<span style="color: #666">1</span>]) <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(sys<span style="color: #666">.</span>argv) <span style="color: #666">&gt;</span> <span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">else</span> Path(<span style="color: #BA2121">&quot;./worker-snapshot&quot;</span>)
+</span><span id="ln-50">    value <span style="color: #666">=</span> build_snapshot(
+</span><span id="ln-51">        root,
+</span><span id="ln-52">        brief_text<span style="color: #666">=</span>(
+</span><span id="ln-53">            <span style="color: #BA2121">&quot;이 브리프에 실린 파일들만 근거로 리뷰하라. 응답 첫 줄에</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-54">            <span style="color: #BA2121">&quot;SOURCE_ACCESS_PROOF:&lt;sources/source-access-proof.txt의 값&gt;을 그대로 적어라.&quot;</span>
+</span><span id="ln-55">        ),
+</span><span id="ln-56">        source_files<span style="color: #666">=</span>{<span style="color: #BA2121">&quot;target.py&quot;</span>: <span style="color: #BA2121">&quot;def add(a, b):</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">    return a + b</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>},
+</span><span id="ln-57">    )
+</span><span id="ln-58">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;snapshot 생성 완료: </span><span style="color: #A45A77; font-weight: bold">{</span>root<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (nonce는 출력하지 않음)&quot;</span>)
+</span></code></pre></div>
+
+<p>스냅샷에는 다른 워커 결과가 없으므로 실수로 함께 전달할 가능성을 줄인다. 접근 차단까지 성립하려면 별도 격리가 필요하다. 위 생성기는 기존 디렉터리를 덮어쓰거나 삭제하지 않고 새 경로만 받는다. 그런데 이렇게만 해서는 "응답이 스냅샷에만 둔 값을 알고 있는지"를 여전히 증명할 수 없다. 브리프만 읽고도 그럴듯한 리뷰를 쓰는 문제는 그대로 남는다.</p>
+<h2 id="1-nonce-source-access-prooftxt">1회성 nonce — source-access-proof.txt</h2>
+<p>그래서 스냅샷 안에 <strong>그 파일을 열어야만 알 수 있는 값</strong>을 심었다. 호출마다 새로 생성한 임의 문자열을 <code>sources/source-access-proof.txt</code>에 단 한 줄로 넣고 워커에게는 응답의 정해진 위치에 <code>SOURCE_ACCESS_PROOF:&lt;값&gt;</code> 형태로 그 줄을 정확히 그대로 되뱉으라고 요구했다. 위 스크립트의 <code>_assert_nonce_unique</code>가 강제하듯 이 값은 스냅샷 전체에서 정확히 한 번만 나타나야 한다 — 브리프에도, 다른 소스 파일에도 없어야 한다.</p>
+<p>이 파일은 <code>tools/verify_source_access.py</code>에 둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;워커 응답이 스냅샷을 실제로 열었다는 증거(1회성 nonce)를 담고 있는지 검사한다.&quot;&quot;&quot;</span>
+</span><span id="ln-3"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-4">
+</span><span id="ln-5"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-6"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
+</span><span id="ln-7"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-8">
+</span><span id="ln-9">
+</span><span id="ln-10"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">expected_nonce</span>(snapshot_root: Path) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+</span><span id="ln-11">    proof_file <span style="color: #666">=</span> snapshot_root <span style="color: #666">/</span> <span style="color: #BA2121">&quot;sources&quot;</span> <span style="color: #666">/</span> <span style="color: #BA2121">&quot;source-access-proof.txt&quot;</span>
+</span><span id="ln-12">    <span style="color: #008000; font-weight: bold">return</span> proof_file<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)<span style="color: #666">.</span>strip()
+</span><span id="ln-13">
+</span><span id="ln-14">
+</span><span id="ln-15"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">verify</span>(response_text: <span style="color: #008000">str</span>, snapshot_root: Path, required_line_index: <span style="color: #008000">int</span> <span style="color: #666">=</span> <span style="color: #666">0</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+</span><span id="ln-16">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">type</span>(required_line_index) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> required_line_index <span style="color: #666">&lt;</span> <span style="color: #666">0</span>:
+</span><span id="ln-17">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-18">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-19">        nonce <span style="color: #666">=</span> expected_nonce(snapshot_root)
+</span><span id="ln-20">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">OSError</span>:
+</span><span id="ln-21">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-22">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> re<span style="color: #666">.</span>fullmatch(<span style="color: #BA2121">r&quot;[0-9a-f]</span><span style="color: #A45A77; font-weight: bold">{32}</span><span style="color: #BA2121">&quot;</span>, nonce):
+</span><span id="ln-23">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-24">    lines <span style="color: #666">=</span> [ln <span style="color: #008000; font-weight: bold">for</span> ln <span style="color: #A2F; font-weight: bold">in</span> response_text<span style="color: #666">.</span>splitlines() <span style="color: #008000; font-weight: bold">if</span> ln<span style="color: #666">.</span>strip() <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;&quot;</span>]
+</span><span id="ln-25">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(lines) <span style="color: #666">&lt;=</span> required_line_index:
+</span><span id="ln-26">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-27">    expected_line <span style="color: #666">=</span> <span style="color: #BA2121">f&quot;SOURCE_ACCESS_PROOF:</span><span style="color: #A45A77; font-weight: bold">{</span>nonce<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-28">    actual_line <span style="color: #666">=</span> lines[required_line_index]<span style="color: #666">.</span>strip()
+</span><span id="ln-29">    <span style="color: #3D7B7B; font-style: italic"># &quot;포함&quot;이 아니라 그 줄 전체가 정확히 일치해야 한다.</span>
+</span><span id="ln-30">    <span style="color: #008000; font-weight: bold">return</span> actual_line <span style="color: #666">==</span> expected_line
+</span><span id="ln-31">
+</span><span id="ln-32">
+</span><span id="ln-33"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-34">    root <span style="color: #666">=</span> Path(sys<span style="color: #666">.</span>argv[<span style="color: #666">1</span>])
+</span><span id="ln-35">    response <span style="color: #666">=</span> Path(sys<span style="color: #666">.</span>argv[<span style="color: #666">2</span>])<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-36">    ok <span style="color: #666">=</span> verify(response, root)
+</span><span id="ln-37">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;PASS&quot;</span> <span style="color: #008000; font-weight: bold">if</span> ok <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;FAIL&quot;</span>)
+</span><span id="ln-38">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span> <span style="color: #008000; font-weight: bold">if</span> ok <span style="color: #008000; font-weight: bold">else</span> <span style="color: #666">1</span>)
+</span></code></pre></div>
+
+<p>왜 "키워드가 포함되면 통과"가 아니라 "정확히 한 줄, 정확한 위치"여야 하는가. 처음엔 느슨하게 만들고 싶었다 — 응답 어딘가에 그 값이 등장하기만 하면 통과시키는 식으로. 그런데 그렇게 짜면 세 가지가 동시에 무너진다.</p>
+<p>첫째, nonce 값 자체를 브리프에 넣으면 proof 파일을 열지 않아도 답할 수 있다. 브리프에는 경로와 응답 형식만 넣고 실제 값은 넣지 않는다. 줄 전체를 비교하는 것만으로 유출된 값의 출처를 구분할 수는 없다.</p>
+<p>둘째, 부분 일치로는 서로 다른 값을 구별하지 못한다. 값이 길어지거나 응답이 장황해지면 부분 문자열 일치에 걸릴 자리만 늘어난다. 정확히 어느 값과 일치했는지, 몇 번 일치했는지를 셀 수 없으면 "읽었다"는 판정이 흐려진다.</p>
+<p>셋째, 정해진 위치를 요구하면 응답 형식에서 스냅샷을 염두에 두고 작성됐다는 신호까지 함께 검증하게 된다. "아무 데나 있으면 됨"이 아니라 "이 응답은 이 스냅샷을 향해 쓰였다"는 것을 형식으로 강제하는 것이다. 실전 리뷰 프롬프트에서는 응답 형식을 헤더 순서와 필수 문구 위치까지 고정해두는 편이 안전하다 — 위치가 자유로울수록 나중에 끼워 맞출 여지가 늘어난다.</p>
+<h2 id="nonce">그런데 nonce는 스냅샷을 읽었다는 증거일 뿐이다</h2>
+<p>nonce를 넣고 나서 한동안은 이걸로 됐다고 생각했다. 그런데 이 값은 딱 하나만 증명했다 — <strong>응답이 해당 nonce 값을 알고 있다</strong>는 것. 값이 유출되지 않았다는 전제에서 proof 파일 접근의 정황 증거가 되지만, 다른 소스 파일을 읽고 이해했다는 증거는 아니다. 리뷰어는 여전히 진짜 코드를 보지 못했다. 스냅샷의 <code>sources/</code>는 브리프를 쓴 사람이 손으로 골라 담은 발췌본이다. 발췌가 잘못됐거나, 오래됐거나, 리뷰에 불리한 부분을 빼먹었다면 리뷰어는 그것도 모른 채 발췌본만 보고 통과시킨다.</p>
+<p>리뷰어에게 실제 코드를 보여주려면 저장소를 직접 읽을 수 있는 두 번째 읽기 경로가 필요했다 — 검토 대상 브랜치를 얕게 복제한 읽기 전용 클론이다. 그런데 이 클론을 여는 순간 새 구멍이 열렸다. 읽을 수 있는 파일 시스템이 하나 더 생겼으니 nonce로 막았던 것과 같은 종류의 실수(느슨한 검사, 위치 미고정, 값의 유일성 미검증)가 더 크고 훨씬 통제하기 어려운 이 표면에서 그대로 반복될 수 있게 됐다.</p>
+<h2 id="_3">읽을 권한을 준 것과 건네준 것은 다르다</h2>
+<p>클론을 만들고 워커의 샌드박스 정책에 클론 경로를 읽을 수 있는 권한을 추가했다. 권한 설정만 보면 완결된 기능처럼 보였다. 그런데 실제로 돌려보니 리뷰어 세 명 중 두 명에게는 이 기능이 몇 주 동안 완전히 헛돌았다.</p>
+<p>알고 보니 간단한 이유였다. 클론은 호출마다 임시 디렉터리 아래 새 이름으로 만들어졌다. 그 경로에 읽기 권한은 열려 있었지만 경로가 <strong>정확히 어디인지</strong> 워커에게 알려주는 채널이 없었다. 셸이 없는 리뷰어는 그 이름을 스스로 찾아낼 수 없다 — <code>ls</code>도 못 치고 디렉터리 인자를 받지도 않는다. "권한이 있다"고 해서 "접근할 방법을 안다"는 뜻은 아니다. 특히 명령줄 인자 하나 받지 못하는 워커에게는 둘이 완전히 별개다.</p>
+<p>그래서 경로를 스냅샷 루트에 파일로 적어 두는 식으로 고쳤다 — 워커가 이미 열 수 있다고 알고 있는 유일한 장소, 즉 브리프 옆이다. 그리고 검증기가 그 파일이 있는지, 안에 적힌 경로가 유효한지 확인하게 했다. 이걸 빠뜨리면 기능이 조용히 아무 일도 하지 않는다 — 에러도 안 나고 로그에 실패라고도 안 찍힌다. 그냥 리뷰어가 클론을 한 번도 열어보지 못한 채로 리뷰가 끝날 뿐이다.</p>
+<p>이 파일은 <code>tools/write_view_handoff.py</code>에 둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;읽기전용 뷰(클론)의 실제 경로를 스냅샷 루트에 적어 넘긴다.&quot;&quot;&quot;</span>
+</span><span id="ln-3"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-4">
+</span><span id="ln-5"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-6">
+</span><span id="ln-7">
+</span><span id="ln-8"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">write_view_handoff</span>(snapshot_root: Path, view_path: Path) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-9">    view_path <span style="color: #666">=</span> view_path<span style="color: #666">.</span>resolve()
+</span><span id="ln-10">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> view_path<span style="color: #666">.</span>is_dir():
+</span><span id="ln-11">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">f&quot;뷰 경로가 존재하지 않음: </span><span style="color: #A45A77; font-weight: bold">{</span>view_path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-12">    (snapshot_root <span style="color: #666">/</span> <span style="color: #BA2121">&quot;repo-view-path.txt&quot;</span>)<span style="color: #666">.</span>write_text(<span style="color: #008000">str</span>(view_path) <span style="color: #666">+</span> <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-13">
+</span><span id="ln-14">
+</span><span id="ln-15"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">verify_view_handoff</span>(snapshot_root: Path) <span style="color: #666">-&gt;</span> Path:
+</span><span id="ln-16">    handoff <span style="color: #666">=</span> snapshot_root <span style="color: #666">/</span> <span style="color: #BA2121">&quot;repo-view-path.txt&quot;</span>
+</span><span id="ln-17">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> handoff<span style="color: #666">.</span>exists():
+</span><span id="ln-18">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">&quot;repo-view-path.txt 없음 — 뷰 경로를 워커에게 건네지 않았다&quot;</span>)
+</span><span id="ln-19">    value <span style="color: #666">=</span> handoff<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)<span style="color: #666">.</span>strip()
+</span><span id="ln-20">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> value <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> Path(value)<span style="color: #666">.</span>is_absolute():
+</span><span id="ln-21">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">&quot;뷰 경로는 비어 있지 않은 절대경로여야 한다&quot;</span>)
+</span><span id="ln-22">    view_path <span style="color: #666">=</span> Path(value)
+</span><span id="ln-23">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> view_path<span style="color: #666">.</span>is_dir():
+</span><span id="ln-24">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">f&quot;기록된 뷰 경로가 실존하지 않음: </span><span style="color: #A45A77; font-weight: bold">{</span>view_path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-25">    <span style="color: #008000; font-weight: bold">return</span> view_path
+</span></code></pre></div>
+
+<h2 id="challenge-response">challenge-response — 뷰 안에만 있는 줄로 묻고 답하게 한다</h2>
+<p>경로를 건네고 나니 다음 질문이 이어졌다. 경로를 받은 것과 그 안의 내용을 읽은 것도 별개다. nonce가 proof 값의 보유를 확인했듯, 이번엔 "뷰를 실제로 읽었는가"를 증명할 장치가 필요했다. 방식은 비슷하다 — 뷰 안에만 존재하는 사실을 골라 질문하고 정확히 그 답을 요구한다. 다만 이번엔 "정답을 어떻게 고를 것인가"부터가 훨씬 어려운 문제였다. 순서대로 네 번 뚫렸다.</p>
+<p><strong>(a) 파일 안에서만 유일한 줄로는 부족하다.</strong> 처음엔 "이 줄이 이 파일 안에서 딱 한 번만 나오는가"만 확인하고 후보로 삼았다. 그런데 같은 줄이 뷰의 다른 파일에도 그대로 있으면 질문받은 파일을 열어보지 않고 다른 파일만 봤어도 답할 수 있다. 그래서 유일성은 <strong>뷰 전체</strong>를 기준으로 다시 계산해야 했다 — 파일 하나 안에서만 따진 유일성이 아니라 워커가 접근할 수 있는 모든 파일을 통틀어 따진 유일성.</p>
+<p><strong>(b) 부분 문자열 비교는 한 줄이 다른 줄에 포함될 때 무너진다.</strong> 정답 판정을 "이 텍스트를 포함하는가"로 짜면 한 후보 줄이 다른 후보 줄의 일부로 들어갈 때 답 하나로 질문 두 개가 동시에 맞아버린다. 서로 다른 두 가지를 확인하려던 것이 같은 내용을 중복해서 센 꼴이 된다. 그래서 비교는 반드시 줄 전체의 정확한 일치여야 한다 — 포함이 아니라 동일.</p>
+<p><strong>(c) 질문 자체가 답을 노출하는 경우가 있다.</strong> 문서 안에 "질문 형식을 설명하는 줄"이 들어 있을 수 있다 — 예컨대 이 챌린지가 렌더링하는 질문 문구와 똑같은 패턴의 문장이 뷰의 어느 문서에 실려 있는 경우다. 이런 줄을 후보로 뽑으면 질문을 쓰는 순간 질문 문장이 이미 답을 담게 된다. 그래서 후보를 확정하기 전에 질문 문장을 먼저 렌더링해보고 질문과 후보 줄이 서로 포함 관계라면 후보에서 제외해야 했다.</p>
+<p><strong>(d) 3문 3정답은 성실한 리뷰어를 거부했다.</strong> 처음엔 세 문제를 내고 셋 다 맞아야 통과로 잡았다. 그런데 실제로 뷰를 꼼꼼히 읽은 리뷰어가 번호 매겨진 목록에서 줄 하나를 잘못 짚어 셋 중 하나를 틀렸다는 이유로 통째로 거부당했다. 정직하게 일한 결과가 통제 장치 때문에 버려진 것이다. 기준을 3문 2정답으로 낮췄다 — 실수 한 번은 허용하되 절반 이상 틀리면 여전히 거부한다. <strong>정직한 작업을 거부하는 통제는 결국 꺼진다.</strong> 게이트가 너무 엄격해서 성실한 결과까지 잡아내면 사람들은 게이트를 신뢰하는 대신 우회하거나 꺼버린다. 그렇다고 느슨하게 만들라는 말은 아니다. 얼마나 엄격하게 할지 정할 때 실제로 잡아야 할 것(조작)과 감내해야 할 것(실수)을 구별하지 못하면 그 통제는 오래 못 간다.</p>
+<p>이 파일은 <code>tools/challenge_response.py</code>에 둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;읽기전용 뷰를 실제로 읽었는지 묻고 답하게 하는 challenge-response 검사기.&quot;&quot;&quot;</span>
+</span><span id="ln-3"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-4">
+</span><span id="ln-5"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">random</span>
+</span><span id="ln-6"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
+</span><span id="ln-7"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-8">
+</span><span id="ln-9">MIN_LINE_LENGTH <span style="color: #666">=</span> <span style="color: #666">20</span>
+</span><span id="ln-10">QUESTION_COUNT <span style="color: #666">=</span> <span style="color: #666">3</span>
+</span><span id="ln-11">PASS_THRESHOLD <span style="color: #666">=</span> <span style="color: #666">2</span>  <span style="color: #3D7B7B; font-style: italic"># 3문 중 2정답 — 3정답을 요구했다가 정직한 리뷰어를 거부한 적이 있다</span>
+</span><span id="ln-12">
+</span><span id="ln-13">QUESTION_LINE_RE <span style="color: #666">=</span> re<span style="color: #666">.</span>compile(<span style="color: #BA2121">r&quot;^(?P&lt;idx&gt;\d+)\. QUOTE_LINE (?P&lt;path&gt;.+):(?P&lt;lineno&gt;\d+)$&quot;</span>)
+</span><span id="ln-14">
+</span><span id="ln-15">
+</span><span id="ln-16"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_iter_view_lines</span>(view_root: Path):
+</span><span id="ln-17">    <span style="color: #008000; font-weight: bold">for</span> path <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">sorted</span>(view_root<span style="color: #666">.</span>rglob(<span style="color: #BA2121">&quot;*&quot;</span>)):
+</span><span id="ln-18">        <span style="color: #008000; font-weight: bold">if</span> path<span style="color: #666">.</span>is_symlink() <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> path<span style="color: #666">.</span>is_file() <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> path<span style="color: #666">.</span>resolve()<span style="color: #666">.</span>is_relative_to(view_root<span style="color: #666">.</span>resolve()):
+</span><span id="ln-19">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-20">        rel <span style="color: #666">=</span> path<span style="color: #666">.</span>relative_to(view_root)
+</span><span id="ln-21">        <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-22">            text <span style="color: #666">=</span> path<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>, errors<span style="color: #666">=</span><span style="color: #BA2121">&quot;strict&quot;</span>)
+</span><span id="ln-23">        <span style="color: #008000; font-weight: bold">except</span> (<span style="color: #CB3F38; font-weight: bold">UnicodeDecodeError</span>, <span style="color: #CB3F38; font-weight: bold">OSError</span>):
+</span><span id="ln-24">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-25">        <span style="color: #008000; font-weight: bold">for</span> lineno, line <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">enumerate</span>(text<span style="color: #666">.</span>splitlines(), start<span style="color: #666">=1</span>):
+</span><span id="ln-26">            stripped <span style="color: #666">=</span> line<span style="color: #666">.</span>strip()
+</span><span id="ln-27">            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(stripped) <span style="color: #666">&gt;=</span> MIN_LINE_LENGTH:
+</span><span id="ln-28">                <span style="color: #008000; font-weight: bold">yield</span> rel, lineno, stripped
+</span><span id="ln-29">
+</span><span id="ln-30">
+</span><span id="ln-31"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_build_exclusion_corpus</span>(<span style="color: #666">*</span>handed_dirs: Path) <span style="color: #666">-&gt;</span> <span style="color: #008000">set</span>[<span style="color: #008000">str</span>]:
+</span><span id="ln-32"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;워커가 이미 받은 모든 텍스트(brief + sources) — 정답 후보에서 제외한다.&quot;&quot;&quot;</span>
+</span><span id="ln-33">    corpus: <span style="color: #008000">set</span>[<span style="color: #008000">str</span>] <span style="color: #666">=</span> <span style="color: #008000">set</span>()
+</span><span id="ln-34">    <span style="color: #008000; font-weight: bold">for</span> handed <span style="color: #A2F; font-weight: bold">in</span> handed_dirs:
+</span><span id="ln-35">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> handed<span style="color: #666">.</span>exists():
+</span><span id="ln-36">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-37">        <span style="color: #008000; font-weight: bold">for</span> path <span style="color: #A2F; font-weight: bold">in</span> handed<span style="color: #666">.</span>rglob(<span style="color: #BA2121">&quot;*&quot;</span>):
+</span><span id="ln-38">            <span style="color: #008000; font-weight: bold">if</span> path<span style="color: #666">.</span>is_file():
+</span><span id="ln-39">                <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-40">                    text <span style="color: #666">=</span> path<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>, errors<span style="color: #666">=</span><span style="color: #BA2121">&quot;strict&quot;</span>)
+</span><span id="ln-41">                <span style="color: #008000; font-weight: bold">except</span> (<span style="color: #CB3F38; font-weight: bold">UnicodeDecodeError</span>, <span style="color: #CB3F38; font-weight: bold">OSError</span>):
+</span><span id="ln-42">                    <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-43">                corpus<span style="color: #666">.</span>update(ln<span style="color: #666">.</span>strip() <span style="color: #008000; font-weight: bold">for</span> ln <span style="color: #A2F; font-weight: bold">in</span> text<span style="color: #666">.</span>splitlines() <span style="color: #008000; font-weight: bold">if</span> ln<span style="color: #666">.</span>strip())
+</span><span id="ln-44">    <span style="color: #008000; font-weight: bold">return</span> corpus
+</span><span id="ln-45">
+</span><span id="ln-46">
+</span><span id="ln-47"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_render_question</span>(rel_path: Path, lineno: <span style="color: #008000">int</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+</span><span id="ln-48">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">f&quot;QUOTE_LINE </span><span style="color: #A45A77; font-weight: bold">{</span>rel_path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:</span><span style="color: #A45A77; font-weight: bold">{</span>lineno<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-49">
+</span><span id="ln-50">
+</span><span id="ln-51"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">select_challenge</span>(
+</span><span id="ln-52">    view_root: Path, handed_dirs: <span style="color: #008000">list</span>[Path], count: <span style="color: #008000">int</span> <span style="color: #666">=</span> QUESTION_COUNT, seed: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+</span><span id="ln-53">) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>[<span style="color: #008000">tuple</span>[Path, <span style="color: #008000">int</span>, <span style="color: #008000">str</span>]]:
+</span><span id="ln-54"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;뷰에서만 나오고, 뷰 전체에서 유일하고, 질문 자체가 답을 드러내지 않는 줄을 count개 고른다.&quot;&quot;&quot;</span>
+</span><span id="ln-55">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">type</span>(count) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> count <span style="color: #666">&lt;</span> <span style="color: #666">1</span>:
+</span><span id="ln-56">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;count는 양의 정수여야 한다&quot;</span>)
+</span><span id="ln-57">    by_text: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">list</span>[<span style="color: #008000">tuple</span>[Path, <span style="color: #008000">int</span>]]] <span style="color: #666">=</span> {}
+</span><span id="ln-58">    <span style="color: #008000; font-weight: bold">for</span> rel, lineno, text <span style="color: #A2F; font-weight: bold">in</span> _iter_view_lines(view_root):
+</span><span id="ln-59">        by_text<span style="color: #666">.</span>setdefault(text, [])<span style="color: #666">.</span>append((rel, lineno))
+</span><span id="ln-60">
+</span><span id="ln-61">    exclusion <span style="color: #666">=</span> _build_exclusion_corpus(<span style="color: #666">*</span>handed_dirs)
+</span><span id="ln-62">
+</span><span id="ln-63">    candidates: <span style="color: #008000">list</span>[<span style="color: #008000">tuple</span>[Path, <span style="color: #008000">int</span>, <span style="color: #008000">str</span>]] <span style="color: #666">=</span> []
+</span><span id="ln-64">    <span style="color: #008000; font-weight: bold">for</span> text, locations <span style="color: #A2F; font-weight: bold">in</span> by_text<span style="color: #666">.</span>items():
+</span><span id="ln-65">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(locations) <span style="color: #666">!=</span> <span style="color: #666">1</span>:
+</span><span id="ln-66">            <span style="color: #008000; font-weight: bold">continue</span>  <span style="color: #3D7B7B; font-style: italic"># 파일 안에서만 유일한 게 아니라, 뷰 전체에서 유일해야 한다</span>
+</span><span id="ln-67">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">any</span>(text <span style="color: #A2F; font-weight: bold">in</span> line <span style="color: #008000; font-weight: bold">for</span> line <span style="color: #A2F; font-weight: bold">in</span> exclusion):
+</span><span id="ln-68">            <span style="color: #008000; font-weight: bold">continue</span>  <span style="color: #3D7B7B; font-style: italic"># 워커가 이미 받은 내용에도 있으면 정답이 아니다</span>
+</span><span id="ln-69">        rel, lineno <span style="color: #666">=</span> locations[<span style="color: #666">0</span>]
+</span><span id="ln-70">        question <span style="color: #666">=</span> _render_question(rel, lineno)
+</span><span id="ln-71">        <span style="color: #008000; font-weight: bold">if</span> question <span style="color: #A2F; font-weight: bold">in</span> text <span style="color: #A2F; font-weight: bold">or</span> text <span style="color: #A2F; font-weight: bold">in</span> question:
+</span><span id="ln-72">            <span style="color: #008000; font-weight: bold">continue</span>  <span style="color: #3D7B7B; font-style: italic"># 질문 문장이 후보 줄 안에 이미 있으면 자기지시적이라 버린다</span>
+</span><span id="ln-73">        candidates<span style="color: #666">.</span>append((rel, lineno, text))
+</span><span id="ln-74">
+</span><span id="ln-75">    rng <span style="color: #666">=</span> random<span style="color: #666">.</span>Random(seed)
+</span><span id="ln-76">    rng<span style="color: #666">.</span>shuffle(candidates)
+</span><span id="ln-77">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(candidates) <span style="color: #666">&lt;</span> count:
+</span><span id="ln-78">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">RuntimeError</span>(<span style="color: #BA2121">f&quot;뷰에서 유일하고 안전한 줄을 </span><span style="color: #A45A77; font-weight: bold">{</span>count<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">개 찾지 못함 (가용 </span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">len</span>(candidates)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">개)&quot;</span>)
+</span><span id="ln-79">    <span style="color: #008000; font-weight: bold">return</span> candidates[:count]
+</span><span id="ln-80">
+</span><span id="ln-81">
+</span><span id="ln-82"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">write_challenge</span>(
+</span><span id="ln-83">    view_root: Path, handed_dirs: <span style="color: #008000">list</span>[Path], out_path: Path, seed: <span style="color: #008000">int</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+</span><span id="ln-84">) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-85">    picked <span style="color: #666">=</span> select_challenge(view_root, handed_dirs, seed<span style="color: #666">=</span>seed)
+</span><span id="ln-86">    lines <span style="color: #666">=</span> [
+</span><span id="ln-87">        <span style="color: #BA2121">&quot;다음 각 질문에, 지정된 파일의 지정된 줄 내용을 정확히 그대로 답하라.&quot;</span>,
+</span><span id="ln-88">        <span style="color: #BA2121">&quot;형식: ANSWER_&lt;번호&gt;: &lt;줄 내용 그대로&gt;&quot;</span>,
+</span><span id="ln-89">        <span style="color: #BA2121">&quot;&quot;</span>,
+</span><span id="ln-90">    ]
+</span><span id="ln-91">    <span style="color: #008000; font-weight: bold">for</span> i, (rel, lineno, _text) <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">enumerate</span>(picked, start<span style="color: #666">=1</span>):
+</span><span id="ln-92">        lines<span style="color: #666">.</span>append(<span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>i<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">. </span><span style="color: #A45A77; font-weight: bold">{</span>_render_question(rel,<span style="color: #BBB"> </span>lineno)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-93">    out_path<span style="color: #666">.</span>write_text(<span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span><span style="color: #666">.</span>join(lines) <span style="color: #666">+</span> <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-94">
+</span><span id="ln-95">
+</span><span id="ln-96"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">verify_challenge</span>(
+</span><span id="ln-97">    view_root: Path, out_path: Path, response_text: <span style="color: #008000">str</span>, pass_threshold: <span style="color: #008000">int</span> <span style="color: #666">=</span> PASS_THRESHOLD
+</span><span id="ln-98">) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+</span><span id="ln-99"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;답은 저장된 값과 비교하지 않는다 — 매번 고정된 읽기 전용 뷰에서 다시 계산한다.&quot;&quot;&quot;</span>
+</span><span id="ln-100">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">type</span>(pass_threshold) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #666">1</span> <span style="color: #666">&lt;=</span> pass_threshold <span style="color: #666">&lt;=</span> QUESTION_COUNT:
+</span><span id="ln-101">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-102">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-103">        questions <span style="color: #666">=</span> []
+</span><span id="ln-104">        <span style="color: #008000; font-weight: bold">for</span> line <span style="color: #A2F; font-weight: bold">in</span> out_path<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)<span style="color: #666">.</span>splitlines():
+</span><span id="ln-105">            match <span style="color: #666">=</span> QUESTION_LINE_RE<span style="color: #666">.</span>fullmatch(line<span style="color: #666">.</span>strip())
+</span><span id="ln-106">            <span style="color: #008000; font-weight: bold">if</span> match:
+</span><span id="ln-107">                questions<span style="color: #666">.</span>append(match)
+</span><span id="ln-108">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(questions) <span style="color: #666">!=</span> QUESTION_COUNT <span style="color: #A2F; font-weight: bold">or</span> {m[<span style="color: #BA2121">&quot;idx&quot;</span>] <span style="color: #008000; font-weight: bold">for</span> m <span style="color: #A2F; font-weight: bold">in</span> questions} <span style="color: #666">!=</span> {<span style="color: #BA2121">&quot;1&quot;</span>, <span style="color: #BA2121">&quot;2&quot;</span>, <span style="color: #BA2121">&quot;3&quot;</span>}:
+</span><span id="ln-109">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-110">        locations <span style="color: #666">=</span> <span style="color: #008000">set</span>()
+</span><span id="ln-111">        expected_values <span style="color: #666">=</span> <span style="color: #008000">set</span>()
+</span><span id="ln-112">        correct <span style="color: #666">=</span> <span style="color: #666">0</span>
+</span><span id="ln-113">        root <span style="color: #666">=</span> view_root<span style="color: #666">.</span>resolve()
+</span><span id="ln-114">        <span style="color: #008000; font-weight: bold">for</span> m <span style="color: #A2F; font-weight: bold">in</span> questions:
+</span><span id="ln-115">            rel <span style="color: #666">=</span> Path(m[<span style="color: #BA2121">&quot;path&quot;</span>])
+</span><span id="ln-116">            lineno <span style="color: #666">=</span> <span style="color: #008000">int</span>(m[<span style="color: #BA2121">&quot;lineno&quot;</span>])
+</span><span id="ln-117">            path <span style="color: #666">=</span> (root <span style="color: #666">/</span> rel)<span style="color: #666">.</span>resolve()
+</span><span id="ln-118">            <span style="color: #008000; font-weight: bold">if</span> rel<span style="color: #666">.</span>is_absolute() <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #BA2121">&quot;..&quot;</span> <span style="color: #A2F; font-weight: bold">in</span> rel<span style="color: #666">.</span>parts <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> path<span style="color: #666">.</span>is_relative_to(root) <span style="color: #A2F; font-weight: bold">or</span> lineno <span style="color: #666">&lt;</span> <span style="color: #666">1</span>:
+</span><span id="ln-119">                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-120">            location <span style="color: #666">=</span> (path, lineno)
+</span><span id="ln-121">            <span style="color: #008000; font-weight: bold">if</span> location <span style="color: #A2F; font-weight: bold">in</span> locations:
+</span><span id="ln-122">                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-123">            locations<span style="color: #666">.</span>add(location)
+</span><span id="ln-124">            expected <span style="color: #666">=</span> path<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)<span style="color: #666">.</span>splitlines()[lineno <span style="color: #666">-</span> <span style="color: #666">1</span>]<span style="color: #666">.</span>strip()
+</span><span id="ln-125">            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(expected) <span style="color: #666">&lt;</span> MIN_LINE_LENGTH <span style="color: #A2F; font-weight: bold">or</span> expected <span style="color: #A2F; font-weight: bold">in</span> expected_values:
+</span><span id="ln-126">                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-127">            expected_values<span style="color: #666">.</span>add(expected)
+</span><span id="ln-128">            answers <span style="color: #666">=</span> [ln<span style="color: #666">.</span>strip() <span style="color: #008000; font-weight: bold">for</span> ln <span style="color: #A2F; font-weight: bold">in</span> response_text<span style="color: #666">.</span>splitlines() <span style="color: #008000; font-weight: bold">if</span> ln<span style="color: #666">.</span>strip()<span style="color: #666">.</span>startswith(<span style="color: #BA2121">f&quot;ANSWER_</span><span style="color: #A45A77; font-weight: bold">{</span>m[<span style="color: #BA2121">&#39;idx&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">:&quot;</span>)]
+</span><span id="ln-129">            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(answers) <span style="color: #666">&gt;</span> <span style="color: #666">1</span>:
+</span><span id="ln-130">                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-131">            <span style="color: #008000; font-weight: bold">if</span> answers <span style="color: #A2F; font-weight: bold">and</span> answers[<span style="color: #666">0</span>]<span style="color: #666">.</span>split(<span style="color: #BA2121">&quot;:&quot;</span>, <span style="color: #666">1</span>)[<span style="color: #666">1</span>]<span style="color: #666">.</span>strip() <span style="color: #666">==</span> expected:
+</span><span id="ln-132">                correct <span style="color: #666">+=</span> <span style="color: #666">1</span>
+</span><span id="ln-133">        <span style="color: #008000; font-weight: bold">return</span> correct <span style="color: #666">&gt;=</span> pass_threshold
+</span><span id="ln-134">    <span style="color: #008000; font-weight: bold">except</span> (<span style="color: #CB3F38; font-weight: bold">OSError</span>, <span style="color: #CB3F38; font-weight: bold">ValueError</span>, <span style="color: #CB3F38; font-weight: bold">IndexError</span>):
+</span><span id="ln-135">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span></code></pre></div>
+
+<p>질문 파일과 뷰는 신뢰된 조정자가 만들고 워커는 수정할 수 없어야 한다. 뷰는 검토할 커밋·파일 해시로 고정하고 생성부터 검증까지 바뀌지 않게 유지한다. 아래 코드는 그 OS 격리나 커밋 고정을 구현하지 않는다. 고정되지 않은 뷰를 다시 읽는 것만으로 최초 질문의 입력과 같다고 증명할 수 없다.</p>
+<p>답을 검증할 때 저장해둔 정답과 비교하지 않고 매번 <code>view_root</code>에서 다시 읽어 계산한다는 점을 눈여겨봐야 한다. 정답을 질문과 함께 봉투에 담아 보내면 그 봉투가 위조·재사용될 수 있는 새로운 표면이 된다. 질문과 답을 같은 곳에 나란히 두기보다 질문은 저장하되 답은 고정된 뷰에서 다시 계산한다. 그 사이 뷰가 달라졌으면 해당 검증은 무효다.</p>
+<h2 id="_4">이 방식이 증명하지 못하는 것</h2>
+<p>이 장치의 경계는 정직하게 밝혀 둬야 한다. 이 challenge-response는 "이 격리 조건 아래서 그 줄들이 산출됐다"는 것을 증명할 뿐 "바로 이 사본을 열어서 그 줄을 봤다"는 것까지 증명하지는 않는다. 미묘하지만 가볍게 넘길 차이가 아니다.</p>
+<p>이 장치는 한 가지를 전제로 한다. 리뷰어에게 셸도, 저장소를 조작할 도구도 없다면 질문의 정답을 스스로 계산해낼 방법은 뷰를 여는 것 말고는 없다. 그런데 리뷰어가 같은 코드의 <strong>다른 공개된 사본</strong>을 이미 어떤 경로로든 알고 있었다면 — 예컨대 저장소가 공개돼 있어서 사전 지식으로 갖고 있었거나 전혀 다른 경로로 같은 내용을 이미 본 적이 있었다면 — 이 검사는 그 사전 지식과 "지금 이 뷰를 열어서 읽었다"를 구분하지 못한다. 이 장치는 격리된 조건에서 나온 산출까지만 검증한다. 인식론적으로 완전한 출처 증명에는 미치지 못한다.</p>
+<p>이 책의 신뢰도는 과대주장하지 않는 데 달려 있다. 이 검사를 넣고 여러 라운드를 돌리면서 문서에는 "증명됐다"고 적혀 있었지만 실제로는 아무도 확인하지 않은 채 방치된 주장이 여러 번 나왔다 — 코드는 존재하는데 호출자가 없거나, 검사 로직은 있는데 재도출이 아니라 저장된 값과 자기 자신을 비교하고 있거나. 그때마다 같은 방법으로 고쳤다. 그 장치가 무엇을 보장하고 무엇을 보장하지 않는지를 문서에 다시 정확히 적었다.</p>
+<h2 id="_5">직접 확인하는 법</h2>
+<p>위 코드 네 벌을 지정된 파일에 저장하고 다음 여섯 가지를 일부러 깨뜨려서 빨간불이 켜지는지 확인하라. 통과만 확인하고 끝내면 검증한 게 아니다.</p>
+<ol>
+<li><strong>nonce 없는 응답을 넣어본다.</strong> <code>verify_source_access.py</code>에 첫 줄이 <code>SOURCE_ACCESS_PROOF:...</code>가 아닌, 그럴듯하지만 무관한 리뷰 텍스트를 넣어라. <code>FAIL</code>이 나와야 정상이다.</li>
+<li><strong>검사를 일부러 느슨하게 바꿔본다.</strong> nonce 값을 리뷰 문단 중간에 파묻은 응답 — 예컨대 <code>코드 세 곳을 확인했고 문제없음. 참고로 SOURCE_ACCESS_PROOF:&lt;값&gt;도 확인함.</code> — 을 만들어라. 원래의 <code>verify()</code>(전체 줄 일치)는 이걸 거부해야 정상이다. 이제 검사를 <code>nonce in response_text</code>로 느슨하게 바꿔서 같은 응답을 다시 넣어보라 — 통과해버릴 것이다. 형식을 지키지 않은 응답, 즉 그 자리에서 진지하게 다시 옮겨 적지 않고 어딘가에 끼워 넣기만 한 응답도 통과한다. 그래서 "포함이면 통과"는 위험하다. 원래대로 되돌려라.</li>
+<li><strong><code>repo-view-path.txt</code>를 지워본다.</strong> 클론은 만들어져 있고 권한도 열려 있는데 이 파일만 없는 상태를 만들어라. <code>verify_view_handoff()</code>가 <code>RuntimeError</code>를 던지는지 확인한다 — 던지지 않는다면 권한과 전달을 혼동하고 있는 것이다.</li>
+<li><strong>후보 줄을 뷰의 두 파일에 똑같이 복제해본다.</strong> <code>select_challenge()</code>를 다시 실행해 그 줄이 후보 목록에서 빠지는지 확인한다 — <code>len(locations) != 1</code> 체크가 살아있다면 빠져야 한다.</li>
+<li><strong>정답의 일부만 잘라서 답해본다.</strong> <code>verify_challenge()</code>에 기대값의 앞부분만 담은 답을 넣어라. 부분 일치가 아니라 전체 일치를 요구하므로 오답 처리돼야 한다.</li>
+<li><strong>3문 중 2문만 정확히 답하고 하나는 살짝 틀리게 넣어본다.</strong> 통과해야 정상이다(임계값 2). 이어서 1문만 맞혀본다 — 이번엔 거부돼야 정상이다. 둘 다 확인해야 임계값이 양쪽 방향으로 제대로 작동하는지 안다.</li>
+</ol>
+<p>여섯 개 중 하나라도 기대와 다르게 나오면 이 장에서 설명한 사고 중 하나가 그 형태로 재발한 것이다.</p>
+<hr />
+</article>
+<aside class="ask">
+<p>따라 하다 막히면 Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> 에 댓글로 남겨 달라. 하나씩 본다.</p>
+</aside>
+</main>
+<nav class="pager"><a class="prev" href="../ch06-dangerous-commands/">← 6장 — 위험한 명령을 안전하게 위임하기</a><a class="next" href="../ch08-proving-the-guards/">8장 — 가드가 진짜 작동하는지 증명하기 →</a></nav>
+<footer class="site">
+<p>이 책은 무료다. 받은 사람은 누구나 읽고 나눠도 된다. 출처만 밝혀 달라.</p>
+<p>쓴 사람: Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> — 하루 한 편씩 나눠 올린다. 책에 실린 코드는 <a href="https://github.com/Gforce10-design/ai-work-evidence">GitHub</a>에 있고 MIT 라이선스다. <a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF 받기</a></p>
+</footer>
+</body>
+</html>

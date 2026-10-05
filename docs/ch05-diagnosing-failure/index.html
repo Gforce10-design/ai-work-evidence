@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5장 — 실패했을 때 무엇을 올릴 것인가 | AI가 일했다는 증거</title>
+<meta name="description" content="실패하면 반사적으로 effort 를 올린다. 또 실패한다. 원인은 딴 데 있었다. 붙일 장치: 실패를 7가지로 나누고 종류마다 다른 손잡이를 당기는 진단표.">
+<link rel="canonical" href="https://gforce10-design.github.io/ai-work-evidence/ch05-diagnosing-failure/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI가 일했다는 증거">
+<meta property="og:title" content="5장 — 실패했을 때 무엇을 올릴 것인가 | AI가 일했다는 증거">
+<meta property="og:description" content="실패하면 반사적으로 effort 를 올린다. 또 실패한다. 원인은 딴 데 있었다. 붙일 장치: 실패를 7가지로 나누고 종류마다 다른 손잡이를 당기는 진단표.">
+<meta property="og:url" content="https://gforce10-design.github.io/ai-work-evidence/ch05-diagnosing-failure/">
+<meta property="og:image" content="https://gforce10-design.github.io/ai-work-evidence/assets/og.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="sitemap" type="application/xml" href="https://gforce10-design.github.io/ai-work-evidence/sitemap.xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://gforce10-design.github.io/ai-work-evidence/ch05-diagnosing-failure/#article", "headline": "5장 — 실패했을 때 무엇을 올릴 것인가", "description": "실패하면 반사적으로 effort 를 올린다. 또 실패한다. 원인은 딴 데 있었다. 붙일 장치: 실패를 7가지로 나누고 종류마다 다른 손잡이를 당기는 진단표.", "inLanguage": "ko", "mainEntityOfPage": "https://gforce10-design.github.io/ai-work-evidence/ch05-diagnosing-failure/", "isAccessibleForFree": true, "image": "https://gforce10-design.github.io/ai-work-evidence/assets/og.png", "isPartOf": {"@type": "Book", "@id": "https://gforce10-design.github.io/ai-work-evidence/#book", "name": "AI가 일했다는 증거", "url": "https://gforce10-design.github.io/ai-work-evidence/"}, "author": {"@type": "Person", "@id": "https://gforce10-design.github.io/ai-work-evidence/#author", "name": "subal_i", "url": "https://www.threads.com/@subal_i", "sameAs": ["https://www.threads.com/@subal_i", "https://github.com/Gforce10-design"]}, "datePublished": "2026-09-28", "dateModified": "2026-09-28"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AI가 일했다는 증거", "item": "https://gforce10-design.github.io/ai-work-evidence/"}, {"@type": "ListItem", "position": 2, "name": "5장 — 실패했을 때 무엇을 올릴 것인가", "item": "https://gforce10-design.github.io/ai-work-evidence/ch05-diagnosing-failure/"}]}]}</script>
+</head>
+<body>
+<header class="site"><a class="name" href="../">AI가 일했다는 증거</a><nav><a href="https://www.threads.com/@subal_i">Threads @subal_i</a><a href="https://github.com/Gforce10-design/ai-work-evidence">코드</a><a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF</a></nav></header>
+<nav class="crumb" aria-label="위치"><a href="../">AI가 일했다는 증거</a> › 5장 — 실패했을 때 무엇을 올릴 것인가</nav>
+<main>
+<article>
+<h1 id="5">5장 — 실패했을 때 무엇을 올릴 것인가</h1>
+<p class="stamp">기술 검증판 2026-09-28 · 원고 최종 수정 2026-09-28</p>
+<div class="brief"><div><dt>증상</dt><dd>실패하면 반사적으로 effort 를 올린다. 또 실패한다. 원인은 딴 데 있었다</dd></div><div><dt>원인</dt><dd>실패에는 종류가 있는데 대응은 "더 세게 시킨다" 한 가지뿐이었다</dd></div><div><dt>붙일 장치</dt><dd>실패를 7가지로 나누고 종류마다 다른 손잡이를 당기는 진단표</dd></div><div><dt>그래도 부족했던 것</dt><dd>명세 부실인데도 모델 티어를 올리는 경로가 남아 있었다. 그걸 막는 것이 최종형이다</dd></div></div>
+
+<p>서브에이전트에게 리팩터링을 맡겼는데 테스트가 깨진 채로 돌아왔다. 반사적으로 effort를 한 단계 올려서 다시 시켰다. 또 깨졌다. 이번엔 모델 티어를 한 단계 올렸다. 또 깨졌다. 세 번째 시도에서야 로그를 제대로 읽었다 — 테스트 자체가 존재하지 않는 헬퍼 함수를 기대하고 있었다. 모델이 약해서가 아니었다. 내가 넘긴 명세와 완료조건이 애초에 앞뒤가 안 맞았다. 원인과 무관한 재시도를 두 번 더 해 비용이 늘었다. 원인과 무관한 effort와 티어를 차례로 올리고 나서야 진짜 문제를 봤다.</p>
+<p>더 찜찜한 경험도 있다. 어느 워커에게 위험한 배치 작업을 맡겼는데 한 번에 성공했다. "이 워커·이 경로가 좋구나" 하고 다음에도 같은 조합을 썼다. 근거를 따져보니 성공은 <strong>딱 한 번</strong>이었다. 그 한 번이 경로가 안정적이라는 증거였을까, 아니면 운이었을까. 스스로도 답을 못 했다.</p>
+<p>두 사고는 뿌리가 같다. <strong>실패에는 종류가 있는데, 대응은 한 가지("더 세게 시킨다")뿐이었다.</strong> 성공에도 등급이 있는데 한 번 성공한 것을 검증된 근거처럼 취급했다.</p>
+<h2 id="_1">왜 그런가</h2>
+<div class="fig"><div class="cards"><div class="card"><div class="h"><span class="ix">1</span>추론깊이 부족</div><div class="sub">effort 한 단계 ↑ — <b>effort 증량을 시험할 칸</b></div></div><div class="card warn"><div class="h"><span class="ix">2</span>모델 역량 부족</div><div class="sub">effort 말고 <b>티어</b>를 올린다</div></div><div class="card warn"><div class="h"><span class="ix">3</span>명세 부실</div><div class="sub">연산량을 올리지 않는다. <b>명세와 완료조건</b>을 고친다</div></div><div class="card warn"><div class="h"><span class="ix">4</span>구현 버그</div><div class="sub">같은 조건으로 <b>한 번만</b> 국소 수선</div></div><div class="card warn"><div class="h"><span class="ix">5</span>도구·인프라 문제</div><div class="sub"><b>아무것도 바꾸지 않는다.</b> 환경을 고친다</div></div><div class="card warn"><div class="h"><span class="ix">6</span>과잉 투입</div><div class="sub">한 단계 <b>낮추고</b> 멈출 조건을 명시</div></div><div class="card warn"><div class="h"><span class="ix">7</span>역할·벤더 불일치</div><div class="sub">다른 <b>워커</b>를 제안한다</div></div><div class="card"><div class="h">그래서</div><div class="sub">이 진단표는 <b>1번에서 effort 증량을 먼저 시험</b>한다. 원인이 겹칠 수 있으므로 재시도 결과를 보고 진단을 고친다</div></div></div><div class="fig-cap">초록은 effort 증량을 먼저 시험할 칸, 빨강은 다른 대응을 먼저 검토할 칸이다. <b>실패했을 때 손이 먼저 가는 손잡이는 대개 1번용이다.</b></div></div>
+
+<p>"effort를 올린다"와 "모델을 바꾼다"는 서로 다른 대응이다. 전자는 같은 모델의 추론 자원 설정을 바꾸고 후자는 모델 자체를 바꾼다. 둘 다 비용을 늘릴 수 있지만 효과를 보장하지는 않는다. 명세·도구·환경이 실패 원인이라면 그 원인부터 고쳐야 한다.</p>
+<p>가장 흔하고 가장 비싼 오진은 <strong>명세 부실을 모델 역량 부족으로 착각하는 것</strong>이다. 테스트를 문자 그대로는 통과시켰지만 요구사항의 취지는 놓친 경우, 완료조건이 애매해서 워커가 나름대로 해석해 만든 경우 — 이런 결과물은 겉보기엔 "틀렸다"로 보이지만 원인은 워커의 지능이 아니라 <strong>내가 건넨 명세</strong>에 있다. 이걸 모델 부족으로 오진하면 티어를 올리는 데 비용을 쓰고, 다음 시도도 똑같이 애매한 명세를 받아 똑같이 애매한 결과를 낸다.</p>
+<p>두 번째 문제는 증거의 무게다. 한 번 성공했다고 그 경로가 좋다고 볼 수는 없다. 표본이 하나뿐이면 그 성공은 우연일 수도, 필연일 수도 있고 <strong>구분할 방법이 없다.</strong> 그런데도 "한 번 됐으니 다음에도 이렇게 하자"고 판단하기가 아주 쉽다. 이걸 막으려면 "몇 번을 봐야 믿을 만한가"에 대한 정직한 기준이 필요하다.</p>
+<h2 id="_2">최소 해법</h2>
+<p>가장 단순한 대응은 이렇다. 실패하면 무조건 effort를 한 단계 올리고, 그래도 안 되면 모델을 올린다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;최소 해법 — 실패하면 무조건 연산량을 늘린다. 구멍이 있다.&quot;&quot;&quot;</span>
+</span><span id="ln-3">
+</span><span id="ln-4">LADDER <span style="color: #666">=</span> (<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;medium&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>)
+</span><span id="ln-5">
+</span><span id="ln-6">
+</span><span id="ln-7"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">naive_escalate</span>(effort: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+</span><span id="ln-8">    i <span style="color: #666">=</span> LADDER<span style="color: #666">.</span>index(effort)
+</span><span id="ln-9">    <span style="color: #008000; font-weight: bold">return</span> LADDER[i <span style="color: #666">+</span> <span style="color: #666">1</span>] <span style="color: #008000; font-weight: bold">if</span> i <span style="color: #666">+</span> <span style="color: #666">1</span> <span style="color: #666">&lt;</span> <span style="color: #008000">len</span>(LADDER) <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;raise_model_tier&quot;</span>
+</span><span id="ln-10">
+</span><span id="ln-11">
+</span><span id="ln-12"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-13">    <span style="color: #008000">print</span>(naive_escalate(<span style="color: #BA2121">&quot;low&quot;</span>))     <span style="color: #3D7B7B; font-style: italic"># -&gt; medium</span>
+</span><span id="ln-14">    <span style="color: #008000">print</span>(naive_escalate(<span style="color: #BA2121">&quot;medium&quot;</span>))  <span style="color: #3D7B7B; font-style: italic"># -&gt; high</span>
+</span><span id="ln-15">    <span style="color: #008000">print</span>(naive_escalate(<span style="color: #BA2121">&quot;high&quot;</span>))    <span style="color: #3D7B7B; font-style: italic"># -&gt; raise_model_tier</span>
+</span></code></pre></div>
+
+<p>이 함수는 실패의 <strong>원인을 전혀 묻지 않는다.</strong> 그냥 다음 단계로 넘어간다.</p>
+<h2 id="_3">그걸로 부족했던 지점</h2>
+<p>앞서 든 리팩터링 사례를 이 함수에 넣어보면 바로 드러난다. 실패 원인은 "테스트가 존재하지 않는 헬퍼를 기대함" — 명세 부실이다. <code>naive_escalate</code>는 이 경우에도 <code>medium</code> → <code>high</code> → <code>raise_model_tier</code> 순서로 그저 연산량과 티어를 올리라고 답한다. 이 함수 자체는 모델이나 테스트를 실행하지 않는다. 위 사례에서는 원인을 고치지 않은 재시도가 실패했다. effort나 티어만 올린다고 잘못된 명세가 해결된다고 볼 수는 없다. 이 함수에는 "테스트를 문자 그대로만 통과시켰다"거나 "인증 오류"라는 신호를 받아줄 자리가 아예 없다.</p>
+<p>도구·인프라 문제는 더 위험하다. 인증 만료나 네트워크 장애로 실패했는데 이걸 "모델이 못 했다"로 기록하면, 그 기록이 나중에 "이 모델·이 경로는 별로다"라는 잘못된 학습 데이터가 된다. 환경 문제를 모델 품질 문제로 뒤집어씌우면 그 뒤로 내리는 판정이 전부 오염된다.</p>
+<p>앞서 짚은 증거의 문제 — 성공 한 번을 믿을 만한 근거로 취급하는 문제는, 애초에 이 함수의 관심사 밖이다. "언제 재시도할까"만 다루고 "언제 믿을까"는 다루지 않는다.</p>
+<h2 id="7">실패 7분류표</h2>
+<p>분류마다 <strong>먼저 시험할 대응이 다르다.</strong> 원인이 겹칠 수 있으므로 한 번의 분류를 확정 진단으로 취급하지 않는다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>증상</th>
+<th>분류</th>
+<th>식별 방법</th>
+<th>정확한 대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>effort가 낮을 때 얕거나 틀림. 명세도 도구도 문제없음</td>
+<td><strong>추론깊이 부족</strong></td>
+<td>같은 명세·같은 도구로 effort만 올려서 재시도했을 때 나아지는지 본다</td>
+<td>같은 모델에서 effort <strong>한 단계만</strong> 올린다</td>
+</tr>
+<tr>
+<td>명세·도구·환경 문제를 배제해도 반복 실패</td>
+<td><strong>모델 역량 부족 후보</strong></td>
+<td>완료조건과 실패 양상을 검토하고 같은 과제에서 다른 모델과 비교</td>
+<td><strong>모델 변경을 시험</strong>한다. 최고 effort에서 실패했다는 사실만으로 확정하지 않는다</td>
+</tr>
+<tr>
+<td>테스트는 통과했는데 요구사항의 정신을 놓침. 검사를 문자 그대로만 만족</td>
+<td><strong>명세 부실</strong></td>
+<td>통과 기준을 다시 읽어보면 애매하거나 반례를 안 막아뒀다</td>
+<td>연산량을 올리지 않는다. <strong>명세와 완료조건을 고친다</strong></td>
+</tr>
+<tr>
+<td>경계가 뚜렷한 버그 하나</td>
+<td><strong>구현 버그</strong></td>
+<td>원인 함수·라인을 특정할 수 있다</td>
+<td>같은 모델·같은 effort로 <strong>한 번만</strong> 국소 수선</td>
+</tr>
+<tr>
+<td>인증 만료, 쿼터 초과, 네트워크 오류, 권한 거부</td>
+<td><strong>도구·인프라 문제</strong></td>
+<td>에러 메시지가 모델 출력이 아니라 시스템·CLI 오류다</td>
+<td><strong>아무것도 바꾸지 않는다.</strong> 환경을 고친다. 절대 모델 품질 실패로 기록하지 않는다</td>
+</tr>
+<tr>
+<td>품질은 충분한데 느리고 비쌈. 끝없이 다듬기만 함</td>
+<td><strong>과잉 투입</strong></td>
+<td>결과물이 이미 완료조건을 만족하는데 계속 도는 중</td>
+<td>한 단계 낮추고 <strong>멈출 조건</strong>을 명시한다</td>
+</tr>
+<tr>
+<td>특화가 안 맞음. 이 워커·이 벤더의 강점 밖 작업</td>
+<td><strong>역할·벤더 불일치</strong></td>
+<td>같은 종류 작업에서 다른 워커는 잘하는데 이 워커만 반복 실패</td>
+<td><strong>다른 워커를 제안한다.</strong> 벤더는 자동으로 바꾸지 않는다</td>
+</tr>
+</tbody>
+</table></div>
+<p>가장 자주 틀리는 지점을 한 번 더 강조한다. <strong>명세 부실을 모델 역량 부족으로 오진하는 것.</strong> 판별법은 간단하다 — 통과 기준(완료조건, 테스트, DoD)을 다시 소리 내어 읽어봤을 때 애매한 구석이 있는가? 있다면 명세부터 고친다. 모호함을 제거해도 실패한다면 도구·환경·구현 버그를 점검한 뒤 모델 역량을 원인 후보로 검토한다. 순서를 지키지 않으면 티어를 계속 올리면서 같은 애매한 명세를 반복해서 먹이게 된다.</p>
+<p>이 장의 코드는 <code>low → medium → high</code>라는 예제용 세 단계만 쓴다. 제품·모델마다 지원 값이 다르므로 보편적인 최고 단계라고 읽으면 안 된다. 상한에 닿으면 명세·도구·역량 진단으로 돌아간다. 한 번에 축 하나만 바꾸는 것은 원인 비교를 위한 실험 규칙이지, 모델을 바꾸면 반드시 해결된다는 법칙이 아니다.</p>
+<h2 id="11">1/1 성공은 증거가 아니다</h2>
+<p>같은 성공 확률을 가진 독립 시행이라는 이항모형을 가정하고 표본의 불확실성을 보자. 여기서는 Wilson 양측 95% 신뢰구간의 하한을 쓴다. "참 성공률이 이 값 이상일 확률이 95%"라는 뜻도, 최악의 경우 보장도 아니다. 같은 절차로 표본을 반복 수집할 때 구간이 참값을 포함하는 빈도를 기준으로 만든 근사 구간이다. 표본 수가 작으면 근사 오차도 주의해야 한다.</p>
+<p>전부 성공한 작은 표본은 운 좋게 얻은 결과일 수 있다. 서로 다른 모델·과제·설정을 한데 섞거나 실패한 시도를 빼고 계산하면 이 구간을 전체 성공률의 근거로 쓸 수 없다.</p>
+<p>계산식은 다음과 같다(z=1.96, 95% 신뢰수준).</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">math</span>
+</span><span id="ln-2">
+</span><span id="ln-3">
+</span><span id="ln-4"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">wilson_lower_bound</span>(successes: <span style="color: #008000">int</span>, n: <span style="color: #008000">int</span>, z: <span style="color: #008000">float</span> <span style="color: #666">=</span> <span style="color: #666">1.96</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">float</span>:
+</span><span id="ln-5">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">type</span>(n) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">type</span>(successes) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #666">0</span> <span style="color: #666">&lt;=</span> successes <span style="color: #666">&lt;=</span> n:
+</span><span id="ln-6">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;0 &lt;= successes &lt;= n인 정수 개수가 필요하다&quot;</span>)
+</span><span id="ln-7">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(z, <span style="color: #008000">bool</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(z, (<span style="color: #008000">int</span>, <span style="color: #008000">float</span>)) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> math<span style="color: #666">.</span>isfinite(z) <span style="color: #A2F; font-weight: bold">or</span> z <span style="color: #666">&lt;=</span> <span style="color: #666">0</span>:
+</span><span id="ln-8">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;z는 유한한 양수여야 한다&quot;</span>)
+</span><span id="ln-9">    <span style="color: #008000; font-weight: bold">if</span> n <span style="color: #666">==</span> <span style="color: #666">0</span>:
+</span><span id="ln-10">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0.0</span>  <span style="color: #3D7B7B; font-style: italic"># 증거 없음 표시; 계산된 신뢰구간이 아니다</span>
+</span><span id="ln-11">    phat <span style="color: #666">=</span> successes <span style="color: #666">/</span> n
+</span><span id="ln-12">    denom <span style="color: #666">=</span> <span style="color: #666">1</span> <span style="color: #666">+</span> z<span style="color: #666">**2</span> <span style="color: #666">/</span> n
+</span><span id="ln-13">    center <span style="color: #666">=</span> phat <span style="color: #666">+</span> z<span style="color: #666">**2</span> <span style="color: #666">/</span> (<span style="color: #666">2</span> <span style="color: #666">*</span> n)
+</span><span id="ln-14">    margin <span style="color: #666">=</span> z <span style="color: #666">*</span> math<span style="color: #666">.</span>sqrt((phat <span style="color: #666">*</span> (<span style="color: #666">1</span> <span style="color: #666">-</span> phat) <span style="color: #666">+</span> z<span style="color: #666">**2</span> <span style="color: #666">/</span> (<span style="color: #666">4</span> <span style="color: #666">*</span> n)) <span style="color: #666">/</span> n)
+</span><span id="ln-15">    <span style="color: #008000; font-weight: bold">return</span> (center <span style="color: #666">-</span> margin) <span style="color: #666">/</span> denom
+</span><span id="ln-16">
+</span><span id="ln-17">
+</span><span id="ln-18"><span style="color: #008000; font-weight: bold">for</span> x, n <span style="color: #A2F; font-weight: bold">in</span> ((<span style="color: #666">1</span>, <span style="color: #666">1</span>), (<span style="color: #666">3</span>, <span style="color: #666">3</span>), (<span style="color: #666">10</span>, <span style="color: #666">10</span>), (<span style="color: #666">20</span>, <span style="color: #666">20</span>)):
+</span><span id="ln-19">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/</span><span style="color: #A45A77; font-weight: bold">{</span>n<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 전부 성공 -&gt; 하한 </span><span style="color: #A45A77; font-weight: bold">{</span>wilson_lower_bound(x,<span style="color: #BBB"> </span>n)<span style="color: #BBB"> </span><span style="color: #666">*</span><span style="color: #BBB"> </span><span style="color: #666">100</span><span style="color: #A45A77; font-weight: bold">:</span><span style="color: #BA2121">.1f</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">%&quot;</span>)
+</span></code></pre></div>
+
+<p>실제로 돌려서 검산한 값이다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">1/1 전부 성공 -&gt; 하한 20.7%
+</span><span id="ln-2">3/3 전부 성공 -&gt; 하한 43.8%
+</span><span id="ln-3">10/10 전부 성공 -&gt; 하한 72.2%
+</span><span id="ln-4">20/20 전부 성공 -&gt; 하한 83.9%
+</span></code></pre></div>
+
+<p>한 번 성공했을 때 하한은 약 <strong>20.7%</strong>다. 구간이 넓다는 사실은 한 번의 성공으로 높은 신뢰성을 주장하기 어렵다는 것을 보여준다. 다음 작업이 최소 20% 확률로 성공한다고 보장하는 값은 아니다.</p>
+<p>아래 3·10·20건 기준은 이 책의 보수적인 운영 정책이다. 통계학이 정한 합격선이나 보편적인 안전 기준이 아니다.</p>
+<p>그래서 표본 크기에 따라 증거를 얼마나 믿을지 이렇게 나눈다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>유사 사례 수</th>
+<th>취급</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0~2건</td>
+<td><strong>일화(anecdotal)</strong> — 참고만 하고 기존 판단을 뒤집지 않는다</td>
+</tr>
+<tr>
+<td>3~9건</td>
+<td><strong>잠정(provisional)</strong> — 동점 상황의 타이브레이커 정도로만 쓴다</td>
+</tr>
+<tr>
+<td>10건 이상</td>
+<td>기존 판단을 <strong>뒤집을 후보</strong>가 된다</td>
+</tr>
+<tr>
+<td>20건 이상 (실패비용이 높은 작업)</td>
+<td>뒤집을 후보가 되려면 이 정도는 필요하다</td>
+</tr>
+</tbody>
+</table></div>
+<p>그리고 표본이 몇 건이든, 다음 세 조건을 만족하지 못하면 애초에 후보에도 못 오른다. 서로 다른 작업 사례가 <strong>3건 미만</strong>이면(같은 작업을 여러 번 반복한 건지 진짜 다양한 사례인지 확인), 실패나 부분 성공이 <strong>하나라도 섞여 있으면</strong>, 또는 검증자가 산출자 본인이면 — 이 셋 중 하나라도 걸리면 이 정책에서 기존 기본값을 뒤집는 후보로 채택하지 않는다. 실패·부분 성공도 유효한 관측이므로 성공률 계산과 원인 분석에서는 빼면 안 된다.</p>
+<h2 id="_4">검증 등급 — 누가 채점했는가</h2>
+<p>성공 여부를 누가 판정했는지에 따라서도 표본을 얼마나 믿을지가 달라진다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>등급</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>V3</strong></td>
+<td>결정론적 테스트, 스키마 검증, 정확한 출력 비교, 렌더링 확인</td>
+</tr>
+<tr>
+<td><strong>V2</strong></td>
+<td>사람 또는 독립 리뷰어가 사전에 정한 완료조건에 대고 판단</td>
+</tr>
+<tr>
+<td><strong>V1</strong></td>
+<td>실행자가 아닌 감독 쪽의 구조화된 검토</td>
+</tr>
+<tr>
+<td><strong>V0</strong></td>
+<td>워커의 자기보고, 또는 근거 없는 "됐습니다"</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>산출자가 자기 결과를 채점하면 안 된다는 원칙이 여기서도 반복된다.</strong> 이 책 앞부분에서 "종료코드 0은 증거가 아니다"라고 짚은 것과 같은 구멍이다. 워커가 "테스트 통과했습니다"라고 자기 입으로 말한 것(V0)과, 실행 근거와 사전에 정한 테스트를 독립적으로 확인한 것(V3)은 믿을 수 있는 정도가 완전히 다르다. 프로세스나 검증자 이름이 다르다는 사실만으로 독립성이 생기지는 않는다. 작업자가 만든 허술한 테스트를 별도 프로세스가 돌리는 경우도 있기 때문이다. 아래 코드는 식별자와 등급 필드의 기본 제약만 확인하며, 검증자의 실체·권한·테스트 품질은 별도로 확인해야 한다.</p>
+<p>V0만 있는 기록은 저장은 해두되, 판정에는 <strong>절대 반영하지 않는다.</strong> V2·V3라 해도 검증자가 산출자 본인이면 즉시 무효로 처리한다 — 등급이 높아도 "누가 채점했는가"를 속이면 소용없다.</p>
+<h2 id="append-only">결과를 기록하는 법 — append-only, 정정은 무효화 이벤트로</h2>
+<p>증거를 쌓으려면 시도할 때마다 결과를 기록해야 한다. 성공만 기록하면 모든 경로가 좋아 보이는 착시에 빠진다. <strong>종료된 시도는 성공·실패·중도 포기·추천을 무시한 강행까지 전부 기록한다.</strong> 승리만 기록하는 습관은 학습 루프 전체를 오염시킨다.</p>
+<p>기록 방식에서 지켜야 할 규칙이 하나 있다. <strong>기존 줄을 절대 덮어쓰지 않는다.</strong> 나쁜 기록을 발견했다고 그 줄을 지우거나 고치면 그 기록을 근거로 과거에 왜 그렇게 판정했는지 추적할 방법이 사라진다. 나중에 "이 경로가 왜 안전하다고 판단됐었지?"를 되짚을 때, 덮어쓴 파일에는 답이 없다. 대신 <strong>무효화 이벤트를 추가로 append한다.</strong> 원본 기록은 그대로 남기고, "이 시도는 이런 이유로 무효"라는 새 줄을 뒤에 붙인다. 그러면 파일을 처음부터 끝까지 읽었을 때 무엇이 있었고 무엇이 왜 취소됐는지 전부 감사할 수 있다. 덮어쓰기는 과거를 지운다. append는 과거를 남겨 둔 채 그 위에 정정을 쌓는다.</p>
+<h2 id="_5">최종형</h2>
+<p>7분류 진단, Wilson 하한, append-only 레지스트리(기록·무효화·유효표본 필터링)를 하나로 묶은 코드다. 표준 라이브러리만 쓴다. 어디에 둬도 되며, 여기서는 <code>failure_diagnosis.py</code>로 부른다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;실패 분류 + Wilson 하한 + append-only 레지스트리. 표준 라이브러리만 쓴다.&quot;&quot;&quot;</span>
+</span><span id="ln-3"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-4"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">json</span>
+</span><span id="ln-5"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">math</span>
+</span><span id="ln-6"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-7"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-8">
+</span><span id="ln-9">NORMAL_EFFORT_LADDER <span style="color: #666">=</span> (<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;medium&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>)
+</span><span id="ln-10">
+</span><span id="ln-11">
+</span><span id="ln-12"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">wilson_lower_bound</span>(successes: <span style="color: #008000">int</span>, n: <span style="color: #008000">int</span>, z: <span style="color: #008000">float</span> <span style="color: #666">=</span> <span style="color: #666">1.96</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">float</span>:
+</span><span id="ln-13"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;일반 성공/시도 개수의 Wilson 양측 95% 신뢰구간 하한.&quot;&quot;&quot;</span>
+</span><span id="ln-14">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">type</span>(n) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">type</span>(successes) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #666">0</span> <span style="color: #666">&lt;=</span> successes <span style="color: #666">&lt;=</span> n:
+</span><span id="ln-15">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;0 &lt;= successes &lt;= n인 정수 개수가 필요하다&quot;</span>)
+</span><span id="ln-16">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">isinstance</span>(z, <span style="color: #008000">bool</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(z, (<span style="color: #008000">int</span>, <span style="color: #008000">float</span>)) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> math<span style="color: #666">.</span>isfinite(z) <span style="color: #A2F; font-weight: bold">or</span> z <span style="color: #666">&lt;=</span> <span style="color: #666">0</span>:
+</span><span id="ln-17">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;z는 유한한 양수여야 한다&quot;</span>)
+</span><span id="ln-18">    <span style="color: #008000; font-weight: bold">if</span> n <span style="color: #666">==</span> <span style="color: #666">0</span>:
+</span><span id="ln-19">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0.0</span>  <span style="color: #3D7B7B; font-style: italic"># 증거 없음 표시; 계산된 신뢰구간이 아니다</span>
+</span><span id="ln-20">    phat <span style="color: #666">=</span> successes <span style="color: #666">/</span> n
+</span><span id="ln-21">    denom <span style="color: #666">=</span> <span style="color: #666">1</span> <span style="color: #666">+</span> z<span style="color: #666">**2</span> <span style="color: #666">/</span> n
+</span><span id="ln-22">    center <span style="color: #666">=</span> phat <span style="color: #666">+</span> z<span style="color: #666">**2</span> <span style="color: #666">/</span> (<span style="color: #666">2</span> <span style="color: #666">*</span> n)
+</span><span id="ln-23">    margin <span style="color: #666">=</span> z <span style="color: #666">*</span> math<span style="color: #666">.</span>sqrt((phat <span style="color: #666">*</span> (<span style="color: #666">1</span> <span style="color: #666">-</span> phat) <span style="color: #666">+</span> z<span style="color: #666">**2</span> <span style="color: #666">/</span> (<span style="color: #666">4</span> <span style="color: #666">*</span> n)) <span style="color: #666">/</span> n)
+</span><span id="ln-24">    <span style="color: #008000; font-weight: bold">return</span> (center <span style="color: #666">-</span> margin) <span style="color: #666">/</span> denom
+</span><span id="ln-25">
+</span><span id="ln-26">
+</span><span id="ln-27"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">evidence_tier</span>(n: <span style="color: #008000">int</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+</span><span id="ln-28">    <span style="color: #008000; font-weight: bold">if</span> n <span style="color: #666">&lt;=</span> <span style="color: #666">2</span>:
+</span><span id="ln-29">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;anecdotal&quot;</span>
+</span><span id="ln-30">    <span style="color: #008000; font-weight: bold">if</span> n <span style="color: #666">&lt;=</span> <span style="color: #666">9</span>:
+</span><span id="ln-31">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;provisional&quot;</span>
+</span><span id="ln-32">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;override_eligible&quot;</span>
+</span><span id="ln-33">
+</span><span id="ln-34">
+</span><span id="ln-35"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">next_effort</span>(effort: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-36">    <span style="color: #008000; font-weight: bold">if</span> effort <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> NORMAL_EFFORT_LADDER:
+</span><span id="ln-37">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">None</span>
+</span><span id="ln-38">    i <span style="color: #666">=</span> NORMAL_EFFORT_LADDER<span style="color: #666">.</span>index(effort)
+</span><span id="ln-39">    <span style="color: #008000; font-weight: bold">return</span> NORMAL_EFFORT_LADDER[i <span style="color: #666">+</span> <span style="color: #666">1</span>] <span style="color: #008000; font-weight: bold">if</span> i <span style="color: #666">+</span> <span style="color: #666">1</span> <span style="color: #666">&lt;</span> <span style="color: #008000">len</span>(NORMAL_EFFORT_LADDER) <span style="color: #008000; font-weight: bold">else</span> <span style="color: #008000; font-weight: bold">None</span>
+</span><span id="ln-40">
+</span><span id="ln-41">
+</span><span id="ln-42"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">diagnose</span>(failure_class: <span style="color: #008000">str</span>, model: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>, effort: <span style="color: #008000">str</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
+</span><span id="ln-43"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;리트라이마다 축을 딱 하나만 바꾼다.&quot;&quot;&quot;</span>
+</span><span id="ln-44">    <span style="color: #008000; font-weight: bold">if</span> failure_class <span style="color: #A2F; font-weight: bold">in</span> {<span style="color: #BA2121">&quot;REASONING_DEPTH_FAILURE&quot;</span>, <span style="color: #BA2121">&quot;OVERPROVISIONING&quot;</span>} <span style="color: #A2F; font-weight: bold">and</span> effort <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> NORMAL_EFFORT_LADDER:
+</span><span id="ln-45">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;none&quot;</span>, <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;지원되는 effort 값을 먼저 확인한다.&quot;</span>}
+</span><span id="ln-46">    <span style="color: #008000; font-weight: bold">if</span> failure_class <span style="color: #666">==</span> <span style="color: #BA2121">&quot;REASONING_DEPTH_FAILURE&quot;</span>:
+</span><span id="ln-47">        <span style="color: #008000; font-weight: bold">if</span> next_effort(effort) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-48">            <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;none&quot;</span>, <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;effort 상한이다. 명세·도구·역량 진단을 다시 한다.&quot;</span>}
+</span><span id="ln-49">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;effort&quot;</span>, <span style="color: #BA2121">&quot;from&quot;</span>: effort, <span style="color: #BA2121">&quot;to&quot;</span>: next_effort(effort),
+</span><span id="ln-50">                <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;숙고가 부족했다. 같은 모델에서 effort를 한 단계만 올린다.&quot;</span>}
+</span><span id="ln-51">    <span style="color: #008000; font-weight: bold">if</span> failure_class <span style="color: #666">==</span> <span style="color: #BA2121">&quot;MODEL_CAPABILITY_FAILURE&quot;</span>:
+</span><span id="ln-52">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;model&quot;</span>, <span style="color: #BA2121">&quot;from&quot;</span>: model,
+</span><span id="ln-53">                <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;명세·도구 문제를 배제하고 역량 부족으로 진단했다면 모델 변경을 시험한다.&quot;</span>}
+</span><span id="ln-54">    <span style="color: #008000; font-weight: bold">if</span> failure_class <span style="color: #666">==</span> <span style="color: #BA2121">&quot;SPEC_FAILURE&quot;</span>:
+</span><span id="ln-55">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;spec&quot;</span>,
+</span><span id="ln-56">                <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;테스트를 문자 그대로만 통과시켰다. 연산량이 아니라 명세·완료조건을 고친다.&quot;</span>}
+</span><span id="ln-57">    <span style="color: #008000; font-weight: bold">if</span> failure_class <span style="color: #666">==</span> <span style="color: #BA2121">&quot;IMPLEMENTATION_BUG&quot;</span>:
+</span><span id="ln-58">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;none&quot;</span>,
+</span><span id="ln-59">                <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;경계가 뚜렷한 버그다. 같은 모델·같은 effort로 한 번만 수선한다.&quot;</span>}
+</span><span id="ln-60">    <span style="color: #008000; font-weight: bold">if</span> failure_class <span style="color: #666">==</span> <span style="color: #BA2121">&quot;TOOL_OR_INFRA_FAILURE&quot;</span>:
+</span><span id="ln-61">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;none&quot;</span>,
+</span><span id="ln-62">                <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;인증·쿼터·네트워크·권한 문제다. 아무것도 바꾸지 않는다 — 환경을 고친다. &quot;</span>
+</span><span id="ln-63">                             <span style="color: #BA2121">&quot;절대 모델 품질 실패로 기록하지 않는다.&quot;</span>}
+</span><span id="ln-64">    <span style="color: #008000; font-weight: bold">if</span> failure_class <span style="color: #666">==</span> <span style="color: #BA2121">&quot;OVERPROVISIONING&quot;</span>:
+</span><span id="ln-65">        <span style="color: #008000; font-weight: bold">if</span> effort <span style="color: #666">==</span> NORMAL_EFFORT_LADDER[<span style="color: #666">0</span>]:
+</span><span id="ln-66">            <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;none&quot;</span>, <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;이 예제의 effort 하한이다. 다른 비용 원인을 확인한다.&quot;</span>}
+</span><span id="ln-67">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;effort&quot;</span>,
+</span><span id="ln-68">                <span style="color: #BA2121">&quot;from&quot;</span>: effort,
+</span><span id="ln-69">                <span style="color: #BA2121">&quot;to&quot;</span>: NORMAL_EFFORT_LADDER[<span style="color: #008000">max</span>(<span style="color: #666">0</span>, NORMAL_EFFORT_LADDER<span style="color: #666">.</span>index(effort) <span style="color: #666">-</span> <span style="color: #666">1</span>)],
+</span><span id="ln-70">                <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;품질은 충분한데 느리고 비싸다. 한 단계 낮추고 멈출 조건을 명시한다.&quot;</span>}
+</span><span id="ln-71">    <span style="color: #008000; font-weight: bold">if</span> failure_class <span style="color: #666">==</span> <span style="color: #BA2121">&quot;ROLE_OR_VENDOR_MISMATCH&quot;</span>:
+</span><span id="ln-72">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;worker&quot;</span>,
+</span><span id="ln-73">                <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">&quot;특화가 안 맞는다. 다른 워커를 제안한다 — 벤더는 자동으로 바꾸지 않는다.&quot;</span>}
+</span><span id="ln-74">    <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;change_axis&quot;</span>: <span style="color: #BA2121">&quot;none&quot;</span>, <span style="color: #BA2121">&quot;rationale&quot;</span>: <span style="color: #BA2121">f&quot;미분류 실패 종류: </span><span style="color: #A45A77; font-weight: bold">{</span>failure_class<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>}
+</span><span id="ln-75">
+</span><span id="ln-76">
+</span><span id="ln-77"><span style="color: #3D7B7B; font-style: italic"># ---------- append-only 레지스트리 ----------</span>
+</span><span id="ln-78">
+</span><span id="ln-79"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">record_attempt</span>(path: Path, <span style="color: #666">**</span>fields) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-80">    fields<span style="color: #666">.</span>setdefault(<span style="color: #BA2121">&quot;event_type&quot;</span>, <span style="color: #BA2121">&quot;attempt_final&quot;</span>)
+</span><span id="ln-81">    <span style="color: #008000; font-weight: bold">with</span> path<span style="color: #666">.</span>open(<span style="color: #BA2121">&quot;a&quot;</span>, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> f:
+</span><span id="ln-82">        f<span style="color: #666">.</span>write(json<span style="color: #666">.</span>dumps(fields, ensure_ascii<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">+</span> <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-83">
+</span><span id="ln-84">
+</span><span id="ln-85"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">invalidate_attempt</span>(path: Path, target_attempt_id: <span style="color: #008000">str</span>, reason_code: <span style="color: #008000">str</span>,
+</span><span id="ln-86">                        evidence: <span style="color: #008000">str</span>, event_id: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-87">    event <span style="color: #666">=</span> {
+</span><span id="ln-88">        <span style="color: #BA2121">&quot;event_type&quot;</span>: <span style="color: #BA2121">&quot;attempt_invalidation&quot;</span>,
+</span><span id="ln-89">        <span style="color: #BA2121">&quot;event_id&quot;</span>: event_id,
+</span><span id="ln-90">        <span style="color: #BA2121">&quot;target_attempt_id&quot;</span>: target_attempt_id,
+</span><span id="ln-91">        <span style="color: #BA2121">&quot;reason_code&quot;</span>: reason_code,
+</span><span id="ln-92">        <span style="color: #BA2121">&quot;verification_evidence&quot;</span>: evidence,
+</span><span id="ln-93">    }
+</span><span id="ln-94">    <span style="color: #008000; font-weight: bold">with</span> path<span style="color: #666">.</span>open(<span style="color: #BA2121">&quot;a&quot;</span>, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> f:
+</span><span id="ln-95">        f<span style="color: #666">.</span>write(json<span style="color: #666">.</span>dumps(event, ensure_ascii<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">False</span>) <span style="color: #666">+</span> <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-96">
+</span><span id="ln-97">
+</span><span id="ln-98"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">load_records</span>(path: Path) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>[<span style="color: #008000">dict</span>]:
+</span><span id="ln-99">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> path<span style="color: #666">.</span>exists():
+</span><span id="ln-100">        <span style="color: #008000; font-weight: bold">return</span> []
+</span><span id="ln-101">    <span style="color: #008000; font-weight: bold">return</span> [json<span style="color: #666">.</span>loads(line) <span style="color: #008000; font-weight: bold">for</span> line <span style="color: #A2F; font-weight: bold">in</span> path<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)<span style="color: #666">.</span>splitlines() <span style="color: #008000; font-weight: bold">if</span> line<span style="color: #666">.</span>strip()]
+</span><span id="ln-102">
+</span><span id="ln-103">
+</span><span id="ln-104"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">usable_attempts</span>(records: <span style="color: #008000">list</span>[<span style="color: #008000">dict</span>], cohort: <span style="color: #008000">dict</span> <span style="color: #666">|</span> <span style="color: #008000; font-weight: bold">None</span> <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>[<span style="color: #008000">dict</span>]:
+</span><span id="ln-105"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;V2/V3 + 독립 검증자 + 무효화되지 않은 것만, attempt_id로 중복 제거.&quot;&quot;&quot;</span>
+</span><span id="ln-106">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">any</span>(<span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(r, <span style="color: #008000">dict</span>) <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> records):
+</span><span id="ln-107">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;레지스트리의 각 줄은 JSON 객체여야 한다&quot;</span>)
+</span><span id="ln-108">    invalidated <span style="color: #666">=</span> <span style="color: #008000">set</span>()
+</span><span id="ln-109">    <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> records:
+</span><span id="ln-110">        <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;event_type&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;attempt_invalidation&quot;</span>:
+</span><span id="ln-111">            target <span style="color: #666">=</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;target_attempt_id&quot;</span>)
+</span><span id="ln-112">            <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(target, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> target<span style="color: #666">.</span>strip():
+</span><span id="ln-113">                <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;무효화 이벤트의 대상 식별자가 비었다&quot;</span>)
+</span><span id="ln-114">            invalidated<span style="color: #666">.</span>add(target)
+</span><span id="ln-115">    by_id: <span style="color: #008000">dict</span>[<span style="color: #008000">str</span>, <span style="color: #008000">list</span>[<span style="color: #008000">dict</span>]] <span style="color: #666">=</span> {}
+</span><span id="ln-116">    <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> records:
+</span><span id="ln-117">        aid <span style="color: #666">=</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;attempt_id&quot;</span>)
+</span><span id="ln-118">        <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;event_type&quot;</span>, <span style="color: #BA2121">&quot;attempt_final&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;attempt_final&quot;</span> <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">isinstance</span>(aid, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">and</span> aid<span style="color: #666">.</span>strip():
+</span><span id="ln-119">            by_id<span style="color: #666">.</span>setdefault(aid, [])<span style="color: #666">.</span>append(r)
+</span><span id="ln-120">    conflicts <span style="color: #666">=</span> {aid <span style="color: #008000; font-weight: bold">for</span> aid, rows <span style="color: #A2F; font-weight: bold">in</span> by_id<span style="color: #666">.</span>items() <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">any</span>(row <span style="color: #666">!=</span> rows[<span style="color: #666">0</span>] <span style="color: #008000; font-weight: bold">for</span> row <span style="color: #A2F; font-weight: bold">in</span> rows)}
+</span><span id="ln-121">    seen: <span style="color: #008000">set</span>[<span style="color: #008000">str</span>] <span style="color: #666">=</span> <span style="color: #008000">set</span>()
+</span><span id="ln-122">    out: <span style="color: #008000">list</span>[<span style="color: #008000">dict</span>] <span style="color: #666">=</span> []
+</span><span id="ln-123">    <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> records:
+</span><span id="ln-124">        <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;event_type&quot;</span>, <span style="color: #BA2121">&quot;attempt_final&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;attempt_final&quot;</span>:
+</span><span id="ln-125">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-126">        <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verification_grade&quot;</span>) <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> (<span style="color: #BA2121">&quot;V2&quot;</span>, <span style="color: #BA2121">&quot;V3&quot;</span>):
+</span><span id="ln-127">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-128">        verifier <span style="color: #666">=</span> <span style="color: #008000">str</span>(r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verifier_role&quot;</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #BA2121">&quot;&quot;</span>)<span style="color: #666">.</span>strip()<span style="color: #666">.</span>lower()
+</span><span id="ln-129">        worker <span style="color: #666">=</span> <span style="color: #008000">str</span>(r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;worker&quot;</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #BA2121">&quot;&quot;</span>)<span style="color: #666">.</span>strip()<span style="color: #666">.</span>lower()
+</span><span id="ln-130">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> verifier <span style="color: #A2F; font-weight: bold">or</span> verifier <span style="color: #A2F; font-weight: bold">in</span> {<span style="color: #BA2121">&quot;self&quot;</span>, <span style="color: #BA2121">&quot;producer&quot;</span>, <span style="color: #BA2121">&quot;worker&quot;</span>} <span style="color: #A2F; font-weight: bold">or</span> verifier <span style="color: #666">==</span> worker:
+</span><span id="ln-131">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-132">        aid <span style="color: #666">=</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;attempt_id&quot;</span>)
+</span><span id="ln-133">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">any</span>(<span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(r<span style="color: #666">.</span>get(k), <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> r[k]<span style="color: #666">.</span>strip() <span style="color: #008000; font-weight: bold">for</span> k <span style="color: #A2F; font-weight: bold">in</span> (<span style="color: #BA2121">&quot;attempt_id&quot;</span>, <span style="color: #BA2121">&quot;task&quot;</span>, <span style="color: #BA2121">&quot;worker&quot;</span>, <span style="color: #BA2121">&quot;verifier_role&quot;</span>)):
+</span><span id="ln-134">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-135">        <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;outcome&quot;</span>) <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> (<span style="color: #BA2121">&quot;success&quot;</span>, <span style="color: #BA2121">&quot;fail&quot;</span>, <span style="color: #BA2121">&quot;partial&quot;</span>, <span style="color: #BA2121">&quot;aborted&quot;</span>) <span style="color: #A2F; font-weight: bold">or</span> aid <span style="color: #A2F; font-weight: bold">in</span> conflicts:
+</span><span id="ln-136">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-137">        <span style="color: #008000; font-weight: bold">if</span> aid <span style="color: #A2F; font-weight: bold">in</span> invalidated <span style="color: #A2F; font-weight: bold">or</span> aid <span style="color: #A2F; font-weight: bold">in</span> seen:
+</span><span id="ln-138">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-139">        <span style="color: #008000; font-weight: bold">if</span> cohort <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #008000">any</span>(r<span style="color: #666">.</span>get(k) <span style="color: #666">!=</span> v <span style="color: #008000; font-weight: bold">for</span> k, v <span style="color: #A2F; font-weight: bold">in</span> cohort<span style="color: #666">.</span>items()):
+</span><span id="ln-140">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-141">        seen<span style="color: #666">.</span>add(aid)
+</span><span id="ln-142">        out<span style="color: #666">.</span>append(r)
+</span><span id="ln-143">    <span style="color: #008000; font-weight: bold">return</span> out
+</span><span id="ln-144">
+</span><span id="ln-145">
+</span><span id="ln-146"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">override_allowed</span>(usable: <span style="color: #008000">list</span>[<span style="color: #008000">dict</span>], failcost: <span style="color: #008000">str</span> <span style="color: #666">=</span> <span style="color: #BA2121">&quot;low&quot;</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
+</span><span id="ln-147">    <span style="color: #008000; font-weight: bold">if</span> failcost <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> {<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;mid&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>}:
+</span><span id="ln-148">        <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #CB3F38; font-weight: bold">ValueError</span>(<span style="color: #BA2121">&quot;알 수 없는 failcost&quot;</span>)
+</span><span id="ln-149">    usable <span style="color: #666">=</span> usable_attempts(usable)
+</span><span id="ln-150">    n <span style="color: #666">=</span> <span style="color: #008000">len</span>(usable)
+</span><span id="ln-151">    unique_tasks <span style="color: #666">=</span> <span style="color: #008000">len</span>({r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;task&quot;</span>) <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> usable})
+</span><span id="ln-152">    success <span style="color: #666">=</span> <span style="color: #008000">sum</span>(<span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> usable <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;outcome&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;success&quot;</span>)
+</span><span id="ln-153">    fail <span style="color: #666">=</span> <span style="color: #008000">sum</span>(<span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> usable <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;outcome&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;fail&quot;</span>)
+</span><span id="ln-154">    partial <span style="color: #666">=</span> <span style="color: #008000">sum</span>(<span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> usable <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;outcome&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;partial&quot;</span>)
+</span><span id="ln-155">    all_success <span style="color: #666">=</span> n <span style="color: #666">&gt;</span> <span style="color: #666">0</span> <span style="color: #A2F; font-weight: bold">and</span> success <span style="color: #666">==</span> n <span style="color: #A2F; font-weight: bold">and</span> fail <span style="color: #666">==</span> <span style="color: #666">0</span> <span style="color: #A2F; font-weight: bold">and</span> partial <span style="color: #666">==</span> <span style="color: #666">0</span>
+</span><span id="ln-156">    need <span style="color: #666">=</span> <span style="color: #666">20</span> <span style="color: #008000; font-weight: bold">if</span> failcost <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span> <span style="color: #008000; font-weight: bold">else</span> <span style="color: #666">10</span>
+</span><span id="ln-157">    allowed <span style="color: #666">=</span> n <span style="color: #666">&gt;=</span> need <span style="color: #A2F; font-weight: bold">and</span> unique_tasks <span style="color: #666">&gt;=</span> <span style="color: #666">3</span> <span style="color: #A2F; font-weight: bold">and</span> all_success
+</span><span id="ln-158">    <span style="color: #008000; font-weight: bold">return</span> {
+</span><span id="ln-159">        <span style="color: #BA2121">&quot;allowed&quot;</span>: allowed, <span style="color: #BA2121">&quot;n&quot;</span>: n, <span style="color: #BA2121">&quot;tier&quot;</span>: evidence_tier(n),
+</span><span id="ln-160">        <span style="color: #BA2121">&quot;unique_task_instances&quot;</span>: unique_tasks, <span style="color: #BA2121">&quot;success&quot;</span>: success, <span style="color: #BA2121">&quot;fail&quot;</span>: fail, <span style="color: #BA2121">&quot;partial&quot;</span>: partial,
+</span><span id="ln-161">        <span style="color: #BA2121">&quot;wilson_lower_bound&quot;</span>: <span style="color: #008000">round</span>(wilson_lower_bound(success, n), <span style="color: #666">3</span>) <span style="color: #008000; font-weight: bold">if</span> n <span style="color: #008000; font-weight: bold">else</span> <span style="color: #666">0.0</span>,
+</span><span id="ln-162">    }
+</span><span id="ln-163">
+</span><span id="ln-164">
+</span><span id="ln-165"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-166">    reg <span style="color: #666">=</span> Path(sys<span style="color: #666">.</span>argv[<span style="color: #666">1</span>]) <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(sys<span style="color: #666">.</span>argv) <span style="color: #666">&gt;</span> <span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">else</span> Path(<span style="color: #BA2121">&quot;registry_demo.jsonl&quot;</span>)
+</span><span id="ln-167">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;Wilson 95% 하한 —&quot;</span>)
+</span><span id="ln-168">    <span style="color: #008000; font-weight: bold">for</span> x, n <span style="color: #A2F; font-weight: bold">in</span> ((<span style="color: #666">1</span>, <span style="color: #666">1</span>), (<span style="color: #666">3</span>, <span style="color: #666">3</span>), (<span style="color: #666">10</span>, <span style="color: #666">10</span>), (<span style="color: #666">20</span>, <span style="color: #666">20</span>)):
+</span><span id="ln-169">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;  </span><span style="color: #A45A77; font-weight: bold">{</span>x<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/</span><span style="color: #A45A77; font-weight: bold">{</span>n<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 전부 성공 -&gt; </span><span style="color: #A45A77; font-weight: bold">{</span>wilson_lower_bound(x,<span style="color: #BBB"> </span>n)<span style="color: #BBB"> </span><span style="color: #666">*</span><span style="color: #BBB"> </span><span style="color: #666">100</span><span style="color: #A45A77; font-weight: bold">:</span><span style="color: #BA2121">.1f</span><span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">%  (</span><span style="color: #A45A77; font-weight: bold">{</span>evidence_tier(n)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)&quot;</span>)
+</span><span id="ln-170">
+</span><span id="ln-171">    record_attempt(reg, attempt_id<span style="color: #666">=</span><span style="color: #BA2121">&quot;a1&quot;</span>, task<span style="color: #666">=</span><span style="color: #BA2121">&quot;배치 업로드 파서 수정&quot;</span>, worker<span style="color: #666">=</span><span style="color: #BA2121">&quot;worker-b&quot;</span>,
+</span><span id="ln-172">                    verification_grade<span style="color: #666">=</span><span style="color: #BA2121">&quot;V3&quot;</span>, verifier_role<span style="color: #666">=</span><span style="color: #BA2121">&quot;pytest&quot;</span>,
+</span><span id="ln-173">                    outcome<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>, task_family<span style="color: #666">=</span><span style="color: #BA2121">&quot;implementation&quot;</span>)
+</span><span id="ln-174">    record_attempt(reg, attempt_id<span style="color: #666">=</span><span style="color: #BA2121">&quot;a2&quot;</span>, task<span style="color: #666">=</span><span style="color: #BA2121">&quot;배치 업로드 파서 수정&quot;</span>, worker<span style="color: #666">=</span><span style="color: #BA2121">&quot;worker-b&quot;</span>,
+</span><span id="ln-175">                    verification_grade<span style="color: #666">=</span><span style="color: #BA2121">&quot;V0&quot;</span>, verifier_role<span style="color: #666">=</span><span style="color: #BA2121">&quot;self&quot;</span>,
+</span><span id="ln-176">                    outcome<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>, task_family<span style="color: #666">=</span><span style="color: #BA2121">&quot;implementation&quot;</span>)
+</span><span id="ln-177">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">usable (V0 자기보고는 빠져야 한다):&quot;</span>, <span style="color: #008000">len</span>(usable_attempts(load_records(reg))))
+</span></code></pre></div>
+
+<p>실행 결과다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">$ python3 failure_diagnosis.py registry_demo.jsonl
+</span><span id="ln-2">Wilson 95% 하한 —
+</span><span id="ln-3">  1/1 전부 성공 -&gt; 20.7%  (anecdotal)
+</span><span id="ln-4">  3/3 전부 성공 -&gt; 43.8%  (provisional)
+</span><span id="ln-5">  10/10 전부 성공 -&gt; 72.2%  (override_eligible)
+</span><span id="ln-6">  20/20 전부 성공 -&gt; 83.9%  (override_eligible)
+</span><span id="ln-7">
+</span><span id="ln-8">usable (V0 자기보고는 빠져야 한다): 1
+</span></code></pre></div>
+
+<p>레지스트리 파일에는 두 줄이 다 남아 있다. V0 기록은 지워지지 않고 <strong>필터링에서 제외</strong>됐을 뿐이다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">{<span style="color: #008000; font-weight: bold">&quot;attempt_id&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;a1&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;task&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;배치 업로드 파서 수정&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;worker&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;worker-b&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;verification_grade&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;V3&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;verifier_role&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;pytest&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;outcome&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;success&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;task_family&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;implementation&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;event_type&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;attempt_final&quot;</span>}
+</span><span id="ln-2">{<span style="color: #008000; font-weight: bold">&quot;attempt_id&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;a2&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;task&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;배치 업로드 파서 수정&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;worker&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;worker-b&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;verification_grade&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;V0&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;verifier_role&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;self&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;outcome&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;success&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;task_family&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;implementation&quot;</span>,<span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">&quot;event_type&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;attempt_final&quot;</span>}
+</span></code></pre></div>
+
+<h2 id="_6">직접 확인하는 법</h2>
+<p><strong>1. Wilson 하한을 직접 검산한다.</strong> 위 코드를 그대로 돌려서 20.7% / 43.8% / 72.2% / 83.9%가 나오는지 확인한다. 표본을 30개, 50개로 늘려가며 하한이 어떻게 올라가는지도 관찰해본다 — 같은 조건에서 전부 성공한 표본이 늘면 계산된 하한이 올라간다. 실제 기록에 실패가 추가되면 하한이 내려갈 수도 있다.</p>
+<p><strong>2. 무효화가 실제로 걸러지는지 확인한다.</strong></p>
+<p>아래 실습은 앞서 저장한 <code>failure_diagnosis.py</code>와 같은 디렉터리의 새 파일에서 실행한다. 결과 파일이 없는 임시 폴더에서 시작한다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-2"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">failure_diagnosis</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> record_attempt, invalidate_attempt, usable_attempts, load_records
+</span><span id="ln-3">
+</span><span id="ln-4">reg <span style="color: #666">=</span> Path(<span style="color: #BA2121">&quot;registry_audit.jsonl&quot;</span>)
+</span><span id="ln-5">record_attempt(reg, attempt_id<span style="color: #666">=</span><span style="color: #BA2121">&quot;b1&quot;</span>, task<span style="color: #666">=</span><span style="color: #BA2121">&quot;배치 이름변경&quot;</span>, worker<span style="color: #666">=</span><span style="color: #BA2121">&quot;worker-b&quot;</span>,
+</span><span id="ln-6">               verification_grade<span style="color: #666">=</span><span style="color: #BA2121">&quot;V3&quot;</span>, verifier_role<span style="color: #666">=</span><span style="color: #BA2121">&quot;pytest&quot;</span>, outcome<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>)
+</span><span id="ln-7"><span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;무효화 전:&quot;</span>, <span style="color: #008000">len</span>(usable_attempts(load_records(reg))))   <span style="color: #3D7B7B; font-style: italic"># -&gt; 1</span>
+</span><span id="ln-8">
+</span><span id="ln-9">invalidate_attempt(reg, target_attempt_id<span style="color: #666">=</span><span style="color: #BA2121">&quot;b1&quot;</span>, reason_code<span style="color: #666">=</span><span style="color: #BA2121">&quot;verifier_was_producer&quot;</span>,
+</span><span id="ln-10">                    evidence<span style="color: #666">=</span><span style="color: #BA2121">&quot;검증자가 실행자 본인이었음이 뒤늦게 밝혀짐&quot;</span>, event_id<span style="color: #666">=</span><span style="color: #BA2121">&quot;inv-1&quot;</span>)
+</span><span id="ln-11"><span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;무효화 후:&quot;</span>, <span style="color: #008000">len</span>(usable_attempts(load_records(reg))))   <span style="color: #3D7B7B; font-style: italic"># -&gt; 0</span>
+</span><span id="ln-12"><span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;파일 줄 수(둘 다 남아 감사 가능):&quot;</span>, <span style="color: #008000">sum</span>(<span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">for</span> _ <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">open</span>(reg)))  <span style="color: #3D7B7B; font-style: italic"># -&gt; 2</span>
+</span></code></pre></div>
+
+<p><strong>3. 안전장치를 일부러 깨뜨린다.</strong> <code>usable_attempts</code>에서 "검증자가 산출자 본인이면 제외" 조건을 지워보자.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">usable_attempts_broken</span>(records, cohort<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">None</span>):
+</span><span id="ln-2">    invalidated <span style="color: #666">=</span> {r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;target_attempt_id&quot;</span>) <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> records <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;event_type&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;attempt_invalidation&quot;</span>}
+</span><span id="ln-3">    seen, out <span style="color: #666">=</span> <span style="color: #008000">set</span>(), []
+</span><span id="ln-4">    <span style="color: #008000; font-weight: bold">for</span> r <span style="color: #A2F; font-weight: bold">in</span> records:
+</span><span id="ln-5">        <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;event_type&quot;</span>, <span style="color: #BA2121">&quot;attempt_final&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;attempt_final&quot;</span>:
+</span><span id="ln-6">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-7">        <span style="color: #008000; font-weight: bold">if</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verification_grade&quot;</span>) <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> (<span style="color: #BA2121">&quot;V2&quot;</span>, <span style="color: #BA2121">&quot;V3&quot;</span>):
+</span><span id="ln-8">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-9">        aid <span style="color: #666">=</span> r<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;attempt_id&quot;</span>)           <span style="color: #3D7B7B; font-style: italic"># 검증자 == 산출자 체크가 사라졌다</span>
+</span><span id="ln-10">        <span style="color: #008000; font-weight: bold">if</span> aid <span style="color: #A2F; font-weight: bold">in</span> invalidated <span style="color: #A2F; font-weight: bold">or</span> aid <span style="color: #A2F; font-weight: bold">in</span> seen:
+</span><span id="ln-11">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-12">        seen<span style="color: #666">.</span>add(aid)
+</span><span id="ln-13">        out<span style="color: #666">.</span>append(r)
+</span><span id="ln-14">    <span style="color: #008000; font-weight: bold">return</span> out
+</span></code></pre></div>
+
+<p>그리고 워커가 스스로를 "V3"로 자칭한 기록을 넣는다.</p>
+<p>위 <code>usable_attempts_broken</code> 함수를 저장한 파일 아래에 다음 코드를 붙여 실행한다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-2"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">failure_diagnosis</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> record_attempt, usable_attempts, load_records
+</span><span id="ln-3">
+</span><span id="ln-4">reg2 <span style="color: #666">=</span> Path(<span style="color: #BA2121">&quot;registry_selfcert.jsonl&quot;</span>)
+</span><span id="ln-5">record_attempt(reg2, attempt_id<span style="color: #666">=</span><span style="color: #BA2121">&quot;c1&quot;</span>, task<span style="color: #666">=</span><span style="color: #BA2121">&quot;배치 이름변경&quot;</span>, worker<span style="color: #666">=</span><span style="color: #BA2121">&quot;worker-b&quot;</span>,
+</span><span id="ln-6">               verification_grade<span style="color: #666">=</span><span style="color: #BA2121">&quot;V3&quot;</span>, verifier_role<span style="color: #666">=</span><span style="color: #BA2121">&quot;worker-b&quot;</span>, outcome<span style="color: #666">=</span><span style="color: #BA2121">&quot;success&quot;</span>)
+</span><span id="ln-7">
+</span><span id="ln-8"><span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;정상판(검증자==실행자면 제외):&quot;</span>, <span style="color: #008000">len</span>(usable_attempts(load_records(reg2))))          <span style="color: #3D7B7B; font-style: italic"># -&gt; 0</span>
+</span><span id="ln-9"><span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;깨진판(검증자 체크 제거 -&gt; 자기증명이 세어짐):&quot;</span>, <span style="color: #008000">len</span>(usable_attempts_broken(load_records(reg2))))  <span style="color: #3D7B7B; font-style: italic"># -&gt; 1</span>
+</span></code></pre></div>
+
+<p>빨간불이다. 정상 버전은 산출자가 스스로를 "V3"라고 자칭한 기록을 표본에서 뺀다. 검증자 체크를 지운 깨진 버전은 그 자기증명을 그대로 세어버린다. 등급 표기(V3)만 믿고 "누가 채점했는가"를 확인하지 않으면 워커가 자기 자신을 검증자로 세우고 스스로에게 최고 등급을 매겨도 막을 방법이 없다.</p>
+<h2 id="_7">실패 진단표 — 인쇄해서 옆에 붙여둘 것</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>증상</th>
+<th>분류</th>
+<th>정확한 대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>effort 낮을 때만 얕음/틀림</td>
+<td>추론깊이 부족</td>
+<td>같은 모델, effort <strong>+1단계</strong></td>
+</tr>
+<tr>
+<td>명세·환경 문제를 배제해도 반복 실패</td>
+<td>모델 역량 부족 후보</td>
+<td><strong>모델 변경을 시험</strong></td>
+</tr>
+<tr>
+<td>통과는 했는데 요구의 정신을 놓침</td>
+<td>명세 부실</td>
+<td>연산량 그대로, <strong>명세·완료조건 수정</strong></td>
+</tr>
+<tr>
+<td>원인 라인을 특정할 수 있는 버그</td>
+<td>구현 버그</td>
+<td>같은 모델·effort로 <strong>1회 국소 수선</strong></td>
+</tr>
+<tr>
+<td>인증/쿼터/네트워크/권한 오류</td>
+<td>도구·인프라 문제</td>
+<td><strong>아무것도 바꾸지 않음</strong>, 환경만 고침</td>
+</tr>
+<tr>
+<td>품질 충분한데 계속 다듬기만 함</td>
+<td>과잉 투입</td>
+<td>effort <strong>-1단계</strong> + 멈출 조건 명시</td>
+</tr>
+<tr>
+<td>이 워커·벤더 강점 밖 작업</td>
+<td>역할·벤더 불일치</td>
+<td><strong>다른 워커</strong> 제안, 벤더 자동 전환 금지</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li><strong>재시도할 때는 축을 딱 하나만 바꾼다.</strong></li>
+<li><strong>1~2건의 성공은 일화다.</strong> 3~9건은 잠정, 10건 이상(고위험 작업은 20건 이상)이라야 기존 판단을 뒤집을 후보가 된다 — 단, 서로 다른 사례 3건 이상 + 전부 성공 + 산출자와 검증자가 다를 때만.</li>
+<li><strong>실패도, 중단도, 추천을 무시한 강행도 전부 기록한다.</strong> 승리만 기록하면 모든 경로가 좋아 보인다.</li>
+<li><strong>정정은 덮어쓰기가 아니라 무효화 이벤트 추가로.</strong> 과거 판단이 왜 그렇게 내려졌는지 나중에 되짚을 수 있어야 한다.</li>
+</ul>
+<p>계산식 근거: <a href="https://itl.nist.gov/div898/handbook/prc/section2/prc241.htm">NIST 신뢰구간 설명</a>, 확인 2026-09-28. JSONL 예제는 단일 작성자용이다. 동시 쓰기 잠금·서명·변조 방지는 구현하지 않았다. 같은 attempt_id의 상충 기록은 전부 제외하고 정정 사유를 조사한다.</p>
+</article>
+<aside class="ask">
+<p>이 장의 코드 전문: <a href="https://github.com/Gforce10-design/ai-work-evidence/tree/main/ch05">ch05/</a> (MIT)</p>
+<p>따라 하다 막히면 Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> 에 댓글로 남겨 달라. 하나씩 본다.</p>
+</aside>
+</main>
+<nav class="pager"><a class="prev" href="../ch04-direct-or-delegate/">← 4장 — 직접 할까 위임할까</a><a class="next" href="../ch06-dangerous-commands/">6장 — 위험한 명령을 안전하게 위임하기 →</a></nav>
+<footer class="site">
+<p>이 책은 무료다. 받은 사람은 누구나 읽고 나눠도 된다. 출처만 밝혀 달라.</p>
+<p>쓴 사람: Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> — 하루 한 편씩 나눠 올린다. 책에 실린 코드는 <a href="https://github.com/Gforce10-design/ai-work-evidence">GitHub</a>에 있고 MIT 라이선스다. <a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF 받기</a></p>
+</footer>
+</body>
+</html>

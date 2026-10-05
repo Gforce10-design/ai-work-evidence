@@ -1,0 +1,244 @@
+
+@page {
+  size: A4;
+  margin: 20mm 18mm 22mm 18mm;
+  @bottom-center { content: counter(page); }
+}
+:root { color-scheme: light; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.75;
+  color: #16181d;
+  background: #fff;
+  margin: 0 auto;
+  max-width: 46em;
+  padding: 2em 1.5em 4em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+h1, h2, h3, h4 { line-height: 1.35; font-weight: 700; letter-spacing: -0.01em; }
+h1 {
+  font-size: 1.9em;
+  margin: 0 0 1.2em;
+  padding-bottom: 0.4em;
+  border-bottom: 2px solid #16181d;
+  page-break-before: always;
+  break-before: page;
+}
+h1:first-of-type { page-break-before: avoid; break-before: avoid; }
+h2 { font-size: 1.3em; margin: 2.4em 0 0.8em; page-break-after: avoid; break-after: avoid; }
+h3 { font-size: 1.08em; margin: 1.8em 0 0.6em; page-break-after: avoid; break-after: avoid; }
+p { margin: 0 0 1em; }
+ul, ol { margin: 0 0 1em; padding-left: 1.4em; }
+li { margin-bottom: 0.35em; }
+blockquote {
+  margin: 1.2em 0;
+  padding: 0.1em 1.1em;
+  border-left: 3px solid #c8ccd4;
+  color: #4a5058;
+}
+hr { border: 0; border-top: 1px solid #dfe2e8; margin: 2.4em 0; }
+code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background: #f2f3f6;
+  padding: 0.12em 0.34em;
+  border-radius: 3px;
+}
+pre {
+  background: #f7f8fa;
+  border: 1px solid #e3e6ec;
+  border-radius: 5px;
+  padding: 0.9em 1.1em;
+  font-size: 8.6pt;
+  line-height: 1.55;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  /* 인쇄에는 가로 스크롤이 없다. 넘치는 줄은 잘리는 대신 접힌다 — 화면에서
+     스크롤로 가려지던 내용이 종이에서 사라지는 것이 이 책의 최악의 결함이다.
+     접힌 줄은 들여쓰기로 원래 줄과 구분한다. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+/* 접힌 줄 구분은 줄마다 건다(Pygments linespans 로 한 줄 = span 하나).
+   2026-10-02: 예전엔 pre 전체에 text-indent 를 걸어 맨 첫 줄만 내어 쓰고 나머지
+   모든 줄이 들여쓰기된 것처럼 보였다 — 파이썬 들여쓰기를 오해하게 만드는 결함. */
+pre code > span[id^="ln-"] { display: block; padding-left: 1.3em; text-indent: -1.3em; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.2em 0;
+  font-size: 0.93em;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+th, td { border: 1px solid #dfe2e8; padding: 0.5em 0.7em; text-align: left; vertical-align: top; }
+th { background: #f2f3f6; font-weight: 600; }
+sub { color: #6b7280; font-size: 0.85em; }
+a { color: #1a4fd6; text-decoration: none; }
+
+/* ─────────────────────────────────────────────────────────────────
+   도표 (2026-08-04 추가)
+
+   글과 코드만 있는 책은 읽히지 않는다. 판매 페이지에는 도표를 만들어
+   놓고 정작 책 안에는 하나도 없었다 — 그 불일치를 메운다.
+
+   원칙:
+   - 이미지 파일이 아니라 HTML/CSS 로 그린다. PDF 에서 선명하고,
+     글자가 그대로 남아 검색·복사·검사 게이트가 다 통한다.
+   - 모든 도표는 page-break-inside:avoid. 반으로 갈린 도표는 도표가 아니다.
+   - 색은 뜻이 있을 때만 쓴다. 초록=지켜진 것, 빨강=깨진 것.
+   ───────────────────────────────────────────────────────────────── */
+
+.fig { margin: 1.6em 0; page-break-inside: avoid; break-inside: avoid; }
+.fig-cap {
+  margin-top: 0.55em; font-size: 0.86em; color: #6E7683; line-height: 1.6;
+}
+.fig-cap b { color: #16181d; font-weight: 700; }
+
+/* 장 도입 요약 — 이 장이 무엇을 다루는지 네 칸으로 */
+.brief {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border: 1px solid #E3E0D9; border-radius: 8px; overflow: hidden;
+  margin: 0 0 1.8em; page-break-inside: avoid; break-inside: avoid;
+}
+.brief > div { padding: 0.75em 0.95em; border-right: 1px solid #EDEAE4; border-bottom: 1px solid #EDEAE4; }
+.brief > div:nth-child(2n) { border-right: 0; }
+.brief > div:nth-child(n+3) { border-bottom: 0; }
+.brief dt {
+  font-size: 0.74em; font-weight: 800; letter-spacing: 0.06em;
+  color: #12A150; margin-bottom: 0.3em;
+}
+.brief dd { margin: 0; font-size: 0.92em; line-height: 1.6; color: #2b2f36; }
+
+/* 증거 사다리 */
+.ladder { display: flex; flex-direction: column; gap: 4px; }
+.rung {
+  display: flex; align-items: baseline; gap: 0.7em;
+  background: #fff; border: 1px solid #E3E0D9; border-left: 3px solid #D8D3CA;
+  border-radius: 5px; padding: 0.42em 0.75em;
+}
+.rung .n {
+  font-family: "SF Mono", Menlo, monospace; font-size: 0.82em; font-weight: 700;
+  color: #A2A9B5; min-width: 1.6em;
+}
+.rung .t { font-weight: 700; font-size: 0.96em; }
+.rung .d { margin-left: auto; font-size: 0.86em; color: #7A828E; text-align: right; }
+.rung.hi { border-left-color: #12A150; background: #F1FAF4; border-color: #D5EEDF; }
+.rung.hi .t { color: #0F7A3D; }
+.rung.bad { border-left-color: #D93A3A; background: #FDF7F6; border-color: #F1DCDC; }
+.rung.bad .t { color: #B32E2E; }
+
+/* 터미널 카드 — 밝은 지면 위의 어두운 코드블록 */
+.term {
+  background: #12161D; border-radius: 7px; padding: 0.85em 1.05em;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 8.4pt; line-height: 1.72; color: #E8EBF0;
+  page-break-inside: avoid; break-inside: avoid;
+}
+.term .l { white-space: pre-wrap; overflow-wrap: anywhere; }
+.term .muted { color: #79828F }
+.term .ok { color: #3DDC84; font-weight: 600 }
+.term .bad { color: #FF8A8A; font-weight: 600 }
+.term .strike { color: #79828F; text-decoration: line-through; text-decoration-color: #FF8A8A; }
+.term .verdict {
+  margin-top: 0.6em; padding-top: 0.6em; border-top: 1px dashed #333B48;
+  font-family: "Apple SD Gothic Neo", sans-serif; font-size: 9.4pt;
+  font-weight: 700; color: #F1F4F8;
+}
+
+/* 카드 묶음 — 분류·목록을 나열할 때 */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.cards.one { grid-template-columns: 1fr; }
+.card {
+  background: #fff; border: 1px solid #E3E0D9; border-radius: 6px;
+  padding: 0.6em 0.8em; font-size: 0.9em; line-height: 1.6;
+}
+.card .h { font-weight: 700; margin-bottom: 0.2em; }
+.card .h .ix {
+  display: inline-block; min-width: 1.35em; height: 1.35em; line-height: 1.35em;
+  text-align: center; border-radius: 3px; background: #12A150; color: #fff;
+  font-family: "SF Mono", Menlo, monospace; font-size: 0.78em; margin-right: 0.45em;
+}
+.card.warn { background: #FDF7F6; border-color: #F1DCDC; }
+.card.warn .h .ix { background: #D93A3A; }
+.card .sub { color: #6E7683; }
+
+/* 2단 비교 */
+.cmp2 { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.cmp2 > div { border-radius: 7px; padding: 0.7em 0.9em; font-size: 0.9em; line-height: 1.65; }
+.cmp2 .no { background: #FDF7F6; border: 1px solid #F1DCDC; }
+.cmp2 .yes { background: #F3FBF6; border: 1px solid #D5EEDF; }
+.cmp2 h4 { margin: 0 0 0.4em; font-size: 0.95em; }
+.cmp2 .no h4 { color: #B32E2E; }
+.cmp2 .yes h4 { color: #0F7A3D; }
+.cmp2 ul { margin: 0; padding-left: 1.1em; }
+.cmp2 li { margin-bottom: 0.2em; }
+
+/* 흐름 — 왼쪽에서 오른쪽으로 */
+.flow { display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; }
+.flow .step {
+  flex: 1 1 0; min-width: 7em;
+  background: #fff; border: 1px solid #E3E0D9; border-radius: 6px;
+  padding: 0.55em 0.7em; font-size: 0.85em; line-height: 1.5; text-align: center;
+}
+.flow .step b { display: block; margin-bottom: 0.15em; }
+.flow .arr { align-self: center; padding: 0 0.35em; color: #A2A9B5; font-size: 0.95em; }
+.flow .step.hit { border-color: #F1DCDC; background: #FDF7F6; }
+.flow .step.hit b { color: #B32E2E; }
+.flow .step.src { border-color: #D5EEDF; background: #F3FBF6; }
+.flow .step.src b { color: #0F7A3D; }
+
+/* 강조 상자 — 장의 핵심 한 문장 */
+.callout {
+  border-left: 3px solid #12A150; background: #F7FBF8;
+  padding: 0.7em 1em; margin: 1.4em 0; border-radius: 0 6px 6px 0;
+  font-size: 1.0em; line-height: 1.7; page-break-inside: avoid; break-inside: avoid;
+}
+.callout.warn { border-left-color: #D93A3A; background: #FDF7F6; }
+.callout b { font-weight: 800; }
+
+/* 긴 표·코드는 인쇄에서 잘리지 않게 가로 스크롤 대신 축소한다 */
+@media print {
+  body { padding: 0; max-width: none; }
+  pre { font-size: 8pt; white-space: pre-wrap; overflow-wrap: anywhere; }
+  a { color: inherit; }
+}
+
+/* ── 웹판 쪽 틀 (본문 CSS 는 책과 같다) ── */
+body { font-size: 17px; padding: 0 1.2em 4em; }
+h1 { margin-top: 0.6em; }
+pre { overflow-x: auto; }
+.tw { overflow-x: auto; margin: 1.2em 0; }
+.tw table { margin: 0; }
+header.site { display: flex; flex-wrap: wrap; gap: 0.4em 1.2em; align-items: baseline;
+  padding: 1.1em 0 0.9em; border-bottom: 1px solid #dfe2e8; font-size: 0.92em; }
+header.site .name { font-weight: 800; color: #16181d; }
+header.site nav { margin-left: auto; display: flex; gap: 1em; }
+.crumb { font-size: 0.86em; color: #6E7683; margin: 1.2em 0 0; }
+.crumb a { color: #6E7683; }
+.stamp { font-size: 0.84em; color: #6E7683; margin: -0.6em 0 1.6em; }
+.lead { font-size: 1.06em; }
+.subtitle { font-size: 1.1em; color: #4b5260; margin: -0.9em 0 1.4em; font-weight: 600; }
+.links { display: flex; flex-wrap: wrap; gap: 0.6em; margin: 1.2em 0 2em; padding: 0; list-style: none; }
+.links a { display: inline-block; padding: 0.5em 0.9em; border: 1px solid #cfd4dc; border-radius: 7px; font-weight: 700; }
+.links a.main { background: #16181d; border-color: #16181d; color: #fff; }
+ol.chapters { list-style: none; padding: 0; margin: 0 0 2.4em; }
+ol.chapters li { margin: 0; padding: 0.85em 0; border-bottom: 1px solid #EDEAE4; }
+ol.chapters a { font-weight: 700; font-size: 1.04em; }
+ol.chapters p { margin: 0.25em 0 0; color: #4b5260; font-size: 0.93em; }
+.ask { margin: 2.6em 0 0; padding: 1em 1.1em; border: 1px solid #D5EEDF; background: #F3FBF6; border-radius: 8px; }
+.ask p { margin: 0 0 0.4em; } .ask p:last-child { margin: 0; }
+.pager { display: flex; justify-content: space-between; gap: 1em; margin: 2em 0 0; font-weight: 700; }
+.pager .next { margin-left: auto; text-align: right; }
+footer.site { margin-top: 3em; padding-top: 1.2em; border-top: 1px solid #dfe2e8; font-size: 0.86em; color: #6E7683; }
+footer.site p { margin: 0 0 0.5em; }
+@media (max-width: 600px) {
+  body { font-size: 16px; padding: 0 1em 3em; }
+  h1 { font-size: 1.55em; }
+  .cards, .cmp2 { grid-template-columns: 1fr; }
+  header.site nav { margin-left: 0; }
+}

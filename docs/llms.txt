@@ -1,0 +1,21 @@
+# AI가 일했다는 증거
+
+> Claude Code에 일을 시키고 "다 됐다"는 말을 어떻게 확인하는지 다룬 한국어 책(Claude Code 멀티에이전트 실전 운영). 0~8장 전문을 무료로 공개한다. 책에 실린 코드는 MIT 라이선스다. 기술 검증판 2026-09-28.
+
+## 장
+
+- [0장 — 왜 "exit 0"은 증거가 아닌가](https://gforce10-design.github.io/ai-work-evidence/ch00-exit-code-is-not-evidence/): 워커가 "완료"라고 답했고 종료코드도 0인데, 그 작업이 실제로 일어났는지 확인할 방법이 없다. 붙일 장치: 증거를 7단계로 나누고, 아래 단계가 다 채워져야만 위 단계를 주장할 수 있게 강제하는 검증기.
+- [1장 — 지시가 몇 턴 만에 흐려지는 문제](https://gforce10-design.github.io/ai-work-evidence/ch01-directives-fade/): CLAUDE.md 에 규칙을 써 두어도 몇 턴 지나면 지켜지지 않는다. 붙일 장치: 사용자 프롬프트를 처리하기 전에 짧은 핵심 지시를 추가하는 훅.
+- [2장 — CLAUDE.md를 오래 고쳐 쓸 수 있게 짜기](https://gforce10-design.github.io/ai-work-evidence/ch02-designing-claude-md/): 사고가 날 때마다 규칙을 덧붙이다 보니 CLAUDE.md 가 감당 못 할 크기가 됐다. 붙일 장치: 얇은 부트스트랩 + 외부 정본 포인터 + 해시 고정 + 마커 블록 조각.
+- [3장 — 세션이 끊겨도 이어지게](https://gforce10-design.github.io/ai-work-evidence/ch03-session-continuity/): 세션이 끊기면 다음 세션이 이미 기각한 설계안을 다시 제안한다. 붙일 장치: SESSION.md 한 장 — 목표·현재 상태·다음 단계·결정 기록·파일 흔적.
+- [4장 — 직접 할까 위임할까](https://gforce10-design.github.io/ai-work-evidence/ch04-direct-or-delegate/): 직접 5분이면 될 일을 위임했다가 15분짜리 왕복이 됐다. 붙일 장치: 물량·명세 확정도·병렬성으로 직접/위임을 가르는 판정 함수.
+- [5장 — 실패했을 때 무엇을 올릴 것인가](https://gforce10-design.github.io/ai-work-evidence/ch05-diagnosing-failure/): 실패하면 반사적으로 effort 를 올린다. 또 실패한다. 원인은 딴 데 있었다. 붙일 장치: 실패를 7가지로 나누고 종류마다 다른 손잡이를 당기는 진단표.
+- [6장 — 위험한 명령을 안전하게 위임하기](https://gforce10-design.github.io/ai-work-evidence/ch06-dangerous-commands/): 승인 버튼을 하루에 수백 번 누르다 보면 내용을 안 읽고 누르게 된다. 붙일 장치: 위험 명령을 기본 차단하고, 1회성 해시 바인딩 승인 마커로만 열어주는 훅.
+- [7장 — 위임 증거 만들기](https://gforce10-design.github.io/ai-work-evidence/ch07-proving-delegation/): 40KB 짜리 파일 셋을 5초 만에 리뷰했다고 답이 왔다. 파일을 연 적이 없었다. 붙일 장치: 워커 스냅샷 격리 · 1회성 nonce · challenge-response · 고정 응답 계약.
+- [8장 — 가드가 진짜 작동하는지 증명하기](https://gforce10-design.github.io/ai-work-evidence/ch08-proving-the-guards/): 몇 주째 초록불이던 검사가, 사고가 난 뒤 보니 한 번도 빨간불이 된 적이 없었다. 붙일 장치: 일부러 깨뜨려서 빨간불이 켜지는지 확인하는 뮤테이션 드릴.
+
+## 그 밖
+
+- [코드 저장소](https://github.com/Gforce10-design/ai-work-evidence): 책에 실린 코드 전문과 직접 확인하는 법
+- [PDF](https://github.com/Gforce10-design/ai-work-evidence/releases/latest): 한 권으로 묶은 무료 공개판
+- [Threads @subal_i](https://www.threads.com/@subal_i): 하루 한 편씩 나눠 올리는 연재와 문의
