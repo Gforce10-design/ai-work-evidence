@@ -1,0 +1,27 @@
+{
+  "agent-loop": {
+    "label": "에이전트 루프",
+    "corner": "에이전트 루프",
+    "desc": "목표·완료조건·이터레이션 캡·합격처리 규율 (머리말·1장)"
+  },
+  "session-handoff": {
+    "label": "세션 이어가기",
+    "corner": "세션 연속성",
+    "desc": "SESSION.md 프로토콜 요약 (3장)"
+  },
+  "verification": {
+    "label": "검증 규율",
+    "corner": "검증 규율",
+    "desc": "증거의 사다리 + 산출자 자기채점 금지 (0장·5장)"
+  },
+  "routing": {
+    "label": "라우팅 판단",
+    "corner": "라우팅 판단",
+    "desc": "직접/위임 판정과 실패 진단 요약 (4장·5장)"
+  },
+  "approval-gate": {
+    "label": "승인 게이트",
+    "corner": "승인 게이트",
+    "desc": "위험 명령 하드셋과 1회성 승인 규율 (6장)"
+  }
+}
