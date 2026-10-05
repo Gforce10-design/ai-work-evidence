@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1장 — 지시가 몇 턴 만에 흐려지는 문제 | AI가 일했다는 증거</title>
+<meta name="description" content="CLAUDE.md 에 규칙을 써 두어도 몇 턴 지나면 지켜지지 않는다. 붙일 장치: 사용자 프롬프트를 처리하기 전에 짧은 핵심 지시를 추가하는 훅.">
+<link rel="canonical" href="https://gforce10-design.github.io/ai-work-evidence/ch01-directives-fade/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI가 일했다는 증거">
+<meta property="og:title" content="1장 — 지시가 몇 턴 만에 흐려지는 문제 | AI가 일했다는 증거">
+<meta property="og:description" content="CLAUDE.md 에 규칙을 써 두어도 몇 턴 지나면 지켜지지 않는다. 붙일 장치: 사용자 프롬프트를 처리하기 전에 짧은 핵심 지시를 추가하는 훅.">
+<meta property="og:url" content="https://gforce10-design.github.io/ai-work-evidence/ch01-directives-fade/">
+<meta property="og:image" content="https://gforce10-design.github.io/ai-work-evidence/assets/og.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="sitemap" type="application/xml" href="https://gforce10-design.github.io/ai-work-evidence/sitemap.xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://gforce10-design.github.io/ai-work-evidence/ch01-directives-fade/#article", "headline": "1장 — 지시가 몇 턴 만에 흐려지는 문제", "description": "CLAUDE.md 에 규칙을 써 두어도 몇 턴 지나면 지켜지지 않는다. 붙일 장치: 사용자 프롬프트를 처리하기 전에 짧은 핵심 지시를 추가하는 훅.", "inLanguage": "ko", "mainEntityOfPage": "https://gforce10-design.github.io/ai-work-evidence/ch01-directives-fade/", "isAccessibleForFree": true, "image": "https://gforce10-design.github.io/ai-work-evidence/assets/og.png", "isPartOf": {"@type": "Book", "@id": "https://gforce10-design.github.io/ai-work-evidence/#book", "name": "AI가 일했다는 증거", "url": "https://gforce10-design.github.io/ai-work-evidence/"}, "author": {"@type": "Person", "@id": "https://gforce10-design.github.io/ai-work-evidence/#author", "name": "subal_i", "url": "https://www.threads.com/@subal_i", "sameAs": ["https://www.threads.com/@subal_i", "https://github.com/Gforce10-design"]}, "datePublished": "2026-09-28", "dateModified": "2026-09-28"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AI가 일했다는 증거", "item": "https://gforce10-design.github.io/ai-work-evidence/"}, {"@type": "ListItem", "position": 2, "name": "1장 — 지시가 몇 턴 만에 흐려지는 문제", "item": "https://gforce10-design.github.io/ai-work-evidence/ch01-directives-fade/"}]}]}</script>
+</head>
+<body>
+<header class="site"><a class="name" href="../">AI가 일했다는 증거</a><nav><a href="https://www.threads.com/@subal_i">Threads @subal_i</a><a href="https://github.com/Gforce10-design/ai-work-evidence">코드</a><a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF</a></nav></header>
+<nav class="crumb" aria-label="위치"><a href="../">AI가 일했다는 증거</a> › 1장 — 지시가 몇 턴 만에 흐려지는 문제</nav>
+<main>
+<article>
+<h1 id="1">1장 — 지시가 몇 턴 만에 흐려지는 문제</h1>
+<p class="stamp">기술 검증판 2026-09-28 · 원고 최종 수정 2026-09-28</p>
+<div class="brief"><div><dt>증상</dt><dd>CLAUDE.md 에 규칙을 써 두어도 몇 턴 지나면 지켜지지 않는다</dd></div><div><dt>원인</dt><dd>규칙이 로드돼 있어도 길이·충돌·작업 맥락에 따라 지켜지지 않을 수 있다</dd></div><div><dt>붙일 장치</dt><dd>사용자 프롬프트를 처리하기 전에 짧은 핵심 지시를 추가하는 훅</dd></div><div><dt>그래도 부족했던 것</dt><dd>2주 만에 3줄이던 규칙 파일이 60줄로 불었다. 재주입 자체가 새 문제를 낳았다</dd></div></div>
+
+<h2 id="_1">증상</h2>
+<p>CLAUDE.md에 이렇게 써 놓았다고 하자.</p>
+<blockquote>
+<p>커밋 전에는 반드시 빌드와 테스트를 실제로 돌리고, 통과를 확인한 뒤에만 커밋한다.</p>
+</blockquote>
+<p>세션을 새로 열고 처음 몇 턴은 이 규칙이 잘 지켜진다. 파일 몇 개 고치고, 테스트 돌리고,
+통과 확인하고, 커밋. 보기 좋다. 그런데 그 세션이 오후 내내 이어지고, 작업이 여러 갈래로
+번지고, 중간에 컨텍스트가 꽉 차서 한 번 컴팩션(compaction)이 지나가고 나면 — 어느 순간
+Claude가 테스트를 돌리지 않은 채로 커밋을 만든다. 그것도 "테스트 통과 확인 완료"라는
+말과 함께.</p>
+<p>처음엔 "얘가 오늘따라 대충 한다"고 생각하기 쉽다. 그런데 같은 패턴이 몇 주에 걸쳐
+반복되면 그게 아니라는 게 보인다. 규칙을 어기는 건 항상 세션
+후반이다. 그리고 컴팩션이 한 번 지나간 직후일 때가 유독 많다. "서브에이전트 결과는
+반드시 diff를 읽고 병합하라"는 규칙도 마찬가지였다 — 10턴째까지는 병합 전에 항상 diff를
+열어보다가 40턴을 넘기면 서브에이전트의 요약 문장만 보고 그대로 병합해버렸다. 그중
+하나가 실제로 깨진 코드였다. 다음 날 CI가 실패하고 나서야 알았다.</p>
+<p>CLAUDE.md에 규칙이 없어서가 아니다. 오히려 규칙은 처음부터 끝까지 그 세션 컨텍스트
+어딘가에 그대로 남아 있다. 문제는 "규칙이 있는가"가 아니라 "그 규칙이 지금 이 순간의
+판단에 얼마나 가까이 있는가"다.</p>
+<h2 id="_2">왜 그런가</h2>
+<p>CLAUDE.md는 세션 시작 때 읽히고, 프로젝트 루트의 파일은 <code>/compact</code> 뒤에도 다시 읽혀 주입된다. 하위 디렉터리의 파일과 경로별 규칙은 해당 파일을 다룰 때 다시 불러온다. 따라서 규칙 위반을 곧바로 "컴팩션이 CLAUDE.md를 지웠다"고 설명하면 틀린다.</p>
+<p>규칙은 실행을 강제하는 설정이 아니라 모델이 참고하는 컨텍스트다. 긴 규칙 목록, 서로 모순되는 지시, 실제로 로드되지 않은 파일부터 확인해야 한다. 긴 대화에서 규칙 위반을 관측했더라도 그 원인이 위치 때문인지는 별도로 비교해야 한다. 모든 모델이 언제나 최신 토큰에 더 크게 반응한다고 단정할 근거도 없다.</p>
+<p>이 장의 훅은 필요한 짧은 규칙을 사용자 프롬프트마다 다시 추가하는 보조 장치다. 규칙을 출력했다는 사실과 모델이 그 규칙을 지켰다는 사실은 따로 확인한다. 규칙 준수를 반드시 강제해야 하는 작업에는 실행 전 검사도 필요하다.</p>
+<p>근거: <a href="https://code.claude.com/docs/en/memory#instructions-seem-lost-after-compact">Claude Code 메모리 문서</a>, 확인 2026-09-28.</p>
+<h2 id="_3">최소 해법</h2>
+<p>Claude Code에는 <code>UserPromptSubmit</code>이라는 훅 이벤트가 있다. 사용자가 프롬프트를
+제출할 때마다, Claude가 그 프롬프트를 처리하기 전에 매번 실행된다. 이 훅이
+표준출력(exit code 0)으로 텍스트를 내보내면 그 텍스트는 이번 턴의 컨텍스트에
+추가로 실린다 — 다시 말해 이 훅으로 "지금 막 들어온 턴 근처"에 원하는 내용을 매번 새로
+꽂아 넣을 수 있다.</p>
+<p>원리는 간단하다. 짧은 지시 모음을 파일 하나에 적어두고 이 훅이 매 턴마다 그
+파일을 읽어서 그대로 다시 내보낸다. CLAUDE.md의 재로딩과 별개로 이 지시 모음은 1턴이든 80턴이든 컴팩션 직후 첫 턴이든 상관없이 항상 "방금 도착한
+컨텍스트"의 일부가 된다.</p>
+<p>최소 버전은 이 정도면 된다.</p>
+<p>이 파일은 <code>~/.claude/hooks/reinject_directives.py</code>에 둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;UserPromptSubmit 훅 — 매 턴마다 짧은 지시 파일을 다시 주입한다.&quot;&quot;&quot;</span>
+</span><span id="ln-3"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
+</span><span id="ln-4"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-5">
+</span><span id="ln-6">PATH <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/agent-directives.md&quot;</span>)
+</span><span id="ln-7">
+</span><span id="ln-8">
+</span><span id="ln-9"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
+</span><span id="ln-10">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>exists(PATH):
+</span><span id="ln-11">        sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-12">    <span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">open</span>(PATH, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
+</span><span id="ln-13">        text <span style="color: #666">=</span> handle<span style="color: #666">.</span>read()<span style="color: #666">.</span>strip()
+</span><span id="ln-14">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> text:
+</span><span id="ln-15">        sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-16">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;&lt;active-directives&gt;&quot;</span>)
+</span><span id="ln-17">    <span style="color: #008000">print</span>(text)
+</span><span id="ln-18">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;&lt;/active-directives&gt;&quot;</span>)
+</span><span id="ln-19">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-20">
+</span><span id="ln-21">
+</span><span id="ln-22">main()
+</span></code></pre></div>
+
+<p>지시 파일은 이런 식으로 짧게 적는다. 이 파일은 <code>~/.claude/agent-directives.md</code>에 둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #000080; font-weight: bold"># 활성 지시 (매 턴 재주입됨)</span>
+</span><span id="ln-2">
+</span><span id="ln-3"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>커밋 전 반드시 빌드/테스트를 실제로 돌리고 통과를 확인한다. 실패한 채 커밋하지 않는다.
+</span><span id="ln-4"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>완료를 선언하기 전에는 검증 명령의 실행 결과를 근거로 든다. &quot;될 것 같다&quot;는 근거가 아니다.
+</span><span id="ln-5"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>서브에이전트 결과를 병합하기 전 diff를 반드시 읽는다. 요약만 보고 병합하지 않는다.
+</span></code></pre></div>
+
+<p>settings.json 배선은 이렇게 한다. 프로젝트 전용이면 프로젝트 루트의
+<code>.claude/settings.json</code>에, 모든 프로젝트에 적용하고 싶으면 <code>~/.claude/settings.json</code>에
+둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">{
+</span><span id="ln-2"><span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>{
+</span><span id="ln-3"><span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">&quot;UserPromptSubmit&quot;</span>:<span style="color: #BBB"> </span>[
+</span><span id="ln-4"><span style="color: #BBB">      </span>{
+</span><span id="ln-5"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>[
+</span><span id="ln-6"><span style="color: #BBB">          </span>{
+</span><span id="ln-7"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;type&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;command&quot;</span>,
+</span><span id="ln-8"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;command&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;python3 $HOME/.claude/hooks/reinject_directives.py&quot;</span>
+</span><span id="ln-9"><span style="color: #BBB">          </span>}
+</span><span id="ln-10"><span style="color: #BBB">        </span>]
+</span><span id="ln-11"><span style="color: #BBB">      </span>}
+</span><span id="ln-12"><span style="color: #BBB">    </span>]
+</span><span id="ln-13"><span style="color: #BBB">  </span>}
+</span><span id="ln-14">}
+</span></code></pre></div>
+
+<p><code>command</code>는 셸을 거쳐 실행되므로 <code>$HOME</code>이 정상적으로 확장된다. 이걸 걸어두고 나면
+100턴짜리 세션이든 컴팩션을 세 번 거친 세션이든 매 턴 시작마다 저 세 줄이 방금 온
+컨텍스트 옆에 다시 나타난다.</p>
+<h3 id="_4">왜 이 훅은 아무것도 막지 않는가</h3>
+<p>최소 버전에는 명시적으로 프롬프트를 거부하는 코드가 없다. 다만 파일 읽기 오류는 처리하지 않아 종료코드 1이 될 수 있다. 아래 최종형은 실행 중 잡힌 예외를 처리해 0으로 끝낸다. 문법 오류처럼 실행 전 발생하는 오류까지 잡는다는 뜻은 아니다.
+의도적이다. 이 훅은 "판단에 필요한 걸 눈에 잘 띄게 다시 놓아주는 것"만 한다.
+"어겼는지 검사해서 막는 것"은 하지 않는다. 이 저장소에는 자매 훅이 하나 더 있다.
+사용자의 자연어 프롬프트를 보고 관련 작업 흐름을 살짝 알려주기만 하는 훅인데
+그 스크립트의 주석에 이런 계약이 적혀 있다.</p>
+<blockquote>
+<p>Contract: … ALWAYS exit 0 — this is a hint, never a block, and must never break a
+prompt. Read-only, no side effects. … It does NOT force a skill. The model … still
+decides.</p>
+</blockquote>
+<p>이 훅도 같은 원칙을 따른다. 컨텍스트에 무언가를 얹어주는 훅과 실행을 막는 훅은
+신뢰 수준을 완전히 다르게 잡고 설계해야 한다. 전자가 실수로 판단을 막아버리면(예: 버그로
+모든 프롬프트를 거부한다면) 사용자는 그 훅을 그냥 꺼버린다. 그러면 원래 주려던 작은
+도움조차 사라진다. 실행을 구조적으로 막아야 하는 진짜 위험한 명령은 따로 다룬다 —
+6장에서, 이 훅과는 다른 종류의 신뢰 수준으로.</p>
+<h2 id="_5">그걸로 부족했던 지점</h2>
+<p>최소 버전을 걸어두고 2주쯤 지나니 문제가 생겼다. 사고가 하나 날 때마다 "이것도
+지켜야지" 하면서 <code>agent-directives.md</code>에 한 줄씩 추가했다. 처음 3줄이던 파일이
+어느새 60줄이 넘었다. 커밋 규칙, 병합 규칙, 파일 삭제 전 재확인, 로그 남기기,
+브랜치 이름 규칙, 특정 디렉터리 건드리지 말기… 전부 한 번씩은 필요해서 넣은
+것들이었다.</p>
+<p>그런데 파일이 커지자 원래 문제가 다른 모양으로 다시 불거졌다. 매 턴 60줄을 통째로
+다시 밀어 넣으니 그 안에서 진짜 중요한 2~3줄(테스트 없이 커밋하지 않기, diff
+읽고 병합하기)이 나머지 다수 규칙 사이에 묻혔다. 훅이 매 턴 규칙을 "가까이"
+가져다 놓긴 하는데 정작 그 뭉치 자체가 너무 커서 그 안에서 규칙이 다시
+희석된 것이다. 게다가 매 턴 몇백 토큰씩 더 먹으니 세션이 길어질수록 이 훅 자체가
+컨텍스트 예산을 갉아먹는 비용이 됐다.</p>
+<p>여기서 역설이 생긴다 — <strong>규칙을 계속 추가하는 행위 자체가 이 문제의 원인이지 해법이 될 수
+없다.</strong> "사고가 났으니 규칙을 하나 더 박자"는 반사적으로 맞는 대응처럼 보이지만
+재주입 파일에다 그렇게 하면 결국 재주입 메커니즘의 효력을 떨어뜨린다. 반대
+방향의 규율이 필요하다. 크기에 상한을 걸어서 무한정 못 늘어나게 막고 그
+상한에 닿으면 "새 걸 추가하기 전에 낡은 걸 먼저 정리하라"는 신호를 명시적으로
+띄워야 한다. 그리고 운영자는 사고가 실제로 재발하지 않게 된 항목,
+이제 다른 구조적 장치로 대체된 항목 등을 주기적으로 쳐내야 한다. 이 파일은 로그가 아니다 —
+"지금도 매 턴 다시 봐야 할 만큼 살아있는 규칙"만 담는 자리다.</p>
+<h2 id="_6">최종형</h2>
+<p>크기 상한과 상한을 넘었을 때의 명시적 경고를 더한 최종형이다. 파일 경로와
+동작은 최소 버전과 같고 예산 관리 로직만 추가됐다.</p>
+<p>이 파일은 <code>~/.claude/hooks/reinject_directives.py</code>에 둔다(최소 버전을 이 내용으로
+덮어쓴다).</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;UserPromptSubmit 훅 — ~/.claude/agent-directives.md를 매 턴 다시 주입한다.</span>
+</span><span id="ln-3">
+</span><span id="ln-4"><span style="color: #BA2121; font-style: italic">목적: 사용자 프롬프트마다 짧은 지시를 다시 출력한다. CLAUDE.md의 재로딩과</span>
+</span><span id="ln-5"><span style="color: #BA2121; font-style: italic">별개인 보조 장치이며, 규칙 준수 효과는 실제 행동을 비교해 확인한다.</span>
+</span><span id="ln-6">
+</span><span id="ln-7"><span style="color: #BA2121; font-style: italic">예산: 최대 CAP 바이트만 원문에서 내보낸다. 태그·경고 문구는 별도다. 넘으면 잘라내고 그 사실을 표시한다 — 규칙</span>
+</span><span id="ln-8"><span style="color: #BA2121; font-style: italic">파일이 계속 길어지면 이 훅 자체가 새로운 희석 문제를 만들기 때문이다.</span>
+</span><span id="ln-9">
+</span><span id="ln-10"><span style="color: #BA2121; font-style: italic">안전장치: main 안에서 잡힌 실행 중 예외는 삼키고 exit 0으로 끝낸다.</span>
+</span><span id="ln-11"><span style="color: #BA2121; font-style: italic">문법 오류·인터프리터 실행 실패·강제 종료까지 이 코드가 처리하지는 않는다.</span>
+</span><span id="ln-12"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+</span><span id="ln-13"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
+</span><span id="ln-14"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-15">
+</span><span id="ln-16">CAP <span style="color: #666">=</span> <span style="color: #666">4096</span>
+</span><span id="ln-17">PATH <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/agent-directives.md&quot;</span>)
+</span><span id="ln-18">
+</span><span id="ln-19">
+</span><span id="ln-20"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
+</span><span id="ln-21">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-22">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>exists(PATH):
+</span><span id="ln-23">            sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-24">        <span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">open</span>(PATH, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>, errors<span style="color: #666">=</span><span style="color: #BA2121">&quot;ignore&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
+</span><span id="ln-25">            text <span style="color: #666">=</span> handle<span style="color: #666">.</span>read()<span style="color: #666">.</span>strip()
+</span><span id="ln-26">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> text:
+</span><span id="ln-27">            sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-28">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(text<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>)) <span style="color: #666">&gt;</span> CAP:
+</span><span id="ln-29">            text <span style="color: #666">=</span> text<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>)[:CAP]<span style="color: #666">.</span>decode(<span style="color: #BA2121">&quot;utf-8&quot;</span>, <span style="color: #BA2121">&quot;ignore&quot;</span>)<span style="color: #666">.</span>rstrip()
+</span><span id="ln-30">            text <span style="color: #666">+=</span> (
+</span><span id="ln-31">                <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">[...truncated at &quot;</span>
+</span><span id="ln-32">                <span style="color: #666">+</span> <span style="color: #008000">str</span>(CAP)
+</span><span id="ln-33">                <span style="color: #666">+</span> <span style="color: #BA2121">&quot; bytes — agent-directives.md가 너무 커졌다. &quot;</span>
+</span><span id="ln-34">                <span style="color: #BA2121">&quot;해소된 항목을 지우고 다시 줄여라.]&quot;</span>
+</span><span id="ln-35">            )
+</span><span id="ln-36">        sys<span style="color: #666">.</span>stdout<span style="color: #666">.</span>write(
+</span><span id="ln-37">            <span style="color: #BA2121">&quot;&lt;active-directives note=</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">매 턴 재주입됨. 지금 다시 확인하고 행동하라.</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">&gt;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-38">            <span style="color: #666">+</span> text
+</span><span id="ln-39">            <span style="color: #666">+</span> <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&lt;/active-directives&gt;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-40">        )
+</span><span id="ln-41">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
+</span><span id="ln-42">        <span style="color: #008000; font-weight: bold">pass</span>
+</span><span id="ln-43">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-44">
+</span><span id="ln-45">
+</span><span id="ln-46">main()
+</span></code></pre></div>
+
+<p>settings.json 배선은 최소 버전과 동일하다 — 스크립트 파일 하나만 바뀌었을 뿐
+훅 등록 방식은 그대로다.</p>
+<p>운영 규율은 코드 대신 습관으로 지킨다. <code>agent-directives.md</code>는 한 달에 한 번, 혹은
+사고가 재발하지 않는다는 확신이 생긴 항목이 있을 때마다 훑어보고 지운다. 새
+항목을 추가할 땐 "이게 정말 매 턴 봐야 할 만큼 자주 무너지는 규칙인가, 아니면
+한 번 만들어서 자연스럽게 지켜지는 구조(예: 린터, 프리커밋 훅)로 옮길 수 있는
+일인가"를 먼저 묻는다. 구조로 옮길 수 있으면 그쪽이 낫다 — 재주입은 "아직 구조화
+못 한 규칙"을 위한 임시방편일 뿐이다.</p>
+<h2 id="_7">직접 확인하는 법</h2>
+<ol>
+<li><code>~/.claude/agent-directives.md</code>에 짧은 규칙 2~3줄을 적는다.</li>
+<li>위 최종형 코드를 <code>~/.claude/hooks/reinject_directives.py</code>로 저장한다.</li>
+<li><code>~/.claude/settings.json</code>(또는 프로젝트 <code>.claude/settings.json</code>)에 위 배선을 추가한다.</li>
+<li>Claude Code를 새 세션으로 열고 규칙과 무관해 보이는 작업을 40~50턴 이상
+   길게 시킨다. 중간에 <code>/compact</code>로 컴팩션을 한 번 직접 트리거한다.</li>
+<li>컴팩션 직후 첫 턴에서 "지금 활성 지시가 뭐야?"라고 물어본다. 재주입 훅이
+   걸려 있으면 방금 도착한 컨텍스트에 그 규칙이 그대로 다시 들어가 있으므로
+   출력 블록에 원문이 있는지와 Claude의 답이 맞는지를 각각 확인한다. 원문 그대로 답한다는 보장은 없다.</li>
+<li>대조군을 만든다: settings.json에서 이 훅 항목을 잠깐 빼고(JSON에는 주석을 넣지 않는다)
+   같은 방식으로 40~50턴을 다시 굴린다. 후반부에 규칙 위반(테스트 안 돌리고
+   커밋한다든지)이 실제로 재현되는지 확인한다. 이 대조로 "껐을 때 빨간불이
+   되는지"를 본다. 같은 과제·모델·설정으로 여러 세션을 비교하고 실제 규칙 위반 횟수를 기록한다. 한 번의 차이나 규칙을 외운 답만으로 효과가 증명되지는 않는다.</li>
+<li>크기 상한을 확인한다: <code>agent-directives.md</code>를 일부러 4KB 넘게 부풀리고
+   다음 턴에 주입된 블록 끝에 <code>[...truncated at 4096 bytes …]</code> 경고가 실제로
+   붙는지 확인한다.</li>
+</ol>
+<p>한 가지 밝혀둔다 — 인터넷에는 "매 턴 재주입이 규칙 준수율을 21%에서 97%로
+올린다"는 식의 수치가 돌아다니지만 그 출처는 확인되지 않았다. 이 장에서는 그
+숫자를 효과의 근거로 채택하지 않았다. 위 6~7번 절차로 자기 환경에서 직접 비교해보는 쪽이 그
+출처 없는 수치를 인용하는 것보다 낫다. 표본이 작으면 결론도 잠정적이다.</p>
+<p>훅의 이벤트·표준출력 처리 근거: <a href="https://code.claude.com/docs/en/hooks#exit-code-0">공식 Hooks reference</a>, 확인 2026-09-28. 여기서 "매 턴"은 모든 도구 호출이 아니라 사용자가 프롬프트를 제출하는 때를 뜻한다.</p>
+</article>
+<aside class="ask">
+<p>이 장의 코드 전문: <a href="https://github.com/Gforce10-design/ai-work-evidence/tree/main/ch01">ch01/</a> (MIT)</p>
+<p>따라 하다 막히면 Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> 에 댓글로 남겨 달라. 하나씩 본다.</p>
+</aside>
+</main>
+<nav class="pager"><a class="prev" href="../ch00-exit-code-is-not-evidence/">← 0장 — 왜 &quot;exit 0&quot;은 증거가 아닌가</a><a class="next" href="../ch02-designing-claude-md/">2장 — CLAUDE.md를 오래 고쳐 쓸 수 있게 짜기 →</a></nav>
+<footer class="site">
+<p>이 책은 무료다. 받은 사람은 누구나 읽고 나눠도 된다. 출처만 밝혀 달라.</p>
+<p>쓴 사람: Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> — 하루 한 편씩 나눠 올린다. 책에 실린 코드는 <a href="https://github.com/Gforce10-design/ai-work-evidence">GitHub</a>에 있고 MIT 라이선스다. <a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF 받기</a></p>
+</footer>
+</body>
+</html>

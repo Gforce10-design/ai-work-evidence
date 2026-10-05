@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>8장 — 가드가 진짜 작동하는지 증명하기 | AI가 일했다는 증거</title>
+<meta name="description" content="몇 주째 초록불이던 검사가, 사고가 난 뒤 보니 한 번도 빨간불이 된 적이 없었다. 붙일 장치: 일부러 깨뜨려서 빨간불이 켜지는지 확인하는 뮤테이션 드릴.">
+<link rel="canonical" href="https://gforce10-design.github.io/ai-work-evidence/ch08-proving-the-guards/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI가 일했다는 증거">
+<meta property="og:title" content="8장 — 가드가 진짜 작동하는지 증명하기 | AI가 일했다는 증거">
+<meta property="og:description" content="몇 주째 초록불이던 검사가, 사고가 난 뒤 보니 한 번도 빨간불이 된 적이 없었다. 붙일 장치: 일부러 깨뜨려서 빨간불이 켜지는지 확인하는 뮤테이션 드릴.">
+<meta property="og:url" content="https://gforce10-design.github.io/ai-work-evidence/ch08-proving-the-guards/">
+<meta property="og:image" content="https://gforce10-design.github.io/ai-work-evidence/assets/og.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="sitemap" type="application/xml" href="https://gforce10-design.github.io/ai-work-evidence/sitemap.xml">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "@id": "https://gforce10-design.github.io/ai-work-evidence/ch08-proving-the-guards/#article", "headline": "8장 — 가드가 진짜 작동하는지 증명하기", "description": "몇 주째 초록불이던 검사가, 사고가 난 뒤 보니 한 번도 빨간불이 된 적이 없었다. 붙일 장치: 일부러 깨뜨려서 빨간불이 켜지는지 확인하는 뮤테이션 드릴.", "inLanguage": "ko", "mainEntityOfPage": "https://gforce10-design.github.io/ai-work-evidence/ch08-proving-the-guards/", "isAccessibleForFree": true, "image": "https://gforce10-design.github.io/ai-work-evidence/assets/og.png", "isPartOf": {"@type": "Book", "@id": "https://gforce10-design.github.io/ai-work-evidence/#book", "name": "AI가 일했다는 증거", "url": "https://gforce10-design.github.io/ai-work-evidence/"}, "author": {"@type": "Person", "@id": "https://gforce10-design.github.io/ai-work-evidence/#author", "name": "subal_i", "url": "https://www.threads.com/@subal_i", "sameAs": ["https://www.threads.com/@subal_i", "https://github.com/Gforce10-design"]}, "datePublished": "2026-09-28", "dateModified": "2026-09-28"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "AI가 일했다는 증거", "item": "https://gforce10-design.github.io/ai-work-evidence/"}, {"@type": "ListItem", "position": 2, "name": "8장 — 가드가 진짜 작동하는지 증명하기", "item": "https://gforce10-design.github.io/ai-work-evidence/ch08-proving-the-guards/"}]}]}</script>
+</head>
+<body>
+<header class="site"><a class="name" href="../">AI가 일했다는 증거</a><nav><a href="https://www.threads.com/@subal_i">Threads @subal_i</a><a href="https://github.com/Gforce10-design/ai-work-evidence">코드</a><a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF</a></nav></header>
+<nav class="crumb" aria-label="위치"><a href="../">AI가 일했다는 증거</a> › 8장 — 가드가 진짜 작동하는지 증명하기</nav>
+<main>
+<article>
+<h1 id="8">8장 — 가드가 진짜 작동하는지 증명하기</h1>
+<p class="stamp">기술 검증판 2026-09-28 · 원고 최종 수정 2026-09-28</p>
+<div class="brief"><div><dt>증상</dt><dd>몇 주째 초록불이던 검사가, 사고가 난 뒤 보니 한 번도 빨간불이 된 적이 없었다</dd></div><div><dt>원인</dt><dd>"검사가 있다"와 "검사가 작동한다"는 다른 말이다</dd></div><div><dt>붙일 장치</dt><dd>일부러 깨뜨려서 빨간불이 켜지는지 확인하는 뮤테이션 드릴</dd></div><div><dt>그래도 부족했던 것</dt><dd>드릴이 복원하지 못한 위험은 여전히 남는다. 그 한계까지 적는다</dd></div></div>
+
+<h2 id="_1">늘 초록불이던 검사</h2>
+<p>멀티에이전트 운영을 몇 주 굴리다 보면 안전장치가 꽤 쌓인다. 리뷰어 역할 서브에이전트는 코드를 쓰지 못하게 막아뒀고, 워커가 프로젝트 바깥을 건드리지 못하게 쓰기 범위도 좁혀뒀고, 커밋 전에는 회귀 스위트를 돌리는 훅도 걸어뒀다. CI는 몇 주째 초록불이었다. 그런데 어느 날 리뷰 결과를 하나하나 다시 읽다가 리뷰어로 지정한 서브에이전트 정의 파일 하나에 <code>Write</code>가 버젓이 들어가 있는 걸 발견했다. 그 파일을 지키려고 만든 검사는 분명 있었다. 실행도 됐다. 그런데 한 번도 빨간불이 켜진 적이 없었다.</p>
+<div class="fig"><div class="cmp2"><div class="no"><h4>검사가 있다</h4><ul><li>파일이 저장소에 있다</li><li>CI 에서 실행된다</li><li>종료코드 0 을 반환한다</li><li>몇 주째 초록불이다</li></ul></div><div class="yes"><h4>검사가 작동한다</h4><ul><li>일부러 깨뜨렸을 때 <b>빨간불이 켜진다</b></li><li>깨뜨린 자리를 정확히 지목한다</li><li>되돌리면 다시 초록불이 된다</li><li>그 왕복을 <b>실제로 해봤다</b></li></ul></div></div><div class="fig-cap">왼쪽 네 줄은 전부 사실이면서도 <b>아무것도 증명하지 않는다.</b> 한 번도 빨간불이 된 적 없는 검사는 통과가 아니라 <b>실행된 적 없음</b>일 수도 있다.</div></div>
+
+<p>원인을 뒤져보면 흔히 둘 중 하나다. 검사가 애초에 그 파일을 보고 있지 않았거나(경로가 하나 빠졌거나, 이름이 살짝 달라서 매칭에서 새거나), 검사는 그 파일을 보고 있었지만 판정 로직이 원래 잡아야 할 조건을 안 잡고 있었거나. 둘 다 증상은 똑같다 — CI는 초록불이고, 사고는 났다. 이 장이 다루는 문제가 바로 이거다. <strong>"검사가 있다"와 "검사가 작동한다"는 다른 말이다.</strong> 한 번도 빨간불이 켜진 적 없는 검사는 통과가 아니라 실행된 적 없음일 수도 있다. 이 책의 다른 모든 장이 만든 가드들 — 승인 게이트, 재진입 프로토콜, 쓰기 범위 제한, 리뷰어 격리 — 도 전부 이 의심을 피해 가지 못한다. 그래서 이 장으로 책을 마무리한다.</p>
+<h2 id="_2">문서는 왜 혼자 못 버티는가</h2>
+<p>규칙을 문서에 적어두는 건 쉽다. "리뷰어는 쓰기 도구를 가지면 안 된다"고 CLAUDE.md나 운영 매뉴얼에 한 줄 적으면 그 순간에는 진짜처럼 느껴진다. 문제는 그다음이다. 누군가(사람이든 에이전트든) 서브에이전트 정의 파일을 고치다가 <code>tools:</code> 목록에 <code>Write</code>를 하나 더 넣어도, 문서에는 아무 경고도 뜨지 않는다. 문서와 코드는 원래 서로 이어져 있지 않다. 코드는 조용히 문서에서 멀어지고(드리프트), 그 사실을 알아채는 유일한 방법이 "문서와 코드를 처음부터 다시 대조하는 전면 재감사"라면, 시스템이 커질수록 아무도 그걸 안 하게 된다. 시스템이 커질수록 전면 재감사에 드는 시간이 늘고, 점검을 미루기 쉬워지기 때문이다.</p>
+<p>그래서 필요한 건 "규칙이 문서에 적혀 있는가"가 아니라 "규칙이 깨지면 기계가 그 자리에서 알아채는가"다. 이 장의 나머지는 전부 이 둘의 차이를 다룬다.</p>
+<h2 id="3">결정 → 불변식 → 자가점검: 3단 결속</h2>
+<p>실제로 작동하려면 세 겹이 정확히 맞물려야 한다.</p>
+<ol>
+<li><strong>결정(Decision)</strong> — 왜 이렇게 정했는가. "리뷰어가 코드를 쓸 수 있으면 자기가 만든 결함을 자기가 통과시킬 수 있다. 그래서 리뷰 역할은 읽기전용이어야 한다."</li>
+<li><strong>불변식(Invariant)</strong> — 그래서 항상 참이어야 하는 것. "검사 대상으로 정한 리뷰어 파일에 <code>tools: Read, Grep, Glob</code> 범위의 명시적인 허용 목록이 있다."</li>
+<li><strong>자가점검(Self-check)</strong> — 그게 참인지 기계가 확인하는 절차. grep이든 스크립트든, 실행하면 참/거짓이 나오는 것.</li>
+</ol>
+<p>세 번째가 없으면 두 번째는 소망이고, 두 번째가 없으면 첫 번째는 그냥 회의록이다. 아래는 이 3단을 그대로 코드로 옮긴 최소 예제다.</p>
+<p>이 파일은 프로젝트 루트의 <code>scripts/check_invariants.py</code>에 둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;리뷰어 역할 서브에이전트가 쓰기 도구를 갖지 않는지 확인한다.</span>
+</span><span id="ln-3">
+</span><span id="ln-4"><span style="color: #BA2121; font-style: italic">결정: 리뷰어가 코드를 쓸 수 있으면 자기가 만든 결함을 자기가 통과시킬 수 있다.</span>
+</span><span id="ln-5"><span style="color: #BA2121; font-style: italic">      그래서 리뷰 역할은 읽기전용이어야 한다.</span>
+</span><span id="ln-6"><span style="color: #BA2121; font-style: italic">불변식: agents 디렉터리의 서브에이전트 정의 중 이름에 &quot;review&quot;가 들어간 것은</span>
+</span><span id="ln-7"><span style="color: #BA2121; font-style: italic">        frontmatter tools를 Read/Grep/Glob의 부분집합으로 명시한다.</span>
+</span><span id="ln-8"><span style="color: #BA2121; font-style: italic">        이 예제는 한 줄 쉼표 목록만 지원하고 다른 표기는 거부한다.</span>
+</span><span id="ln-9"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+</span><span id="ln-10"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-11">
+</span><span id="ln-12"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
+</span><span id="ln-13"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-14"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-15">
+</span><span id="ln-16"><span style="color: #3D7B7B; font-style: italic"># 이 예제는 쉼표 구분 한 줄 tools만 받는다. 미지원 YAML을 추측하지 않는다.</span>
+</span><span id="ln-17">READ_TOOLS <span style="color: #666">=</span> {<span style="color: #BA2121">&quot;Read&quot;</span>, <span style="color: #BA2121">&quot;Grep&quot;</span>, <span style="color: #BA2121">&quot;Glob&quot;</span>}
+</span><span id="ln-18">
+</span><span id="ln-19">
+</span><span id="ln-20"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">find_violations</span>(agents_dir: Path) <span style="color: #666">-&gt;</span> <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]:
+</span><span id="ln-21">    violations <span style="color: #666">=</span> []
+</span><span id="ln-22">    reviewed <span style="color: #666">=</span> <span style="color: #666">0</span>
+</span><span id="ln-23">    <span style="color: #008000; font-weight: bold">for</span> path <span style="color: #A2F; font-weight: bold">in</span> <span style="color: #008000">sorted</span>(agents_dir<span style="color: #666">.</span>glob(<span style="color: #BA2121">&quot;*.md&quot;</span>)):
+</span><span id="ln-24">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">&quot;review&quot;</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> path<span style="color: #666">.</span>stem<span style="color: #666">.</span>lower():
+</span><span id="ln-25">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-26">        reviewed <span style="color: #666">+=</span> <span style="color: #666">1</span>
+</span><span id="ln-27">        text <span style="color: #666">=</span> path<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-28">        front <span style="color: #666">=</span> re<span style="color: #666">.</span>match(<span style="color: #BA2121">r&quot;\A---\r?\n(.*?)\r?\n---(?:\r?\n|$)&quot;</span>, text, re<span style="color: #666">.</span>S)
+</span><span id="ln-29">        rows <span style="color: #666">=</span> re<span style="color: #666">.</span>findall(<span style="color: #BA2121">r&quot;^tools:[ \t]*(.*)$&quot;</span>, front[<span style="color: #666">1</span>], re<span style="color: #666">.</span>M) <span style="color: #008000; font-weight: bold">if</span> front <span style="color: #008000; font-weight: bold">else</span> []
+</span><span id="ln-30">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(rows) <span style="color: #666">!=</span> <span style="color: #666">1</span> <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> rows[<span style="color: #666">0</span>]<span style="color: #666">.</span>strip():
+</span><span id="ln-31">            violations<span style="color: #666">.</span>append(<span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">: tools 허용 목록 누락·중복&quot;</span>)
+</span><span id="ln-32">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-33">        declared <span style="color: #666">=</span> [tok<span style="color: #666">.</span>strip() <span style="color: #008000; font-weight: bold">for</span> tok <span style="color: #A2F; font-weight: bold">in</span> rows[<span style="color: #666">0</span>]<span style="color: #666">.</span>split(<span style="color: #BA2121">&quot;,&quot;</span>)]
+</span><span id="ln-34">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">any</span>(tok <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> READ_TOOLS <span style="color: #008000; font-weight: bold">for</span> tok <span style="color: #A2F; font-weight: bold">in</span> declared):
+</span><span id="ln-35">            violations<span style="color: #666">.</span>append(<span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">: 허용하지 않거나 해석하지 못한 tools </span><span style="color: #A45A77; font-weight: bold">{</span>declared<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-36">    <span style="color: #008000; font-weight: bold">if</span> reviewed <span style="color: #666">==</span> <span style="color: #666">0</span>:
+</span><span id="ln-37">        violations<span style="color: #666">.</span>append(<span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>agents_dir<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">: 이름에 review가 든 검사 대상 없음&quot;</span>)
+</span><span id="ln-38">    <span style="color: #008000; font-weight: bold">return</span> violations
+</span><span id="ln-39">
+</span><span id="ln-40">
+</span><span id="ln-41"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>(argv: <span style="color: #008000">list</span>[<span style="color: #008000">str</span>]) <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
+</span><span id="ln-42">    agents_dir <span style="color: #666">=</span> Path(argv[<span style="color: #666">1</span>] <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(argv) <span style="color: #666">&gt;</span> <span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;.claude/agents&quot;</span>)
+</span><span id="ln-43">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> agents_dir<span style="color: #666">.</span>is_dir():
+</span><span id="ln-44">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>agents_dir<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 없음 — 판정 불가&quot;</span>)
+</span><span id="ln-45">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">2</span>
+</span><span id="ln-46">    violations <span style="color: #666">=</span> find_violations(agents_dir)
+</span><span id="ln-47">    <span style="color: #008000; font-weight: bold">for</span> line <span style="color: #A2F; font-weight: bold">in</span> violations:
+</span><span id="ln-48">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;VIOLATION </span><span style="color: #A45A77; font-weight: bold">{</span>line<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-49">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #A45A77; font-weight: bold">{</span><span style="color: #008000">len</span>(violations)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">건 위반&quot;</span>)
+</span><span id="ln-50">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">if</span> violations <span style="color: #008000; font-weight: bold">else</span> <span style="color: #666">0</span>
+</span><span id="ln-51">
+</span><span id="ln-52">
+</span><span id="ln-53"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-54">    sys<span style="color: #666">.</span>exit(main(sys<span style="color: #666">.</span>argv))
+</span></code></pre></div>
+
+<p>이 검사는 파일명에 <code>review</code>가 있는 정의와 한 줄 쉼표 목록만 다룬다. 허용 도구를 명시하지 않으면 상위 도구를 상속할 수 있어 누락도 거부한다. YAML 목록·새 도구·MCP 도구는 추측해서 허용하지 않는다. 이름이 다른 리뷰 역할, 런타임 도구 주입, 훅·파일시스템 권한은 별도 점검 대상이다. <code>description</code> 등 에이전트 로딩 필드 전체의 유효성을 검사하는 도구도 아니다.</p>
+<p>이걸 시스템 파일을 고칠 때마다 돌리면(pre-commit이든, 그냥 손으로든) 전면 재감사 없이도 이 한 가지 회귀는 잡힌다. 실제 운영에서는 이런 검사가 수십 개까지 쌓인다 — 로그 태그 형식이 정해진 6종을 벗어나지 않는지, 승인 없이는 아무 워커도 파일을 못 쓰는지, 폐기된 연동 경로가 되살아나 있지 않은지. 각 검사는 이 스크립트와 똑같은 3단 구조로 짜여 있다. 그리고 시스템 파일을 고칠 때마다 이 자가점검 묶음만 돌려서 "고칠 때마다 전부 다시 감사"를 대신한다 — 운영은 실제로 이렇게 돌아간다.</p>
+<h2 id="_3">검사가 있다고 작동하는 게 아니다</h2>
+<p>이 장의 알맹이는 여기서부터다. 위와 같은 구조를 몇 달 운영하면서 실제로 뚫렸던 구멍들이다. 전부 "검사는 분명 있었는데 작동하지 않았다"는 같은 꼴이었다.</p>
+<p><strong>소스 문자열에 묶인 검사는 실행되지 않는 경로를 통과로 친다.</strong> 어떤 검증 과제에서 특정 함수가 존재하는지를 grep으로 확인하는 검사를 믿고 넘어간 적이 있다. 함수는 소스에 분명히 있었다. 그런데 <code>main()</code>이 그 함수에 닿기도 전에 <code>UnboundLocalError</code>로 죽고 있었다. grep은 "이 텍스트가 파일에 있다"만 확인하지 "이 코드가 실제로 실행된다"는 확인하지 않는다. 텍스트가 있는지와 그 코드가 실행 경로에 있는지는 다른 질문이다. 텍스트 확인으로 실행 확인을 대신하면 죽은 코드도 통과한다.</p>
+<p><strong>이름으로 비교하면 늘 하나를 빠뜨린다.</strong> 산출물 경로가 예상한 곳과 같은지 확인하는 검사가 있었다. <code>resolve()</code>한 경로 문자열을 그대로 비교했는데 macOS 기본 파일시스템은 대소문자를 보존하면서도 비교는 구분하지 않는다. 소문자 경로는 거부되고 대문자가 섞인 같은 경로는 통과했다 — 실제로는 완전히 같은 디렉터리를 가리키는데도 문자열이 달라서였다. 경로는 이름이 아니라 실체로 비교해야 한다. 이 사고 이후로는 파일의 디바이스 번호와 아이노드(inode)로 동일성을 확인한다. 이러면 대소문자·심볼릭 링크·상대경로 표기가 달라도 실체가 같으면 같다고 판정한다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-2">
+</span><span id="ln-3">
+</span><span id="ln-4"><span style="color: #008000; font-weight: bold">class</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">UnmeasurablePath</span>(<span style="color: #CB3F38; font-weight: bold">RuntimeError</span>):
+</span><span id="ln-5">    <span style="color: #008000; font-weight: bold">pass</span>
+</span><span id="ln-6">
+</span><span id="ln-7">
+</span><span id="ln-8"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">same_file</span>(path_a: Path, path_b: Path) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+</span><span id="ln-9"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;이름이 아니라 (device, inode)로 두 경로가 같은 파일인지 확인한다.&quot;&quot;&quot;</span>
+</span><span id="ln-10">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-11">        stat_a <span style="color: #666">=</span> path_a<span style="color: #666">.</span>stat()
+</span><span id="ln-12">        stat_b <span style="color: #666">=</span> path_b<span style="color: #666">.</span>stat()
+</span><span id="ln-13">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">OSError</span>:
+</span><span id="ln-14">        <span style="color: #008000; font-weight: bold">raise</span> UnmeasurablePath(<span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>path_a<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 또는 </span><span style="color: #A45A77; font-weight: bold">{</span>path_b<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">를 조회할 수 없다&quot;</span>)
+</span><span id="ln-15">    <span style="color: #008000; font-weight: bold">return</span> (stat_a<span style="color: #666">.</span>st_dev, stat_a<span style="color: #666">.</span>st_ino) <span style="color: #666">==</span> (stat_b<span style="color: #666">.</span>st_dev, stat_b<span style="color: #666">.</span>st_ino)
+</span></code></pre></div>
+
+<p>여기서 <code>UnmeasurablePath</code>를 일부러 예외로 던진 이유가 바로 다음 항목이다.</p>
+<p><strong>fail-open은 조회 실패를 "깨끗함"으로 처리해버린다.</strong> 위 코드에서 <code>stat()</code>이 실패했을 때(파일이 아직 없거나, 권한이 없거나) 그걸 그냥 <code>False</code>로 접으면 "다르다"가 되고 문맥에 따라 "다르다"는 곧 "허용"으로 읽힌다. 실제로 이런 실수를 했다 — 조회 실패를 조용히 "허용"으로 간주하는 헬퍼가 하나 있었고 별개로 "작업 트리가 깨끗한가"를 확인하는 게이트가 있었는데 그 게이트 역시 버전 관리 조회가 실패하면 "깨끗함"으로 처리했다. 둘 다 의도는 같았다 — 애매하면 막지 말고 지나가자는 것. 그런데 그 결과 조회가 실패하는 모든 경우가 통과 경로가 됐다. 심지어 이 두 번째 fail-open은 다른 fail-open 하나를 막으려고 새로 넣은 코드였다 — <strong>닫는 장치가 다음 결함이 들어설 자리를 만든 셈이다.</strong> 안전장치를 추가할 때마다 "이게 실패하면 무엇으로 접히는가"를 반드시 물어야 한다. 조회 실패는 "허용"이 아니라 "판정 불가"라는 별도 상태로 분류해서 거부해야 한다. 애매함을 통과로 넘기는 순간 그 애매함이 바로 우회로가 된다.</p>
+<p><strong>하한을 상한처럼 쓰면 안 된다.</strong> 정적 검색(grep, AST 스캔)으로 "이 값을 쓰는 곳"을 찾는 검사가 있었다. 이런 검사가 찾아내는 목록은 "적어도 이만큼은 있다"는 하한이지, "이게 전부다"라는 상한이 아니다. 정적 스캔은 심볼릭 링크를 안 따라가거나, 동적으로 조립된 이름은 못 보거나, 다른 도구 경로로 우회한 소비처는 놓친다. 그런데 나중에 이 목록의 길이나 존재 여부를 "완전한 목록"인 것처럼 쓰는 코드가 어느새 생겨난다. 실제로 겪은 형태는 이랬다 — 산출물 파일의 "정체가 바뀌었는가"를 확인하는 검사가 소비처로 지정된 디렉터리 자체의 정체만 봤다. 그 디렉터리 안의 파일로 가는 하드링크는 조상 디렉터리의 정체가 그대로라서 검사를 통과했다. 하나를 찾았다고 전부를 찾은 게 아니다. 이후로는 이런 하한형 검사에는 반드시 "이건 하한이다, 못 찾은 걸 없다고 말하지 않는다"는 표식을 산출물에 같이 남긴다 — 검사 자체를 없애는 대신 그 검사가 무엇을 증명하지 않는지를 정직하게 적어두는 쪽을 택한 것이다.</p>
+<p><strong>검사를 등록한 뒤 대상을 고치고 게이트를 다시 안 돌리면, 커밋 메시지의 수치는 그 트리에서 잰 값이 아니게 된다.</strong> 어느 라운드에서 등록부에 특정 마커 문자열이 있는지 확인하는 검사를 새로 추가했다. 그런데 그 마커 문자열 자체가 라운드마다 값이 바뀌는 식별자였다. 검사를 등록한 바로 다음 편집에서 그 스크립트를 고치며 마커 값을 바꿨는데, 게이트를 다시 돌리지 않은 채 커밋해버렸다. 그 결과 바로 앞 커밋 메시지에 적힌 "전수 검사 PASS"와 "회귀 몇 건 통과" 같은 수치는 실제로는 그 마지막 편집 <strong>이전</strong>에 잰 것이었다 — 커밋된 트리와 커밋 메시지의 숫자가 서로 따로 놀았던 셈이다. 원칙은 단순하다. <strong>검사는 마지막 변경 뒤에, 그 트리 자체에서 다시 돌려야 그 트리의 증거가 된다.</strong> 도중에 잰 숫자를 마지막 커밋 메시지에 그대로 옮기면 그 숫자는 틀렸을 수 있다.</p>
+<p>이 다섯 가지는 모양만 다를 뿐 전부 같은 말이다. <strong>검사가 존재하는 것과 검사가 실제로 그 위험을 잡는 것은 다른 사실이다. 잡는다는 사실은 저절로 증명되지 않는다.</strong></p>
+<h2 id="_4">그래서 검사를 검사한다</h2>
+<p>앞 절의 다섯 사고 모두 "검사는 있는데 안 잡는다"는 걸 사고가 나고 나서야 알았다. 사고를 기다리지 않고 미리 알아내는 방법은 하나뿐이다 — 코드를 일부러 한 군데씩 망가뜨리고 그때마다 가드에 빨간불이 들어오는지 직접 확인하는 것. 이게 뮤테이션 드릴(mutation drill)이다. 빨간불이 안 켜지면 그 가드는 애초에 아무것도 지키고 있지 않았던 것이다.</p>
+<p>드릴이 지켜야 할 규율은 네 가지다.</p>
+<p><strong>① 변이는 주장한 위험을 실제로 복원해야 한다.</strong> "리뷰어가 쓰기 권한을 갖는 위험"을 테스트하겠다면서 리뷰어 파일의 오타 하나를 고치는 식으로 엉뚱한 곳을 건드리고 "잡혔다"고 하면 안 된다. 실제로 이런 실수가 반복해서 나왔다 — 검사 로직은 그대로 둔 채 검사 주변의 무관한 코드를 망가뜨린 다음 그게 우연히 다른 이유로 빨간불이 켜진 걸 "캐치"로 잘못 보는 경우다. 변이 하나하나가 "이 가드가 막는다고 주장하는 그 시나리오"를 정확히 재현해야 한다.</p>
+<p><strong>② 앵커(변이를 심을 지점)가 원본에 정확히 한 번만 나타나는지 먼저 확인한다.</strong> 같은 문자열이 두 번 나오는 곳에 <code>replace(old, new, 1)</code>을 쓰면 엉뚱한 자리가 바뀐다. 코드가 리팩터링되면서 앵커 문자열이 사라지거나 여러 번 나타날 수도 있다 — 그러면 드릴은 "낡았다"고 스스로 보고하고 멈춰야지, 조용히 다른 곳을 바꾸고 성공한 척하면 안 된다.</p>
+<p><strong>③ 원본 상태에서는 위험 판정이 0건이어야 한다(베이스라인 확인).</strong> 시작부터 빨간불이면 그 뒤에 뭘 망가뜨리든 "빨간불이 됐다"는 관측이 의미가 없다. 매 변이 전에 베이스라인이 초록불인지 먼저 확인하고, 아니면 그 드릴 실행 전체를 무효로 처리해야 한다.</p>
+<p><strong>④ 마지막 변경 뒤에 전수 스윕을 돌린다.</strong> 앞 절의 다섯 번째 사고가 바로 이 규율을 어긴 결과였다. 드릴 스크립트 자체를 포함해서 시스템을 마지막으로 고친 그 상태에서 다시 돌린 숫자만 인용할 수 있다.</p>
+<p>그리고 마지막으로, <strong>양방향 확인</strong>이 빠지면 이 전부가 무의미해진다. 심었을 때 빨간불이 들어오는 것과 치웠을 때 다시 초록불로 돌아오는 것을 둘 다 봐야 한다. 한쪽만 보면 "이 검사는 항상 빨간불"이거나 "이 검사는 이유 없이 실패 중"인 상태를 "작동한다"고 착각할 수 있다. 원상복구 뒤에도 빨간불이면 드릴 자체가 고장난 것이다. 가드가 뭔가를 잡은 게 아니다.</p>
+<h2 id="_5">최종형: 복붙용 뮤테이션 드릴</h2>
+<p>앞에서 만든 <code>check_invariants.py</code>와 아래 <code>mutation_drill.py</code>를 같은 디렉터리에 저장해 실행한다. 아래 블록은 두 번째 파일인 드릴 전문이다. 자기 프로젝트에 적용할 때는 <code>MUTATIONS</code> 목록과 대상 파일·검사 명령만 바꾸면 된다.</p>
+<p>이 파일은 프로젝트 루트의 <code>scripts/mutation_drill.py</code>에 둔다.</p>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;뮤테이션 드릴 — 가드를 일부러 깨뜨려 빨간불이 되는지 확인한다.</span>
+</span><span id="ln-3">
+</span><span id="ln-4"><span style="color: #BA2121; font-style: italic">자기 완결형 예시다. 가짜 리뷰어 정의를 임시 폴더에 만들고, check_invariants.py가</span>
+</span><span id="ln-5"><span style="color: #BA2121; font-style: italic">지키는 불변식을 하나씩 망가뜨려 본다. 자기 프로젝트에 쓸 때는 MUTATIONS와 검사</span>
+</span><span id="ln-6"><span style="color: #BA2121; font-style: italic">대상만 바꾸면 된다. check_invariants.py는 이 파일과 같은 디렉터리에 있어야 한다.</span>
+</span><span id="ln-7">
+</span><span id="ln-8"><span style="color: #BA2121; font-style: italic">규율:</span>
+</span><span id="ln-9"><span style="color: #BA2121; font-style: italic">1. 변이는 주장한 위험을 실제로 복원해야 한다.</span>
+</span><span id="ln-10"><span style="color: #BA2121; font-style: italic">2. 앵커(원본 조각)는 대상 파일에 정확히 한 번만 나타나야 한다.</span>
+</span><span id="ln-11"><span style="color: #BA2121; font-style: italic">3. 원본 상태에서는 위반이 0건이어야 한다(베이스라인이 이미 빨간불이면 무효).</span>
+</span><span id="ln-12"><span style="color: #BA2121; font-style: italic">4. 마지막 변경 뒤에 전수 스윕을 돌린다.</span>
+</span><span id="ln-13"><span style="color: #BA2121; font-style: italic">5. 심었을 때 빨간불, 치웠을 때 다시 초록불이어야 한다(양방향 확인).</span>
+</span><span id="ln-14"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+</span><span id="ln-15"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-16">
+</span><span id="ln-17"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">subprocess</span>
+</span><span id="ln-18"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-19"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">tempfile</span>
+</span><span id="ln-20"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-21">
+</span><span id="ln-22">CHECKER <span style="color: #666">=</span> Path(<span style="color: #19177C">__file__</span>)<span style="color: #666">.</span>resolve()<span style="color: #666">.</span>parent <span style="color: #666">/</span> <span style="color: #BA2121">&quot;check_invariants.py&quot;</span>
+</span><span id="ln-23">
+</span><span id="ln-24">CLEAN_REVIEWER_MD <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;&quot;---</span>
+</span><span id="ln-25"><span style="color: #BA2121">name: code-reviewer</span>
+</span><span id="ln-26"><span style="color: #BA2121">description: 코드를 읽고 검토한다</span>
+</span><span id="ln-27"><span style="color: #BA2121">tools: Read, Grep, Glob</span>
+</span><span id="ln-28"><span style="color: #BA2121">---</span>
+</span><span id="ln-29"><span style="color: #BA2121">코드를 읽고 문제만 지적한다. 고치지 않는다.</span>
+</span><span id="ln-30"><span style="color: #BA2121">&quot;&quot;&quot;</span>
+</span><span id="ln-31">
+</span><span id="ln-32"><span style="color: #3D7B7B; font-style: italic"># (라벨, 원본 조각, 망가뜨린 조각) — 자기 프로젝트의 위험으로 교체할 자리</span>
+</span><span id="ln-33">MUTATIONS <span style="color: #666">=</span> [
+</span><span id="ln-34">    (<span style="color: #BA2121">&quot;리뷰어에 Write 권한을 몰래 추가&quot;</span>, <span style="color: #BA2121">&quot;tools: Read, Grep, Glob&quot;</span>, <span style="color: #BA2121">&quot;tools: Read, Grep, Glob, Write&quot;</span>),
+</span><span id="ln-35">    (<span style="color: #BA2121">&quot;리뷰어에 Bash 권한을 몰래 추가&quot;</span>, <span style="color: #BA2121">&quot;tools: Read, Grep, Glob&quot;</span>, <span style="color: #BA2121">&quot;tools: Read, Grep, Glob, Bash&quot;</span>),
+</span><span id="ln-36">]
+</span><span id="ln-37">
+</span><span id="ln-38">
+</span><span id="ln-39"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run_checker</span>(agents_dir: Path) <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
+</span><span id="ln-40">    result <span style="color: #666">=</span> subprocess<span style="color: #666">.</span>run(
+</span><span id="ln-41">        [sys<span style="color: #666">.</span>executable, <span style="color: #008000">str</span>(CHECKER), <span style="color: #008000">str</span>(agents_dir)],
+</span><span id="ln-42">        capture_output<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, text<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, timeout<span style="color: #666">=10</span>,
+</span><span id="ln-43">    )
+</span><span id="ln-44">    <span style="color: #008000; font-weight: bold">if</span> result<span style="color: #666">.</span>returncode <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> (<span style="color: #666">0</span>, <span style="color: #666">1</span>) <span style="color: #A2F; font-weight: bold">or</span> (result<span style="color: #666">.</span>returncode <span style="color: #666">==</span> <span style="color: #666">1</span> <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #BA2121">&quot;VIOLATION &quot;</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> result<span style="color: #666">.</span>stdout):
+</span><span id="ln-45">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">2</span>  <span style="color: #3D7B7B; font-style: italic"># 인터프리터 오류를 위험 검출로 세지 않는다</span>
+</span><span id="ln-46">    <span style="color: #008000; font-weight: bold">return</span> result<span style="color: #666">.</span>returncode
+</span><span id="ln-47">
+</span><span id="ln-48">
+</span><span id="ln-49"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
+</span><span id="ln-50">    <span style="color: #008000; font-weight: bold">with</span> tempfile<span style="color: #666">.</span>TemporaryDirectory(prefix<span style="color: #666">=</span><span style="color: #BA2121">&quot;mutation-drill-&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> tmp:
+</span><span id="ln-51">        agents_dir <span style="color: #666">=</span> Path(tmp) <span style="color: #666">/</span> <span style="color: #BA2121">&quot;agents&quot;</span>
+</span><span id="ln-52">        agents_dir<span style="color: #666">.</span>mkdir()
+</span><span id="ln-53">        target <span style="color: #666">=</span> agents_dir <span style="color: #666">/</span> <span style="color: #BA2121">&quot;code-reviewer.md&quot;</span>
+</span><span id="ln-54">        target<span style="color: #666">.</span>write_text(CLEAN_REVIEWER_MD, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-55">
+</span><span id="ln-56">        <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;베이스라인 확인 (원본은 위반 0건이어야 함) ...&quot;</span>)
+</span><span id="ln-57">        <span style="color: #008000; font-weight: bold">if</span> run_checker(agents_dir) <span style="color: #666">!=</span> <span style="color: #666">0</span>:
+</span><span id="ln-58">            <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;BASELINE RED — 원본부터 위반이 있다. 드릴을 멈춘다.&quot;</span>)
+</span><span id="ln-59">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">1</span>
+</span><span id="ln-60">
+</span><span id="ln-61">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> MUTATIONS:
+</span><span id="ln-62">            <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;INVALID — 변이 목록이 비었다&quot;</span>)
+</span><span id="ln-63">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">1</span>
+</span><span id="ln-64">        caught <span style="color: #666">=</span> missed <span style="color: #666">=</span> <span style="color: #666">0</span>
+</span><span id="ln-65">        <span style="color: #008000; font-weight: bold">for</span> label, old, new <span style="color: #A2F; font-weight: bold">in</span> MUTATIONS:
+</span><span id="ln-66">            <span style="color: #008000; font-weight: bold">if</span> run_checker(agents_dir) <span style="color: #666">!=</span> <span style="color: #666">0</span>:
+</span><span id="ln-67">                <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;BASELINE RED — 매 변이 전 원본 확인 실패&quot;</span>)
+</span><span id="ln-68">                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">1</span>
+</span><span id="ln-69">            original <span style="color: #666">=</span> target<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-70">            <span style="color: #008000; font-weight: bold">if</span> original<span style="color: #666">.</span>count(old) <span style="color: #666">!=</span> <span style="color: #666">1</span>:
+</span><span id="ln-71">                <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;SKIP    </span><span style="color: #A45A77; font-weight: bold">{</span>label<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (앵커가 정확히 1번 나오지 않음 — 드릴이 낡았다)&quot;</span>)
+</span><span id="ln-72">                <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">1</span>
+</span><span id="ln-73">
+</span><span id="ln-74">            target<span style="color: #666">.</span>write_text(original<span style="color: #666">.</span>replace(old, new, <span style="color: #666">1</span>), encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-75">            <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-76">                mutation_result <span style="color: #666">=</span> run_checker(agents_dir)
+</span><span id="ln-77">                turned_red <span style="color: #666">=</span> mutation_result <span style="color: #666">==</span> <span style="color: #666">1</span>
+</span><span id="ln-78">            <span style="color: #008000; font-weight: bold">finally</span>:
+</span><span id="ln-79">                target<span style="color: #666">.</span>write_text(original, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)  <span style="color: #3D7B7B; font-style: italic"># 항상 원상복구</span>
+</span><span id="ln-80">
+</span><span id="ln-81">            recovered <span style="color: #666">=</span> run_checker(agents_dir) <span style="color: #666">==</span> <span style="color: #666">0</span>
+</span><span id="ln-82">
+</span><span id="ln-83">            <span style="color: #008000; font-weight: bold">if</span> turned_red <span style="color: #A2F; font-weight: bold">and</span> recovered:
+</span><span id="ln-84">                <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;caught  </span><span style="color: #A45A77; font-weight: bold">{</span>label<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">  (심었을 때 빨간불, 치웠을 때 다시 초록불)&quot;</span>)
+</span><span id="ln-85">                caught <span style="color: #666">+=</span> <span style="color: #666">1</span>
+</span><span id="ln-86">            <span style="color: #008000; font-weight: bold">elif</span> mutation_result <span style="color: #666">!=</span> <span style="color: #666">0</span>:
+</span><span id="ln-87">                <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;ERROR   </span><span style="color: #A45A77; font-weight: bold">{</span>label<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">  (검사기 오류 — 위험 검출로 세지 않음)&quot;</span>)
+</span><span id="ln-88">                missed <span style="color: #666">+=</span> <span style="color: #666">1</span>
+</span><span id="ln-89">            <span style="color: #008000; font-weight: bold">elif</span> <span style="color: #A2F; font-weight: bold">not</span> turned_red:
+</span><span id="ln-90">                <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;MISSED  </span><span style="color: #A45A77; font-weight: bold">{</span>label<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">  (망가뜨렸는데도 초록불 — 이 가드는 이 위험을 안 본다)&quot;</span>)
+</span><span id="ln-91">                missed <span style="color: #666">+=</span> <span style="color: #666">1</span>
+</span><span id="ln-92">            <span style="color: #008000; font-weight: bold">else</span>:
+</span><span id="ln-93">                <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;BROKEN  </span><span style="color: #A45A77; font-weight: bold">{</span>label<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">  (복구 후에도 빨간불 — 드릴 자체가 고장)&quot;</span>)
+</span><span id="ln-94">                missed <span style="color: #666">+=</span> <span style="color: #666">1</span>
+</span><span id="ln-95">
+</span><span id="ln-96">        total <span style="color: #666">=</span> caught <span style="color: #666">+</span> missed
+</span><span id="ln-97">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #A45A77; font-weight: bold">{</span>caught<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">/</span><span style="color: #A45A77; font-weight: bold">{</span>total<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 캐치&quot;</span>)
+</span><span id="ln-98">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span> <span style="color: #008000; font-weight: bold">if</span> missed <span style="color: #666">==</span> <span style="color: #666">0</span> <span style="color: #008000; font-weight: bold">else</span> <span style="color: #666">1</span>
+</span><span id="ln-99">
+</span><span id="ln-100">
+</span><span id="ln-101"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-102">    sys<span style="color: #666">.</span>exit(main())
+</span></code></pre></div>
+
+<p>두 파일을 같은 디렉터리에 두고 <code>python3 scripts/mutation_drill.py</code>를 돌리면 두 변이 모두 <code>caught</code>로 나온다. 자기 프로젝트에 적용하려면 <code>check_invariants.py</code>의 불변식 자체를 자신이 지키려는 것으로 바꾸고, <code>mutation_drill.py</code>의 <code>MUTATIONS</code>에 그 불변식을 깨는 구체적 변이를 추가하면 된다.</p>
+<p>아래는 불변식을 표로 관리할 때 쓰는 템플릿이다. 새 불변식을 추가할 때마다 네 칸을 전부 채우는 걸 규칙으로 삼으면 "검사 없는 불변식"이 끼어들 틈이 사라진다.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>결정(왜)</th>
+<th>불변식(항상 참이어야 하는 것)</th>
+<th>자가점검(명령/스크립트)</th>
+<th>깨지면</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INV-1</td>
+<td>리뷰어가 코드를 쓸 수 있으면 자기 결함을 자기가 통과시킨다</td>
+<td>리뷰어 서브에이전트 정의의 tools에 Write/Edit/Bash 없음</td>
+<td><code>python3 scripts/check_invariants.py</code></td>
+<td>셀프리뷰 우회</td>
+</tr>
+<tr>
+<td>INV-2</td>
+<td>(예: 워커는 승인된 범위 밖을 쓰면 안 된다)</td>
+<td>(예: write_scope가 none이 아닌 워커는 전부 승인 기록이 있다)</td>
+<td>(예: <code>grep -L</code> 로 미승인 워커 탐색)</td>
+<td>(예: 무단 쓰기)</td>
+</tr>
+<tr>
+<td>INV-N</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="_6">같은 실수를 두 번 하지 않는 장치</h2>
+<p>뮤테이션 드릴이 "지금 이 가드가 작동하는가"를 증명한다면 이 장치는 "이미 한 번 겪은 실수를 또 하지 않는가"를 지킨다. 방법은 단순하다 — 재사용 가능한 교훈만 한 파일에 계속 추가한다. append-only, 덮어쓰기 금지.</p>
+<p>왜 덮어쓰지 않고 추가만 해야 하는가. 덮어쓰면 "예전엔 이렇게 판단했다가 이런 이유로 뒤집었다"는 이력이 사라진다. 앞 절의 다섯 번째 사고 — 검사를 등록한 뒤 대상을 고치고 게이트를 다시 안 돌린 사고 — 는 사실 그 프로젝트가 몇 주 전에 이미 한 번 겪고 교훈으로 남겨둔 패턴이었다. 그런데도 같은 실수가 반복됐다. 이게 이 장치의 한계이기도 하다 — 기록해둔다고 다음에 안 어기는 게 보장되진 않는다. 다만 기록이 없으면 "이거 전에도 겪지 않았나?"라는 질문 자체를 할 수가 없다. 뒤집힌 판단도 지우지 않고 "OO 시점에 이 판단을 뒤집음(사유)"으로 추가하는 것도 같은 이유다 — 지운 판단은 왜 지웠는지도 같이 사라지고 나중에 누군가 똑같은 길을 다시 걷는다.</p>
+<h2 id="_7">직접 확인하는 법</h2>
+<p>자기 프로젝트에서 이 장 전체가 실제로 작동하는지 증명하는 절차다.</p>
+<ol>
+<li>지키고 싶은 규칙을 하나 고른다. "왜 이렇게 정했는가"를 한 문장으로 적는다 — 이게 결정이다.</li>
+<li>그 결정을 "항상 참이어야 하는 것"으로 바꾼다 — 이게 불변식이다. 애매하면 아직 검사할 수 있는 형태가 아니다.</li>
+<li>그 불변식을 확인하는 스크립트나 명령을 만든다. 지금 프로젝트에서 돌려서 통과하는지 본다.</li>
+<li>그 불변식이 지키는 위험을 정확히 재현하는 변이를 하나 만든다 — 파일 하나, 한 줄. 심는다.</li>
+<li>검사를 다시 돌린다. 빨간불이 안 켜지면 3번의 스크립트는 아직 아무것도 지키고 있지 않다. 다시 만든다.</li>
+<li>변이를 치운다. 검사를 다시 돌린다. 다시 초록불이 되는지 확인한다 — 안 되면 드릴이나 검사 둘 중 하나가 고장이다.</li>
+<li>위 3~6번의 검사·변이·재검사·복구를 자동화해서(위 <code>mutation_drill.py</code> 형태로) 시스템 파일을 고칠 때마다 돌린다. 마지막 변경 뒤에 한 번 더 돌리는 걸 잊지 않는다.</li>
+<li>판정이 뒤집힌 적이 있다면(검사를 고쳤다, 불변식을 완화했다) 그 사유를 append-only 로그에 한 줄 남긴다.</li>
+</ol>
+<p>이 절차를 통과한 검사만 "작동한다"고 말할 수 있다. 통과하지 못한 검사가 있으나 마나 한 건 아니다 — 아직 증명되지 않았을 뿐이다.</p>
+<h2 id="_8">닫는 말</h2>
+<p>이 책 전체를 관통하는 문장 하나로 글을 맺는다. <strong>증거는 만드는 것이지 주장하는 것이 아니다.</strong> 승인 게이트도, 재진입 프로토콜도, 리뷰어 격리도, 이 장의 뮤테이션 드릴도 전부 같다 — "이렇게 설계했다"는 주장과 "실제로 이렇게 작동한다"는 증거 사이엔 항상 간극이 있고 그 간극은 문서가 아닌 실행할 수 있는 검사로만 메워진다.</p>
+<p>그리고 정직하게 끝맺어야 한다. 이 장의 장치들도 완전하지 않다. 정적 스캔으로 찾은 소비처 목록은 하한이지 상한이 아니라고 이미 말했다 — 뮤테이션 드릴도 마찬가지다. 카탈로그에 없는 변이를 가드가 잡을 수도 있지만, 이 드릴을 통과했다는 사실만으로 그 검출 능력까지 검증되지는 않는다. 드릴이 100% 캐치했다는 건 "카탈로그에 적어둔 위험들에 대해서는" 작동한다는 뜻이다. 그렇다고 "이 시스템의 모든 위험을 다 알고 있다"는 뜻은 아니다. fail-open을 fail-closed로 고친 자리에 다음 fail-open이 숨어 있을 수 있다는 것도 이미 겪었다. append-only 로그에 "적어뒀다"고 해서 "다음에 안 어긴다"가 보장되지는 않는다는 것 역시 실제로 겪었다.</p>
+<p>그러니 이 책을 덮은 다음 자기 시스템에서 물어야 할 질문은 하나다 — 지금 초록불인 검사 중에 한 번도 빨간불이 켜진 적 없는 게 몇 개인가. 그 목록부터 이 장의 절차로 돌려보라는 것이 이 책에서 줄 수 있는 마지막 조언이다.</p>
+<p>도구 허용 목록의 근거: <a href="https://code.claude.com/docs/en/sub-agents">Claude Code 서브에이전트 문서</a>, 확인 2026-09-28. 뮤테이션 드릴은 검사기가 규약에 맞게 위반을 보고했는지도 확인한다. 프로세스 고장이나 시간 초과는 위험을 잡은 성공 사례로 세지 않는다.</p>
+</article>
+<aside class="ask">
+<p>따라 하다 막히면 Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> 에 댓글로 남겨 달라. 하나씩 본다.</p>
+</aside>
+</main>
+<nav class="pager"><a class="prev" href="../ch07-proving-delegation/">← 7장 — 위임 증거 만들기</a><a class="next" href="../">첫 쪽 →</a></nav>
+<footer class="site">
+<p>이 책은 무료다. 받은 사람은 누구나 읽고 나눠도 된다. 출처만 밝혀 달라.</p>
+<p>쓴 사람: Threads <a href="https://www.threads.com/@subal_i">@subal_i</a> — 하루 한 편씩 나눠 올린다. 책에 실린 코드는 <a href="https://github.com/Gforce10-design/ai-work-evidence">GitHub</a>에 있고 MIT 라이선스다. <a href="https://github.com/Gforce10-design/ai-work-evidence/releases/latest">PDF 받기</a></p>
+</footer>
+</body>
+</html>

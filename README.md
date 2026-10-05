@@ -1,8 +1,29 @@
 # 『AI가 일했다는 증거』 — 책에 실린 코드 전문
 
 Claude Code에 일을 시키고 "다 됐다"는 말을 어떻게 확인하는지 다룬 전자책의 코드다.
-원래 팔던 책인데 전부 무료로 풀었다. 본문은 Threads [@subal_i](https://www.threads.com/@subal_i) 에 하루 한 편씩 올라간다.
+원래 팔던 책인데 전부 무료로 풀었다.
+
+- **웹에서 읽기**: <https://gforce10-design.github.io/ai-work-evidence/> — 0~8장 전문, 장마다 한 쪽
+- **하루 한 편 연재와 문의**: Threads [@subal_i](https://www.threads.com/@subal_i)
+- **한 권으로 받기**: [PDF 무료 공개판](https://github.com/Gforce10-design/ai-work-evidence/releases/latest)
+
 여기엔 Threads 한 편(500자)에 안 들어가는 코드를 원문 그대로 둔다.
+
+## 이 책이 답하는 질문
+
+| 질문 | 장 |
+|---|---|
+| "다 됐습니다"를 어떻게 믿는가 | [0장 — 왜 "exit 0"은 증거가 아닌가](https://gforce10-design.github.io/ai-work-evidence/ch00-exit-code-is-not-evidence/) |
+| 규칙을 써놨는데 왜 몇 턴 지나면 무시되는가 | [1장 — 지시가 몇 턴 만에 흐려지는 문제](https://gforce10-design.github.io/ai-work-evidence/ch01-directives-fade/) |
+| 사고가 날 때마다 규칙을 덧붙이다 보니 CLAUDE.md 가 감당 못 할 크기가 됐다 | [2장 — CLAUDE.md를 오래 고쳐 쓸 수 있게 짜기](https://gforce10-design.github.io/ai-work-evidence/ch02-designing-claude-md/) |
+| 세션이 끊기면 왜 다음 세션은 처음부터 헤매는가 | [3장 — 세션이 끊겨도 이어지게](https://gforce10-design.github.io/ai-work-evidence/ch03-session-continuity/) |
+| 이 작업을 직접 할지 위임할지, 매번 감으로 정하는 게 맞는가 | [4장 — 직접 할까 위임할까](https://gforce10-design.github.io/ai-work-evidence/ch04-direct-or-delegate/) |
+| 실패했을 때 무엇을 올려야 하는가 — 모델인가, effort인가, 아니면 내 명세인가 | [5장 — 실패했을 때 무엇을 올릴 것인가](https://gforce10-design.github.io/ai-work-evidence/ch05-diagnosing-failure/) |
+| 승인 버튼을 하루에 수백 번 누르다 보면 내용을 안 읽고 누르게 된다 | [6장 — 위험한 명령을 안전하게 위임하기](https://gforce10-design.github.io/ai-work-evidence/ch06-dangerous-commands/) |
+| 서브에이전트가 진짜로 그 파일을 읽었는지 어떻게 아는가 | [7장 — 위임 증거 만들기](https://gforce10-design.github.io/ai-work-evidence/ch07-proving-delegation/) |
+| 안전장치를 만들어뒀는데 그게 실제로 작동하는지는 어떻게 아는가 | [8장 — 가드가 진짜 작동하는지 증명하기](https://gforce10-design.github.io/ai-work-evidence/ch08-proving-the-guards/) |
+
+아래는 장별 코드 목록이다.
 
 ## 1장 — 지시가 몇 턴 만에 흐려지는 문제
 
