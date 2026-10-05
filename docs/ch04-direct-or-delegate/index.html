@@ -71,19 +71,19 @@
 <h2 id="_4">최소 해법</h2>
 <p>가장 단순한 버전은 대략 이렇다. 축 하나(물량)만 보고 갈림길을 정한다.</p>
 <p>이 파일은 예시로 어디에나 둘 수 있다. 여기서는 편의상 <code>naive_gate.py</code>로 부른다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
-</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;최소 해법 — 물량 하나만 보고 정한다. 구멍이 있다.&quot;&quot;&quot;</span>
-</span><span id="ln-3">
-</span><span id="ln-4">
-</span><span id="ln-5"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">naive_gate</span>(axes: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
-</span><span id="ln-6">    <span style="color: #008000; font-weight: bold">if</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;volume&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span>:
-</span><span id="ln-7">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;DELEGATE&quot;</span>
-</span><span id="ln-8">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;DIRECT&quot;</span>
-</span><span id="ln-9">
-</span><span id="ln-10">
-</span><span id="ln-11"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
-</span><span id="ln-12">    <span style="color: #008000">print</span>(naive_gate({<span style="color: #BA2121">&quot;volume&quot;</span>: <span style="color: #BA2121">&quot;high&quot;</span>, <span style="color: #BA2121">&quot;spec_readiness&quot;</span>: <span style="color: #BA2121">&quot;vague&quot;</span>}))
-</span><span id="ln-13">    <span style="color: #008000">print</span>(naive_gate({<span style="color: #BA2121">&quot;volume&quot;</span>: <span style="color: #BA2121">&quot;high&quot;</span>, <span style="color: #BA2121">&quot;failcost&quot;</span>: <span style="color: #BA2121">&quot;high&quot;</span>}))
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;최소 해법 — 물량 하나만 보고 정한다. 구멍이 있다.&quot;&quot;&quot;</span>
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">naive_gate</span>(axes: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+</span><span id="ln-6" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;volume&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span>:
+</span><span id="ln-7" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;DELEGATE&quot;</span>
+</span><span id="ln-8" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;DIRECT&quot;</span>
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-12" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(naive_gate({<span style="color: #BA2121">&quot;volume&quot;</span>: <span style="color: #BA2121">&quot;high&quot;</span>, <span style="color: #BA2121">&quot;spec_readiness&quot;</span>: <span style="color: #BA2121">&quot;vague&quot;</span>}))
+</span><span id="ln-13" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(naive_gate({<span style="color: #BA2121">&quot;volume&quot;</span>: <span style="color: #BA2121">&quot;high&quot;</span>, <span style="color: #BA2121">&quot;failcost&quot;</span>: <span style="color: #BA2121">&quot;high&quot;</span>}))
 </span></code></pre></div>
 
 <p>실행하면 둘 다 <code>DELEGATE</code>가 나온다.</p>
@@ -93,152 +93,152 @@
 <p>그리고 설령 안전하게 기계적 배치로 분류했다 해도 앞 절에서 다룬 문제가 남는다 — 위임이 실제로 더 싼지는 최적화 목표 없이는 답할 수 없다. 최소 해법에는 그렇게 되묻는 절차가 아예 없다.</p>
 <h2 id="_6">최종형</h2>
 <p>이 세 구멍(명세 미확정, 위험한 배치를 기계적으로 오판, 최적화 목표 부재)을 메운 버전이다. 표준 라이브러리만 쓴다. 어디에 둬도 상관없으며 여기서는 <code>route_advisor.py</code>로 부른다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
-</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;직접/위임 판정기 — 표준 라이브러리만 쓴다. 아무 폴더에나 둬도 된다.&quot;&quot;&quot;</span>
-</span><span id="ln-3"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
-</span><span id="ln-4"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">argparse</span>
-</span><span id="ln-5">
-</span><span id="ln-6">OPT_GOALS <span style="color: #666">=</span> (<span style="color: #BA2121">&quot;cost&quot;</span>, <span style="color: #BA2121">&quot;latency&quot;</span>, <span style="color: #BA2121">&quot;context_preservation&quot;</span>)
-</span><span id="ln-7">
-</span><span id="ln-8">
-</span><span id="ln-9"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parse_kv</span>(s: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
-</span><span id="ln-10">    out <span style="color: #666">=</span> {}
-</span><span id="ln-11">    <span style="color: #008000; font-weight: bold">for</span> pair <span style="color: #A2F; font-weight: bold">in</span> s<span style="color: #666">.</span>split(<span style="color: #BA2121">&quot;,&quot;</span>):
-</span><span id="ln-12">        pair <span style="color: #666">=</span> pair<span style="color: #666">.</span>strip()
-</span><span id="ln-13">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> pair:
-</span><span id="ln-14">            <span style="color: #008000; font-weight: bold">continue</span>
-</span><span id="ln-15">        k, _, v <span style="color: #666">=</span> pair<span style="color: #666">.</span>partition(<span style="color: #BA2121">&quot;=&quot;</span>)
-</span><span id="ln-16">        out[k<span style="color: #666">.</span>strip()] <span style="color: #666">=</span> v<span style="color: #666">.</span>strip()
-</span><span id="ln-17">    <span style="color: #008000; font-weight: bold">return</span> out
-</span><span id="ln-18">
-</span><span id="ln-19">
-</span><span id="ln-20"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_mechanical_batch</span>(axes: <span style="color: #008000">dict</span>, ext: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-</span><span id="ln-21"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;shallow + verifiable 단둘로는 부족하다 — 전 조건을 다 걸어야 한다.&quot;&quot;&quot;</span>
-</span><span id="ln-22">    <span style="color: #008000; font-weight: bold">return</span> (
-</span><span id="ln-23">        axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;depth&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;shallow&quot;</span>
-</span><span id="ln-24">        <span style="color: #A2F; font-weight: bold">and</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verifiable&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;yes&quot;</span>
-</span><span id="ln-25">        <span style="color: #A2F; font-weight: bold">and</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;volume&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span>
-</span><span id="ln-26">        <span style="color: #A2F; font-weight: bold">and</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;failcost&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;high&quot;</span>
-</span><span id="ln-27">        <span style="color: #A2F; font-weight: bold">and</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;spec_readiness&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;executable&quot;</span>
-</span><span id="ln-28">        <span style="color: #A2F; font-weight: bold">and</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;decomposability&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;independent&quot;</span>
-</span><span id="ln-29">        <span style="color: #A2F; font-weight: bold">and</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;context_dependency&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;low&quot;</span>
-</span><span id="ln-30">    )
-</span><span id="ln-31">
-</span><span id="ln-32">
-</span><span id="ln-33"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">gate</span>(axes: <span style="color: #008000">dict</span>, ext: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
-</span><span id="ln-34">    choices <span style="color: #666">=</span> {<span style="color: #BA2121">&quot;verifiable&quot;</span>: {<span style="color: #BA2121">&quot;yes&quot;</span>, <span style="color: #BA2121">&quot;partial&quot;</span>, <span style="color: #BA2121">&quot;no&quot;</span>}, <span style="color: #BA2121">&quot;failcost&quot;</span>: {<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;mid&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>},
-</span><span id="ln-35">               <span style="color: #BA2121">&quot;volume&quot;</span>: {<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>}, <span style="color: #BA2121">&quot;depth&quot;</span>: {<span style="color: #BA2121">&quot;shallow&quot;</span>, <span style="color: #BA2121">&quot;mid&quot;</span>, <span style="color: #BA2121">&quot;deep&quot;</span>}}
-</span><span id="ln-36">    extra <span style="color: #666">=</span> {<span style="color: #BA2121">&quot;handoff_cost&quot;</span>: {<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>}, <span style="color: #BA2121">&quot;spec_readiness&quot;</span>: {<span style="color: #BA2121">&quot;executable&quot;</span>, <span style="color: #BA2121">&quot;vague&quot;</span>},
-</span><span id="ln-37">             <span style="color: #BA2121">&quot;decomposability&quot;</span>: {<span style="color: #BA2121">&quot;independent&quot;</span>, <span style="color: #BA2121">&quot;single&quot;</span>}, <span style="color: #BA2121">&quot;context_dependency&quot;</span>: {<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>},
-</span><span id="ln-38">             <span style="color: #BA2121">&quot;verifier_available&quot;</span>: {<span style="color: #BA2121">&quot;yes&quot;</span>, <span style="color: #BA2121">&quot;no&quot;</span>}, <span style="color: #BA2121">&quot;optimization_goal&quot;</span>: <span style="color: #008000">set</span>(OPT_GOALS)}
-</span><span id="ln-39">    <span style="color: #008000; font-weight: bold">if</span> (<span style="color: #008000">set</span>(axes) <span style="color: #666">!=</span> <span style="color: #008000">set</span>(choices) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">set</span>(ext) <span style="color: #666">-</span> <span style="color: #008000">set</span>(extra)
-</span><span id="ln-40">            <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">any</span>(<span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(v, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> v <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> choices[k] <span style="color: #008000; font-weight: bold">for</span> k, v <span style="color: #A2F; font-weight: bold">in</span> axes<span style="color: #666">.</span>items())
-</span><span id="ln-41">            <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">any</span>(<span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(v, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> v <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> extra[k] <span style="color: #008000; font-weight: bold">for</span> k, v <span style="color: #A2F; font-weight: bold">in</span> ext<span style="color: #666">.</span>items())):
-</span><span id="ln-42">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;PLAN_FIRST&quot;</span>, <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;필수 축 누락·알 수 없는 값이 있다. 입력부터 확인한다.&quot;</span>}
-</span><span id="ln-43">    <span style="color: #008000; font-weight: bold">if</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;spec_readiness&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;executable&quot;</span>:
-</span><span id="ln-44">        <span style="color: #008000; font-weight: bold">return</span> {
-</span><span id="ln-45">            <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;PLAN_FIRST&quot;</span>,
-</span><span id="ln-46">            <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;명세가 실행 가능한 상태(범위·완료조건·검증자)가 아니다. 먼저 정한다.&quot;</span>,
-</span><span id="ln-47">        }
-</span><span id="ln-48">
-</span><span id="ln-49">    <span style="color: #008000; font-weight: bold">if</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;volume&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;low&quot;</span> <span style="color: #A2F; font-weight: bold">and</span> (
-</span><span id="ln-50">        ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;handoff_cost&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span> <span style="color: #A2F; font-weight: bold">or</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;context_dependency&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span>
-</span><span id="ln-51">    ):
-</span><span id="ln-52">        <span style="color: #008000; font-weight: bold">return</span> {
-</span><span id="ln-53">            <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DIRECT&quot;</span>,
-</span><span id="ln-54">            <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;위임 고정비(새 컨텍스트 구축 + 명세 작성)가 산출물 규모보다 크다.&quot;</span>,
-</span><span id="ln-55">        }
-</span><span id="ln-56">
-</span><span id="ln-57">    <span style="color: #008000; font-weight: bold">if</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verifier_available&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;yes&quot;</span>:
-</span><span id="ln-58">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;PLAN_FIRST&quot;</span>, <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;독립 검증자를 정한 뒤 위임을 판단한다.&quot;</span>}
-</span><span id="ln-59">
-</span><span id="ln-60">    <span style="color: #008000; font-weight: bold">if</span> is_mechanical_batch(axes, ext):
-</span><span id="ln-61">        goal <span style="color: #666">=</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;optimization_goal&quot;</span>)
-</span><span id="ln-62">        <span style="color: #008000; font-weight: bold">if</span> goal <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> OPT_GOALS:
-</span><span id="ln-63">            <span style="color: #008000; font-weight: bold">return</span> {
-</span><span id="ln-64">                <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;NEEDS_PREFERENCE&quot;</span>,
-</span><span id="ln-65">                <span style="color: #BA2121">&quot;reason&quot;</span>: (
-</span><span id="ln-66">                    <span style="color: #BA2121">&quot;기계적 배치이지만 위임 워커에 경제형 로드아웃이 없다. &quot;</span>
-</span><span id="ln-67">                    <span style="color: #BA2121">&quot;비용/시간/컨텍스트 보존 중 무엇이 우선인지 답해야 판정이 성립한다.&quot;</span>
-</span><span id="ln-68">                ),
-</span><span id="ln-69">                <span style="color: #BA2121">&quot;ask&quot;</span>: <span style="color: #BA2121">&quot;비용 / 완료시간 / 메인 컨텍스트 보존 중 무엇이 우선입니까?&quot;</span>,
-</span><span id="ln-70">            }
-</span><span id="ln-71">        <span style="color: #008000; font-weight: bold">if</span> goal <span style="color: #666">==</span> <span style="color: #BA2121">&quot;cost&quot;</span>:
-</span><span id="ln-72">            <span style="color: #008000; font-weight: bold">return</span> {
-</span><span id="ln-73">                <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DIRECT&quot;</span>,
-</span><span id="ln-74">                <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;비용 우선 — 직접 실행을 측정 후보로 삼는다. 모델 전환은 별도 판단이다.&quot;</span>,
-</span><span id="ln-75">            }
-</span><span id="ln-76">        <span style="color: #008000; font-weight: bold">return</span> {
-</span><span id="ln-77">            <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DELEGATE&quot;</span>,
-</span><span id="ln-78">            <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>goal<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 우선 — 위임은 병렬성·컨텍스트 보존을 산다(비용 절감이 아니다).&quot;</span>,
-</span><span id="ln-79">        }
-</span><span id="ln-80">
-</span><span id="ln-81">    <span style="color: #008000; font-weight: bold">if</span> (
-</span><span id="ln-82">        ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;spec_readiness&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;executable&quot;</span>
-</span><span id="ln-83">        <span style="color: #A2F; font-weight: bold">and</span> (axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;volume&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span> <span style="color: #A2F; font-weight: bold">or</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;decomposability&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;independent&quot;</span>)
-</span><span id="ln-84">        <span style="color: #A2F; font-weight: bold">and</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verifier_available&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;yes&quot;</span>
-</span><span id="ln-85">    ):
-</span><span id="ln-86">        <span style="color: #008000; font-weight: bold">return</span> {
-</span><span id="ln-87">            <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DELEGATE&quot;</span>,
-</span><span id="ln-88">            <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;명세 확정 + (물량 또는 분해 가능) + 독립 검증자 존재.&quot;</span>,
-</span><span id="ln-89">        }
-</span><span id="ln-90">
-</span><span id="ln-91">    <span style="color: #008000; font-weight: bold">return</span> {
-</span><span id="ln-92">        <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DIRECT&quot;</span>,
-</span><span id="ln-93">        <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;위 조건 중 어느 것도 확정적으로 위임을 지지하지 않는다.&quot;</span>,
-</span><span id="ln-94">        <span style="color: #BA2121">&quot;confidence&quot;</span>: <span style="color: #BA2121">&quot;low&quot;</span>,
-</span><span id="ln-95">    }
-</span><span id="ln-96">
-</span><span id="ln-97">
-</span><span id="ln-98"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
-</span><span id="ln-99">    ap <span style="color: #666">=</span> argparse<span style="color: #666">.</span>ArgumentParser()
-</span><span id="ln-100">    ap<span style="color: #666">.</span>add_argument(
-</span><span id="ln-101">        <span style="color: #BA2121">&quot;--axes&quot;</span>, required<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
-</span><span id="ln-102">        help<span style="color: #666">=</span><span style="color: #BA2121">&quot;verifiable=yes|partial|no,failcost=low|mid|high,volume=high|low,depth=shallow|mid|deep&quot;</span>,
-</span><span id="ln-103">    )
-</span><span id="ln-104">    ap<span style="color: #666">.</span>add_argument(
-</span><span id="ln-105">        <span style="color: #BA2121">&quot;--axes-ext&quot;</span>, default<span style="color: #666">=</span><span style="color: #BA2121">&quot;&quot;</span>,
-</span><span id="ln-106">        help<span style="color: #666">=</span>(
-</span><span id="ln-107">            <span style="color: #BA2121">&quot;handoff_cost=low|high,spec_readiness=executable|vague,&quot;</span>
-</span><span id="ln-108">            <span style="color: #BA2121">&quot;decomposability=independent|single,context_dependency=low|high,&quot;</span>
-</span><span id="ln-109">            <span style="color: #BA2121">&quot;verifier_available=yes|no,optimization_goal=cost|latency|context_preservation&quot;</span>
-</span><span id="ln-110">        ),
-</span><span id="ln-111">    )
-</span><span id="ln-112">    args <span style="color: #666">=</span> ap<span style="color: #666">.</span>parse_args()
-</span><span id="ln-113">    axes <span style="color: #666">=</span> parse_kv(args<span style="color: #666">.</span>axes)
-</span><span id="ln-114">    ext <span style="color: #666">=</span> parse_kv(args<span style="color: #666">.</span>axes_ext)
-</span><span id="ln-115">    result <span style="color: #666">=</span> gate(axes, ext)
-</span><span id="ln-116">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;route: </span><span style="color: #A45A77; font-weight: bold">{</span>result[<span style="color: #BA2121">&#39;route&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
-</span><span id="ln-117">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;reason: </span><span style="color: #A45A77; font-weight: bold">{</span>result[<span style="color: #BA2121">&#39;reason&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
-</span><span id="ln-118">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">&quot;ask&quot;</span> <span style="color: #A2F; font-weight: bold">in</span> result:
-</span><span id="ln-119">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;ask: </span><span style="color: #A45A77; font-weight: bold">{</span>result[<span style="color: #BA2121">&#39;ask&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
-</span><span id="ln-120">
-</span><span id="ln-121">
-</span><span id="ln-122"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
-</span><span id="ln-123">    main()
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;직접/위임 판정기 — 표준 라이브러리만 쓴다. 아무 폴더에나 둬도 된다.&quot;&quot;&quot;</span>
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">argparse</span>
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch">OPT_GOALS <span style="color: #666">=</span> (<span style="color: #BA2121">&quot;cost&quot;</span>, <span style="color: #BA2121">&quot;latency&quot;</span>, <span style="color: #BA2121">&quot;context_preservation&quot;</span>)
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">parse_kv</span>(s: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
+</span><span id="ln-10" style="padding-left:6ch;text-indent:-6ch">    out <span style="color: #666">=</span> {}
+</span><span id="ln-11" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">for</span> pair <span style="color: #A2F; font-weight: bold">in</span> s<span style="color: #666">.</span>split(<span style="color: #BA2121">&quot;,&quot;</span>):
+</span><span id="ln-12" style="padding-left:10ch;text-indent:-10ch">        pair <span style="color: #666">=</span> pair<span style="color: #666">.</span>strip()
+</span><span id="ln-13" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> pair:
+</span><span id="ln-14" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">continue</span>
+</span><span id="ln-15" style="padding-left:10ch;text-indent:-10ch">        k, _, v <span style="color: #666">=</span> pair<span style="color: #666">.</span>partition(<span style="color: #BA2121">&quot;=&quot;</span>)
+</span><span id="ln-16" style="padding-left:10ch;text-indent:-10ch">        out[k<span style="color: #666">.</span>strip()] <span style="color: #666">=</span> v<span style="color: #666">.</span>strip()
+</span><span id="ln-17" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">return</span> out
+</span><span id="ln-18" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-19" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_mechanical_batch</span>(axes: <span style="color: #008000">dict</span>, ext: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+</span><span id="ln-21" style="padding-left:6ch;text-indent:-6ch"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;shallow + verifiable 단둘로는 부족하다 — 전 조건을 다 걸어야 한다.&quot;&quot;&quot;</span>
+</span><span id="ln-22" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">return</span> (
+</span><span id="ln-23" style="padding-left:10ch;text-indent:-10ch">        axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;depth&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;shallow&quot;</span>
+</span><span id="ln-24" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #A2F; font-weight: bold">and</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verifiable&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;yes&quot;</span>
+</span><span id="ln-25" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #A2F; font-weight: bold">and</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;volume&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span>
+</span><span id="ln-26" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #A2F; font-weight: bold">and</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;failcost&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;high&quot;</span>
+</span><span id="ln-27" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #A2F; font-weight: bold">and</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;spec_readiness&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;executable&quot;</span>
+</span><span id="ln-28" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #A2F; font-weight: bold">and</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;decomposability&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;independent&quot;</span>
+</span><span id="ln-29" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #A2F; font-weight: bold">and</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;context_dependency&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;low&quot;</span>
+</span><span id="ln-30" style="padding-left:6ch;text-indent:-6ch">    )
+</span><span id="ln-31" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-32" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-33" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">gate</span>(axes: <span style="color: #008000">dict</span>, ext: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">dict</span>:
+</span><span id="ln-34" style="padding-left:6ch;text-indent:-6ch">    choices <span style="color: #666">=</span> {<span style="color: #BA2121">&quot;verifiable&quot;</span>: {<span style="color: #BA2121">&quot;yes&quot;</span>, <span style="color: #BA2121">&quot;partial&quot;</span>, <span style="color: #BA2121">&quot;no&quot;</span>}, <span style="color: #BA2121">&quot;failcost&quot;</span>: {<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;mid&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>},
+</span><span id="ln-35" style="padding-left:17ch;text-indent:-17ch">               <span style="color: #BA2121">&quot;volume&quot;</span>: {<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>}, <span style="color: #BA2121">&quot;depth&quot;</span>: {<span style="color: #BA2121">&quot;shallow&quot;</span>, <span style="color: #BA2121">&quot;mid&quot;</span>, <span style="color: #BA2121">&quot;deep&quot;</span>}}
+</span><span id="ln-36" style="padding-left:6ch;text-indent:-6ch">    extra <span style="color: #666">=</span> {<span style="color: #BA2121">&quot;handoff_cost&quot;</span>: {<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>}, <span style="color: #BA2121">&quot;spec_readiness&quot;</span>: {<span style="color: #BA2121">&quot;executable&quot;</span>, <span style="color: #BA2121">&quot;vague&quot;</span>},
+</span><span id="ln-37" style="padding-left:15ch;text-indent:-15ch">             <span style="color: #BA2121">&quot;decomposability&quot;</span>: {<span style="color: #BA2121">&quot;independent&quot;</span>, <span style="color: #BA2121">&quot;single&quot;</span>}, <span style="color: #BA2121">&quot;context_dependency&quot;</span>: {<span style="color: #BA2121">&quot;low&quot;</span>, <span style="color: #BA2121">&quot;high&quot;</span>},
+</span><span id="ln-38" style="padding-left:15ch;text-indent:-15ch">             <span style="color: #BA2121">&quot;verifier_available&quot;</span>: {<span style="color: #BA2121">&quot;yes&quot;</span>, <span style="color: #BA2121">&quot;no&quot;</span>}, <span style="color: #BA2121">&quot;optimization_goal&quot;</span>: <span style="color: #008000">set</span>(OPT_GOALS)}
+</span><span id="ln-39" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> (<span style="color: #008000">set</span>(axes) <span style="color: #666">!=</span> <span style="color: #008000">set</span>(choices) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">set</span>(ext) <span style="color: #666">-</span> <span style="color: #008000">set</span>(extra)
+</span><span id="ln-40" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">any</span>(<span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(v, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> v <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> choices[k] <span style="color: #008000; font-weight: bold">for</span> k, v <span style="color: #A2F; font-weight: bold">in</span> axes<span style="color: #666">.</span>items())
+</span><span id="ln-41" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">any</span>(<span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(v, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> v <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> extra[k] <span style="color: #008000; font-weight: bold">for</span> k, v <span style="color: #A2F; font-weight: bold">in</span> ext<span style="color: #666">.</span>items())):
+</span><span id="ln-42" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;PLAN_FIRST&quot;</span>, <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;필수 축 누락·알 수 없는 값이 있다. 입력부터 확인한다.&quot;</span>}
+</span><span id="ln-43" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;spec_readiness&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;executable&quot;</span>:
+</span><span id="ln-44" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> {
+</span><span id="ln-45" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;PLAN_FIRST&quot;</span>,
+</span><span id="ln-46" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;명세가 실행 가능한 상태(범위·완료조건·검증자)가 아니다. 먼저 정한다.&quot;</span>,
+</span><span id="ln-47" style="padding-left:10ch;text-indent:-10ch">        }
+</span><span id="ln-48" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-49" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;volume&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;low&quot;</span> <span style="color: #A2F; font-weight: bold">and</span> (
+</span><span id="ln-50" style="padding-left:10ch;text-indent:-10ch">        ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;handoff_cost&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span> <span style="color: #A2F; font-weight: bold">or</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;context_dependency&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span>
+</span><span id="ln-51" style="padding-left:6ch;text-indent:-6ch">    ):
+</span><span id="ln-52" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> {
+</span><span id="ln-53" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DIRECT&quot;</span>,
+</span><span id="ln-54" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;위임 고정비(새 컨텍스트 구축 + 명세 작성)가 산출물 규모보다 크다.&quot;</span>,
+</span><span id="ln-55" style="padding-left:10ch;text-indent:-10ch">        }
+</span><span id="ln-56" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-57" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verifier_available&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;yes&quot;</span>:
+</span><span id="ln-58" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> {<span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;PLAN_FIRST&quot;</span>, <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;독립 검증자를 정한 뒤 위임을 판단한다.&quot;</span>}
+</span><span id="ln-59" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-60" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> is_mechanical_batch(axes, ext):
+</span><span id="ln-61" style="padding-left:10ch;text-indent:-10ch">        goal <span style="color: #666">=</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;optimization_goal&quot;</span>)
+</span><span id="ln-62" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> goal <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #A2F; font-weight: bold">in</span> OPT_GOALS:
+</span><span id="ln-63" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">return</span> {
+</span><span id="ln-64" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;NEEDS_PREFERENCE&quot;</span>,
+</span><span id="ln-65" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;reason&quot;</span>: (
+</span><span id="ln-66" style="padding-left:22ch;text-indent:-22ch">                    <span style="color: #BA2121">&quot;기계적 배치이지만 위임 워커에 경제형 로드아웃이 없다. &quot;</span>
+</span><span id="ln-67" style="padding-left:22ch;text-indent:-22ch">                    <span style="color: #BA2121">&quot;비용/시간/컨텍스트 보존 중 무엇이 우선인지 답해야 판정이 성립한다.&quot;</span>
+</span><span id="ln-68" style="padding-left:18ch;text-indent:-18ch">                ),
+</span><span id="ln-69" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;ask&quot;</span>: <span style="color: #BA2121">&quot;비용 / 완료시간 / 메인 컨텍스트 보존 중 무엇이 우선입니까?&quot;</span>,
+</span><span id="ln-70" style="padding-left:14ch;text-indent:-14ch">            }
+</span><span id="ln-71" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> goal <span style="color: #666">==</span> <span style="color: #BA2121">&quot;cost&quot;</span>:
+</span><span id="ln-72" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">return</span> {
+</span><span id="ln-73" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DIRECT&quot;</span>,
+</span><span id="ln-74" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;비용 우선 — 직접 실행을 측정 후보로 삼는다. 모델 전환은 별도 판단이다.&quot;</span>,
+</span><span id="ln-75" style="padding-left:14ch;text-indent:-14ch">            }
+</span><span id="ln-76" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> {
+</span><span id="ln-77" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DELEGATE&quot;</span>,
+</span><span id="ln-78" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>goal<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 우선 — 위임은 병렬성·컨텍스트 보존을 산다(비용 절감이 아니다).&quot;</span>,
+</span><span id="ln-79" style="padding-left:10ch;text-indent:-10ch">        }
+</span><span id="ln-80" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-81" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> (
+</span><span id="ln-82" style="padding-left:10ch;text-indent:-10ch">        ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;spec_readiness&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;executable&quot;</span>
+</span><span id="ln-83" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #A2F; font-weight: bold">and</span> (axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;volume&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;high&quot;</span> <span style="color: #A2F; font-weight: bold">or</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;decomposability&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;independent&quot;</span>)
+</span><span id="ln-84" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #A2F; font-weight: bold">and</span> ext<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verifier_available&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;yes&quot;</span>
+</span><span id="ln-85" style="padding-left:6ch;text-indent:-6ch">    ):
+</span><span id="ln-86" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> {
+</span><span id="ln-87" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DELEGATE&quot;</span>,
+</span><span id="ln-88" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;명세 확정 + (물량 또는 분해 가능) + 독립 검증자 존재.&quot;</span>,
+</span><span id="ln-89" style="padding-left:10ch;text-indent:-10ch">        }
+</span><span id="ln-90" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-91" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">return</span> {
+</span><span id="ln-92" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #BA2121">&quot;route&quot;</span>: <span style="color: #BA2121">&quot;DIRECT&quot;</span>,
+</span><span id="ln-93" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #BA2121">&quot;reason&quot;</span>: <span style="color: #BA2121">&quot;위 조건 중 어느 것도 확정적으로 위임을 지지하지 않는다.&quot;</span>,
+</span><span id="ln-94" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #BA2121">&quot;confidence&quot;</span>: <span style="color: #BA2121">&quot;low&quot;</span>,
+</span><span id="ln-95" style="padding-left:6ch;text-indent:-6ch">    }
+</span><span id="ln-96" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-97" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-98" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
+</span><span id="ln-99" style="padding-left:6ch;text-indent:-6ch">    ap <span style="color: #666">=</span> argparse<span style="color: #666">.</span>ArgumentParser()
+</span><span id="ln-100" style="padding-left:6ch;text-indent:-6ch">    ap<span style="color: #666">.</span>add_argument(
+</span><span id="ln-101" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #BA2121">&quot;--axes&quot;</span>, required<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>,
+</span><span id="ln-102" style="padding-left:10ch;text-indent:-10ch">        help<span style="color: #666">=</span><span style="color: #BA2121">&quot;verifiable=yes|partial|no,failcost=low|mid|high,volume=high|low,depth=shallow|mid|deep&quot;</span>,
+</span><span id="ln-103" style="padding-left:6ch;text-indent:-6ch">    )
+</span><span id="ln-104" style="padding-left:6ch;text-indent:-6ch">    ap<span style="color: #666">.</span>add_argument(
+</span><span id="ln-105" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #BA2121">&quot;--axes-ext&quot;</span>, default<span style="color: #666">=</span><span style="color: #BA2121">&quot;&quot;</span>,
+</span><span id="ln-106" style="padding-left:10ch;text-indent:-10ch">        help<span style="color: #666">=</span>(
+</span><span id="ln-107" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;handoff_cost=low|high,spec_readiness=executable|vague,&quot;</span>
+</span><span id="ln-108" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;decomposability=independent|single,context_dependency=low|high,&quot;</span>
+</span><span id="ln-109" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;verifier_available=yes|no,optimization_goal=cost|latency|context_preservation&quot;</span>
+</span><span id="ln-110" style="padding-left:10ch;text-indent:-10ch">        ),
+</span><span id="ln-111" style="padding-left:6ch;text-indent:-6ch">    )
+</span><span id="ln-112" style="padding-left:6ch;text-indent:-6ch">    args <span style="color: #666">=</span> ap<span style="color: #666">.</span>parse_args()
+</span><span id="ln-113" style="padding-left:6ch;text-indent:-6ch">    axes <span style="color: #666">=</span> parse_kv(args<span style="color: #666">.</span>axes)
+</span><span id="ln-114" style="padding-left:6ch;text-indent:-6ch">    ext <span style="color: #666">=</span> parse_kv(args<span style="color: #666">.</span>axes_ext)
+</span><span id="ln-115" style="padding-left:6ch;text-indent:-6ch">    result <span style="color: #666">=</span> gate(axes, ext)
+</span><span id="ln-116" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;route: </span><span style="color: #A45A77; font-weight: bold">{</span>result[<span style="color: #BA2121">&#39;route&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-117" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;reason: </span><span style="color: #A45A77; font-weight: bold">{</span>result[<span style="color: #BA2121">&#39;reason&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-118" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #BA2121">&quot;ask&quot;</span> <span style="color: #A2F; font-weight: bold">in</span> result:
+</span><span id="ln-119" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;ask: </span><span style="color: #A45A77; font-weight: bold">{</span>result[<span style="color: #BA2121">&#39;ask&#39;</span>]<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-120" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-121" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-122" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-123" style="padding-left:6ch;text-indent:-6ch">    main()
 </span></code></pre></div>
 
 <p>실행 예시 몇 가지다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">$ python3 route_advisor.py --axes &quot;verifiable=yes,failcost=low,volume=low,depth=shallow&quot; \
-</span><span id="ln-2">    --axes-ext &quot;handoff_cost=high,spec_readiness=executable,decomposability=single,context_dependency=high,verifier_available=yes&quot;
-</span><span id="ln-3">route: DIRECT
-</span><span id="ln-4">reason: 위임 고정비(새 컨텍스트 구축 + 명세 작성)가 산출물 규모보다 크다.
-</span><span id="ln-5">
-</span><span id="ln-6">$ python3 route_advisor.py --axes &quot;verifiable=partial,failcost=mid,volume=low,depth=mid&quot; \
-</span><span id="ln-7">    --axes-ext &quot;spec_readiness=vague&quot;
-</span><span id="ln-8">route: PLAN_FIRST
-</span><span id="ln-9">reason: 명세가 실행 가능한 상태(범위·완료조건·검증자)가 아니다. 먼저 정한다.
-</span><span id="ln-10">
-</span><span id="ln-11">$ python3 route_advisor.py --axes &quot;verifiable=yes,failcost=low,volume=high,depth=shallow&quot; \
-</span><span id="ln-12">    --axes-ext &quot;spec_readiness=executable,decomposability=independent,context_dependency=low,verifier_available=yes&quot;
-</span><span id="ln-13">route: NEEDS_PREFERENCE
-</span><span id="ln-14">reason: 기계적 배치이지만 위임 워커에 경제형 로드아웃이 없다. 비용/시간/컨텍스트 보존 중 무엇이 우선인지 답해야 판정이 성립한다.
-</span><span id="ln-15">ask: 비용 / 완료시간 / 메인 컨텍스트 보존 중 무엇이 우선입니까?
-</span><span id="ln-16">
-</span><span id="ln-17">$ python3 route_advisor.py --axes &quot;verifiable=yes,failcost=high,volume=high,depth=shallow&quot; \
-</span><span id="ln-18">    --axes-ext &quot;spec_readiness=executable,decomposability=independent,context_dependency=low,verifier_available=yes&quot;
-</span><span id="ln-19">route: DELEGATE
-</span><span id="ln-20">reason: 명세 확정 + (물량 또는 분해 가능) + 독립 검증자 존재.
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch">$ python3 route_advisor.py --axes &quot;verifiable=yes,failcost=low,volume=low,depth=shallow&quot; \
+</span><span id="ln-2" style="padding-left:6ch;text-indent:-6ch">    --axes-ext &quot;handoff_cost=high,spec_readiness=executable,decomposability=single,context_dependency=high,verifier_available=yes&quot;
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">route: DIRECT
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch">reason: 위임 고정비(새 컨텍스트 구축 + 명세 작성)가 산출물 규모보다 크다.
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch">$ python3 route_advisor.py --axes &quot;verifiable=partial,failcost=mid,volume=low,depth=mid&quot; \
+</span><span id="ln-7" style="padding-left:6ch;text-indent:-6ch">    --axes-ext &quot;spec_readiness=vague&quot;
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch">route: PLAN_FIRST
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch">reason: 명세가 실행 가능한 상태(범위·완료조건·검증자)가 아니다. 먼저 정한다.
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch">$ python3 route_advisor.py --axes &quot;verifiable=yes,failcost=low,volume=high,depth=shallow&quot; \
+</span><span id="ln-12" style="padding-left:6ch;text-indent:-6ch">    --axes-ext &quot;spec_readiness=executable,decomposability=independent,context_dependency=low,verifier_available=yes&quot;
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch">route: NEEDS_PREFERENCE
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch">reason: 기계적 배치이지만 위임 워커에 경제형 로드아웃이 없다. 비용/시간/컨텍스트 보존 중 무엇이 우선인지 답해야 판정이 성립한다.
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch">ask: 비용 / 완료시간 / 메인 컨텍스트 보존 중 무엇이 우선입니까?
+</span><span id="ln-16" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-17" style="padding-left:2ch;text-indent:-2ch">$ python3 route_advisor.py --axes &quot;verifiable=yes,failcost=high,volume=high,depth=shallow&quot; \
+</span><span id="ln-18" style="padding-left:6ch;text-indent:-6ch">    --axes-ext &quot;spec_readiness=executable,decomposability=independent,context_dependency=low,verifier_available=yes&quot;
+</span><span id="ln-19" style="padding-left:2ch;text-indent:-2ch">route: DELEGATE
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch">reason: 명세 확정 + (물량 또는 분해 가능) + 독립 검증자 존재.
 </span></code></pre></div>
 
 <p>마지막 두 예시를 나란히 보면 요지가 드러난다. <code>failcost</code>(실패 비용) 하나만 <code>low</code>에서 <code>high</code>로 바뀌었을 뿐인데 판정이 "되물어라"에서 "위임해도 된다"로 바뀐다. 실패 비용이 높은 작업은 애초에 "기계적 배치라서 값싸게 위임할지 말지 고민하는" 범주에 들지 못한다. 이런 작업은 명세·물량·검증자 조건을 정공법으로 통과해야만 위임될 수 있다.</p>
@@ -324,19 +324,19 @@
 <h2 id="_9">직접 확인하는 법</h2>
 <p>먼저 위 예시들을 그대로 돌려 네 결과가 실제로 나오는지 확인한다. 그다음, 안전장치를 다루는 장답게 <strong>일부러 깨뜨려서 빨간불이 되는지</strong> 본다.</p>
 <p><code>route_advisor.py</code>를 임시 폴더에 <code>route_advisor_broken.py</code>로 복사한다. 아래 함수 이름에서 <code>_broken</code>을 빼고 기존 <code>is_mechanical_batch</code>를 교체한다. <code>is_mechanical_batch</code>의 전체 조건 중 <code>depth</code>와 <code>verifiable</code> 딱 두 개만 남기고 나머지를 지워보자.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_mechanical_batch_broken</span>(axes: <span style="color: #008000">dict</span>, ext: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-</span><span id="ln-2">    <span style="color: #008000; font-weight: bold">return</span> (
-</span><span id="ln-3">        axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;depth&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;shallow&quot;</span>
-</span><span id="ln-4">        <span style="color: #A2F; font-weight: bold">and</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verifiable&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;yes&quot;</span>
-</span><span id="ln-5">    )
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">is_mechanical_batch_broken</span>(axes: <span style="color: #008000">dict</span>, ext: <span style="color: #008000">dict</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+</span><span id="ln-2" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">return</span> (
+</span><span id="ln-3" style="padding-left:10ch;text-indent:-10ch">        axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;depth&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;shallow&quot;</span>
+</span><span id="ln-4" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #A2F; font-weight: bold">and</span> axes<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;verifiable&quot;</span>) <span style="color: #666">==</span> <span style="color: #BA2121">&quot;yes&quot;</span>
+</span><span id="ln-5" style="padding-left:6ch;text-indent:-6ch">    )
 </span></code></pre></div>
 
 <p>그리고 저장소 전체 권한 변경처럼 실패 비용이 높은 사례를 넣는다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">$ python3 route_advisor_broken.py --axes &quot;verifiable=yes,failcost=high,volume=high,depth=shallow&quot; \
-</span><span id="ln-2">    --axes-ext &quot;spec_readiness=executable,decomposability=independent,context_dependency=low,verifier_available=yes&quot;
-</span><span id="ln-3">route: NEEDS_PREFERENCE
-</span><span id="ln-4">reason: 기계적 배치이지만 위임 워커에 경제형 로드아웃이 없다. 비용/시간/컨텍스트 보존 중 무엇이 우선인지 답해야 판정이 성립한다.
-</span><span id="ln-5">ask: 비용 / 완료시간 / 메인 컨텍스트 보존 중 무엇이 우선입니까?
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch">$ python3 route_advisor_broken.py --axes &quot;verifiable=yes,failcost=high,volume=high,depth=shallow&quot; \
+</span><span id="ln-2" style="padding-left:6ch;text-indent:-6ch">    --axes-ext &quot;spec_readiness=executable,decomposability=independent,context_dependency=low,verifier_available=yes&quot;
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">route: NEEDS_PREFERENCE
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch">reason: 기계적 배치이지만 위임 워커에 경제형 로드아웃이 없다. 비용/시간/컨텍스트 보존 중 무엇이 우선인지 답해야 판정이 성립한다.
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch">ask: 비용 / 완료시간 / 메인 컨텍스트 보존 중 무엇이 우선입니까?
 </span></code></pre></div>
 
 <p>분류가 달라졌다. 정상판에서 <code>DELEGATE</code>가 나오는 이유는 실패 비용이 높아서가 아니라 별도의 명세·물량·검증자 조건을 통과했기 때문이다. 이 예제는 위험한 작업의 실행 승인이나 안전성을 판정하지 않는다. 그런데 두 조건만 보는 깨진 버전에 넣으면 이 사례가 "기계적 배치라서 비용/시간/컨텍스트 중 뭐가 중한지만 고르면 되는" 사소한 문제로 둔갑한다. 실패 비용이 높다는 신호가 판정 과정에서 사라져 버렸다. 그래서 얕고 검증 가능하다는 조건 둘만으로 "기계적"이라 부르면 안 된다 — 위험한 작업을 편안한 작업으로 오분류하면 정작 신중해야 할 순간에 "그냥 어느 쪽이 편하냐"만 묻게 된다.</p>

@@ -77,80 +77,80 @@ Claude Code에는 그 자리가 있다 — 도구 호출이 실제로 실행되�
 "이 몇 개만은 절대"로 좁혀서 시작하고 필요하면 사고가 실제로 난 항목만
 추가하는 편이 낫다.</p>
 <p>이 파일은 <code>~/.claude/hooks/block_consequential.py</code>에 둔다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
-</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;PreToolUse 훅 — Bash 호출 중 좁은 하드셋만 정규식으로 차단한다.</span>
-</span><span id="ln-3">
-</span><span id="ln-4"><span style="color: #BA2121; font-style: italic">기준: (1) 되돌릴 수 없는가 (2) 내 작업 범위를 벗어나 남에게 영향을 주는가.</span>
-</span><span id="ln-5"><span style="color: #BA2121; font-style: italic">둘 다 아니면 이 훅에 넣지 않는다 — 넓게 막으면 결국 훅 자체가 꺼진다.</span>
-</span><span id="ln-6">
-</span><span id="ln-7"><span style="color: #BA2121; font-style: italic">안전장치: 파싱/로직 에러는 전부 허용(exit 0)으로 떨어진다. 이 훅의 버그가</span>
-</span><span id="ln-8"><span style="color: #BA2121; font-style: italic">작업 전체를 마비시켜서는 안 된다.</span>
-</span><span id="ln-9"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
-</span><span id="ln-10"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">json</span>
-</span><span id="ln-11"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
-</span><span id="ln-12"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
-</span><span id="ln-13">
-</span><span id="ln-14">
-</span><span id="ln-15"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_allow</span>():
-</span><span id="ln-16">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
-</span><span id="ln-17">
-</span><span id="ln-18">
-</span><span id="ln-19"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
-</span><span id="ln-20">    <span style="color: #008000; font-weight: bold">try</span>:
-</span><span id="ln-21">        data <span style="color: #666">=</span> json<span style="color: #666">.</span>load(sys<span style="color: #666">.</span>stdin)
-</span><span id="ln-22">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
-</span><span id="ln-23">        _allow()
-</span><span id="ln-24">
-</span><span id="ln-25">    <span style="color: #008000; font-weight: bold">try</span>:
-</span><span id="ln-26">        <span style="color: #008000; font-weight: bold">if</span> data<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;tool_name&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;Bash&quot;</span>:
-</span><span id="ln-27">            _allow()
-</span><span id="ln-28">        cmd <span style="color: #666">=</span> (data<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;tool_input&quot;</span>) <span style="color: #A2F; font-weight: bold">or</span> {})<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;command&quot;</span>, <span style="color: #BA2121">&quot;&quot;</span>)
-</span><span id="ln-29">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(cmd, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> cmd<span style="color: #666">.</span>strip():
-</span><span id="ln-30">            _allow()
-</span><span id="ln-31">
-</span><span id="ln-32">        blocks <span style="color: #666">=</span> []
-</span><span id="ln-33">
-</span><span id="ln-34">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\bgit\s+push\b&quot;</span>, cmd):
-</span><span id="ln-35">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\b(master|main)\b&quot;</span>, cmd):
-</span><span id="ln-36">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;master/main으로의 git push&quot;</span>)
-</span><span id="ln-37">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;--force(-with-lease)?\b|\s-f\b&quot;</span>, cmd):
-</span><span id="ln-38">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;git force-push&quot;</span>)
-</span><span id="ln-39">
-</span><span id="ln-40">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\bgit\s+reset\s+--hard\b&quot;</span>, cmd) <span style="color: #A2F; font-weight: bold">and</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\b(origin|upstream)/&quot;</span>, cmd):
-</span><span id="ln-41">            blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;원격 ref로의 git reset --hard&quot;</span>)
-</span><span id="ln-42">
-</span><span id="ln-43">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\brm\s+-\S*r\S*f|\brm\s+-\S*f\S*r|\brm\s+-rf|\brm\s+-fr&quot;</span>, cmd):
-</span><span id="ln-44">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;(^|\s)(/|~|\$HOME)(\s|$|</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">|&#39;)&quot;</span>, cmd):
-</span><span id="ln-45">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;홈/루트 대상 rm -rf&quot;</span>)
-</span><span id="ln-46">
-</span><span id="ln-47">        <span style="color: #008000; font-weight: bold">if</span> blocks:
-</span><span id="ln-48">            sys<span style="color: #666">.</span>stderr<span style="color: #666">.</span>write(<span style="color: #BA2121">&quot;BLOCKED: &quot;</span> <span style="color: #666">+</span> <span style="color: #BA2121">&quot;; &quot;</span><span style="color: #666">.</span>join(blocks) <span style="color: #666">+</span> <span style="color: #BA2121">&quot;.</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>)
-</span><span id="ln-49">            sys<span style="color: #666">.</span>exit(<span style="color: #666">2</span>)
-</span><span id="ln-50">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
-</span><span id="ln-51">        _allow()
-</span><span id="ln-52">    _allow()
-</span><span id="ln-53">
-</span><span id="ln-54">
-</span><span id="ln-55">main()
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;PreToolUse 훅 — Bash 호출 중 좁은 하드셋만 정규식으로 차단한다.</span>
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">기준: (1) 되돌릴 수 없는가 (2) 내 작업 범위를 벗어나 남에게 영향을 주는가.</span>
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">둘 다 아니면 이 훅에 넣지 않는다 — 넓게 막으면 결국 훅 자체가 꺼진다.</span>
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">안전장치: 파싱/로직 에러는 전부 허용(exit 0)으로 떨어진다. 이 훅의 버그가</span>
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">작업 전체를 마비시켜서는 안 된다.</span>
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">json</span>
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
+</span><span id="ln-12" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_allow</span>():
+</span><span id="ln-16" style="padding-left:6ch;text-indent:-6ch">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-17" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-18" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-19" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
+</span><span id="ln-20" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-21" style="padding-left:10ch;text-indent:-10ch">        data <span style="color: #666">=</span> json<span style="color: #666">.</span>load(sys<span style="color: #666">.</span>stdin)
+</span><span id="ln-22" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
+</span><span id="ln-23" style="padding-left:10ch;text-indent:-10ch">        _allow()
+</span><span id="ln-24" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-25" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-26" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> data<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;tool_name&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;Bash&quot;</span>:
+</span><span id="ln-27" style="padding-left:14ch;text-indent:-14ch">            _allow()
+</span><span id="ln-28" style="padding-left:10ch;text-indent:-10ch">        cmd <span style="color: #666">=</span> (data<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;tool_input&quot;</span>) <span style="color: #A2F; font-weight: bold">or</span> {})<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;command&quot;</span>, <span style="color: #BA2121">&quot;&quot;</span>)
+</span><span id="ln-29" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(cmd, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> cmd<span style="color: #666">.</span>strip():
+</span><span id="ln-30" style="padding-left:14ch;text-indent:-14ch">            _allow()
+</span><span id="ln-31" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-32" style="padding-left:10ch;text-indent:-10ch">        blocks <span style="color: #666">=</span> []
+</span><span id="ln-33" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-34" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\bgit\s+push\b&quot;</span>, cmd):
+</span><span id="ln-35" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\b(master|main)\b&quot;</span>, cmd):
+</span><span id="ln-36" style="padding-left:18ch;text-indent:-18ch">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;master/main으로의 git push&quot;</span>)
+</span><span id="ln-37" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;--force(-with-lease)?\b|\s-f\b&quot;</span>, cmd):
+</span><span id="ln-38" style="padding-left:18ch;text-indent:-18ch">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;git force-push&quot;</span>)
+</span><span id="ln-39" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-40" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\bgit\s+reset\s+--hard\b&quot;</span>, cmd) <span style="color: #A2F; font-weight: bold">and</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\b(origin|upstream)/&quot;</span>, cmd):
+</span><span id="ln-41" style="padding-left:14ch;text-indent:-14ch">            blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;원격 ref로의 git reset --hard&quot;</span>)
+</span><span id="ln-42" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-43" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\brm\s+-\S*r\S*f|\brm\s+-\S*f\S*r|\brm\s+-rf|\brm\s+-fr&quot;</span>, cmd):
+</span><span id="ln-44" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;(^|\s)(/|~|\$HOME)(\s|$|</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">|&#39;)&quot;</span>, cmd):
+</span><span id="ln-45" style="padding-left:18ch;text-indent:-18ch">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;홈/루트 대상 rm -rf&quot;</span>)
+</span><span id="ln-46" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-47" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> blocks:
+</span><span id="ln-48" style="padding-left:14ch;text-indent:-14ch">            sys<span style="color: #666">.</span>stderr<span style="color: #666">.</span>write(<span style="color: #BA2121">&quot;BLOCKED: &quot;</span> <span style="color: #666">+</span> <span style="color: #BA2121">&quot;; &quot;</span><span style="color: #666">.</span>join(blocks) <span style="color: #666">+</span> <span style="color: #BA2121">&quot;.</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>)
+</span><span id="ln-49" style="padding-left:14ch;text-indent:-14ch">            sys<span style="color: #666">.</span>exit(<span style="color: #666">2</span>)
+</span><span id="ln-50" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
+</span><span id="ln-51" style="padding-left:10ch;text-indent:-10ch">        _allow()
+</span><span id="ln-52" style="padding-left:6ch;text-indent:-6ch">    _allow()
+</span><span id="ln-53" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-54" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-55" style="padding-left:2ch;text-indent:-2ch">main()
 </span></code></pre></div>
 
 <p>settings.json 배선. 프로젝트 루트의 <code>.claude/settings.json</code>이든
 <code>~/.claude/settings.json</code>이든 형태는 같다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">{
-</span><span id="ln-2"><span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>{
-</span><span id="ln-3"><span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">&quot;PreToolUse&quot;</span>:<span style="color: #BBB"> </span>[
-</span><span id="ln-4"><span style="color: #BBB">      </span>{
-</span><span id="ln-5"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;matcher&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;Bash&quot;</span>,
-</span><span id="ln-6"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>[
-</span><span id="ln-7"><span style="color: #BBB">          </span>{
-</span><span id="ln-8"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;type&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;command&quot;</span>,
-</span><span id="ln-9"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;command&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;python3 $HOME/.claude/hooks/block_consequential.py&quot;</span>
-</span><span id="ln-10"><span style="color: #BBB">          </span>}
-</span><span id="ln-11"><span style="color: #BBB">        </span>]
-</span><span id="ln-12"><span style="color: #BBB">      </span>}
-</span><span id="ln-13"><span style="color: #BBB">    </span>]
-</span><span id="ln-14"><span style="color: #BBB">  </span>}
-</span><span id="ln-15">}
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch">{
+</span><span id="ln-2" style="padding-left:4ch;text-indent:-4ch"><span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>{
+</span><span id="ln-3" style="padding-left:6ch;text-indent:-6ch"><span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">&quot;PreToolUse&quot;</span>:<span style="color: #BBB"> </span>[
+</span><span id="ln-4" style="padding-left:8ch;text-indent:-8ch"><span style="color: #BBB">      </span>{
+</span><span id="ln-5" style="padding-left:10ch;text-indent:-10ch"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;matcher&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;Bash&quot;</span>,
+</span><span id="ln-6" style="padding-left:10ch;text-indent:-10ch"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>[
+</span><span id="ln-7" style="padding-left:12ch;text-indent:-12ch"><span style="color: #BBB">          </span>{
+</span><span id="ln-8" style="padding-left:14ch;text-indent:-14ch"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;type&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;command&quot;</span>,
+</span><span id="ln-9" style="padding-left:14ch;text-indent:-14ch"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;command&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;python3 $HOME/.claude/hooks/block_consequential.py&quot;</span>
+</span><span id="ln-10" style="padding-left:12ch;text-indent:-12ch"><span style="color: #BBB">          </span>}
+</span><span id="ln-11" style="padding-left:10ch;text-indent:-10ch"><span style="color: #BBB">        </span>]
+</span><span id="ln-12" style="padding-left:8ch;text-indent:-8ch"><span style="color: #BBB">      </span>}
+</span><span id="ln-13" style="padding-left:6ch;text-indent:-6ch"><span style="color: #BBB">    </span>]
+</span><span id="ln-14" style="padding-left:4ch;text-indent:-4ch"><span style="color: #BBB">  </span>}
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch">}
 </span></code></pre></div>
 
 <p>이 정규식은 표에 든 단순한 명령 표기만 잡는 보조 검사다. 예를 들어 <code>git -C repo push --force</code>, 기본 대상이 main인 인자 없는 push, 따옴표·변수·별칭·별도 스크립트를 거친 명령은 놓칠 수 있다. 셸 전체를 해석하지 않으므로 위험 명령을 항상 막는 보안 경계로 쓰면 안 된다. 저장소 보호 규칙·도구 권한·OS 격리와 함께 써야 한다.</p>
@@ -183,54 +183,54 @@ Claude Code에는 그 자리가 있다 — 도구 호출이 실제로 실행되�
 <p><strong>명령 해시의 한계.</strong> 같은 문자열도 작업 디렉터리·환경변수·PATH·실행 파일·저장소 상태가 달라지면 효과가 달라진다. 이 예제는 문자열만 묶으므로 그런 실행 맥락까지 승인하는 토큰이 아니다. 운영용 승인 기록에는 대상과 실행 맥락도 함께 묶어야 한다.</p>
 <p>발급은 사람 또는 분리된 신뢰 주체만 한다. 에이전트에게 차단을 풀기 위해 이 스크립트를 실행하라고 지시하면 안 된다.</p>
 <p>발급 스크립트다. 이 파일은 <code>~/.claude/scripts/approve_once.py</code>에 둔다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
-</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;1회성 승인 마커 발행 스크립트.</span>
-</span><span id="ln-3">
-</span><span id="ln-4"><span style="color: #BA2121; font-style: italic">사용: python3 approve_once.py &quot;&lt;실행할 정확한 명령 전체 문자열&gt;&quot;</span>
-</span><span id="ln-5">
-</span><span id="ln-6"><span style="color: #BA2121; font-style: italic">이 문자열과 SHA256이 정확히 일치하는 명령 하나만, 발급 시각으로부터 TTL초</span>
-</span><span id="ln-7"><span style="color: #BA2121; font-style: italic">안에 통과시키는 마커를 만든다. 훅이 그 마커를 소비하는 순간 파일이 지워진다 —</span>
-</span><span id="ln-8"><span style="color: #BA2121; font-style: italic">재사용 불가.</span>
-</span><span id="ln-9"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
-</span><span id="ln-10"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">hashlib</span>
-</span><span id="ln-11"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">json</span>
-</span><span id="ln-12"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
-</span><span id="ln-13"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
-</span><span id="ln-14"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">time</span>
-</span><span id="ln-15"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">tempfile</span>
-</span><span id="ln-16">
-</span><span id="ln-17">MARKER <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/.consequential_allow.json&quot;</span>)
-</span><span id="ln-18">TTL_SECONDS <span style="color: #666">=</span> <span style="color: #666">300</span>
-</span><span id="ln-19">
-</span><span id="ln-20">
-</span><span id="ln-21"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
-</span><span id="ln-22">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(sys<span style="color: #666">.</span>argv) <span style="color: #666">!=</span> <span style="color: #666">2</span>:
-</span><span id="ln-23">        sys<span style="color: #666">.</span>exit(<span style="color: #BA2121">&#39;사용법: approve_once.py &quot;&lt;정확한 명령 문자열&gt;&quot;&#39;</span>)
-</span><span id="ln-24">    command <span style="color: #666">=</span> sys<span style="color: #666">.</span>argv[<span style="color: #666">1</span>]
-</span><span id="ln-25">    now <span style="color: #666">=</span> <span style="color: #008000">int</span>(time<span style="color: #666">.</span>time())
-</span><span id="ln-26">    marker <span style="color: #666">=</span> {
-</span><span id="ln-27">        <span style="color: #BA2121">&quot;schema_version&quot;</span>: <span style="color: #BA2121">&quot;1&quot;</span>,
-</span><span id="ln-28">        <span style="color: #BA2121">&quot;command_sha256&quot;</span>: hashlib<span style="color: #666">.</span>sha256(command<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>))<span style="color: #666">.</span>hexdigest(),
-</span><span id="ln-29">        <span style="color: #BA2121">&quot;issued_at_epoch&quot;</span>: now,
-</span><span id="ln-30">        <span style="color: #BA2121">&quot;expires_at_epoch&quot;</span>: now <span style="color: #666">+</span> TTL_SECONDS,
-</span><span id="ln-31">    }
-</span><span id="ln-32">    <span style="color: #3D7B7B; font-style: italic"># 발급 경로는 에이전트와 분리된 신뢰 영역에서만 호출한다.</span>
-</span><span id="ln-33">    directory <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>dirname(MARKER)
-</span><span id="ln-34">    os<span style="color: #666">.</span>makedirs(directory, mode<span style="color: #666">=0o700</span>, exist_ok<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
-</span><span id="ln-35">    fd, staged <span style="color: #666">=</span> tempfile<span style="color: #666">.</span>mkstemp(prefix<span style="color: #666">=</span><span style="color: #BA2121">&quot;.approval-&quot;</span>, <span style="color: #008000">dir</span><span style="color: #666">=</span>directory)
-</span><span id="ln-36">    <span style="color: #008000; font-weight: bold">try</span>:
-</span><span id="ln-37">        <span style="color: #008000; font-weight: bold">with</span> os<span style="color: #666">.</span>fdopen(fd, <span style="color: #BA2121">&quot;w&quot;</span>, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
-</span><span id="ln-38">            json<span style="color: #666">.</span>dump(marker, handle)
-</span><span id="ln-39">        os<span style="color: #666">.</span>chmod(staged, <span style="color: #666">0o600</span>)
-</span><span id="ln-40">        os<span style="color: #666">.</span>replace(staged, MARKER)
-</span><span id="ln-41">    <span style="color: #008000; font-weight: bold">finally</span>:
-</span><span id="ln-42">        <span style="color: #008000; font-weight: bold">if</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>lexists(staged):
-</span><span id="ln-43">            os<span style="color: #666">.</span>unlink(staged)
-</span><span id="ln-44">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;승인 마커 발급: </span><span style="color: #A45A77; font-weight: bold">{</span>MARKER<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (TTL </span><span style="color: #A45A77; font-weight: bold">{</span>TTL_SECONDS<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">초)&quot;</span>)
-</span><span id="ln-45">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;지금 정확히 이 문자열로 실행해야 한다 — 한 글자라도 다르면 거부된다.&quot;</span>)
-</span><span id="ln-46">
-</span><span id="ln-47">
-</span><span id="ln-48">main()
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;1회성 승인 마커 발행 스크립트.</span>
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">사용: python3 approve_once.py &quot;&lt;실행할 정확한 명령 전체 문자열&gt;&quot;</span>
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">이 문자열과 SHA256이 정확히 일치하는 명령 하나만, 발급 시각으로부터 TTL초</span>
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">안에 통과시키는 마커를 만든다. 훅이 그 마커를 소비하는 순간 파일이 지워진다 —</span>
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">재사용 불가.</span>
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">hashlib</span>
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">json</span>
+</span><span id="ln-12" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">time</span>
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">tempfile</span>
+</span><span id="ln-16" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-17" style="padding-left:2ch;text-indent:-2ch">MARKER <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/.consequential_allow.json&quot;</span>)
+</span><span id="ln-18" style="padding-left:2ch;text-indent:-2ch">TTL_SECONDS <span style="color: #666">=</span> <span style="color: #666">300</span>
+</span><span id="ln-19" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-21" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
+</span><span id="ln-22" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(sys<span style="color: #666">.</span>argv) <span style="color: #666">!=</span> <span style="color: #666">2</span>:
+</span><span id="ln-23" style="padding-left:10ch;text-indent:-10ch">        sys<span style="color: #666">.</span>exit(<span style="color: #BA2121">&#39;사용법: approve_once.py &quot;&lt;정확한 명령 문자열&gt;&quot;&#39;</span>)
+</span><span id="ln-24" style="padding-left:6ch;text-indent:-6ch">    command <span style="color: #666">=</span> sys<span style="color: #666">.</span>argv[<span style="color: #666">1</span>]
+</span><span id="ln-25" style="padding-left:6ch;text-indent:-6ch">    now <span style="color: #666">=</span> <span style="color: #008000">int</span>(time<span style="color: #666">.</span>time())
+</span><span id="ln-26" style="padding-left:6ch;text-indent:-6ch">    marker <span style="color: #666">=</span> {
+</span><span id="ln-27" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #BA2121">&quot;schema_version&quot;</span>: <span style="color: #BA2121">&quot;1&quot;</span>,
+</span><span id="ln-28" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #BA2121">&quot;command_sha256&quot;</span>: hashlib<span style="color: #666">.</span>sha256(command<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>))<span style="color: #666">.</span>hexdigest(),
+</span><span id="ln-29" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #BA2121">&quot;issued_at_epoch&quot;</span>: now,
+</span><span id="ln-30" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #BA2121">&quot;expires_at_epoch&quot;</span>: now <span style="color: #666">+</span> TTL_SECONDS,
+</span><span id="ln-31" style="padding-left:6ch;text-indent:-6ch">    }
+</span><span id="ln-32" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #3D7B7B; font-style: italic"># 발급 경로는 에이전트와 분리된 신뢰 영역에서만 호출한다.</span>
+</span><span id="ln-33" style="padding-left:6ch;text-indent:-6ch">    directory <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>dirname(MARKER)
+</span><span id="ln-34" style="padding-left:6ch;text-indent:-6ch">    os<span style="color: #666">.</span>makedirs(directory, mode<span style="color: #666">=0o700</span>, exist_ok<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)
+</span><span id="ln-35" style="padding-left:6ch;text-indent:-6ch">    fd, staged <span style="color: #666">=</span> tempfile<span style="color: #666">.</span>mkstemp(prefix<span style="color: #666">=</span><span style="color: #BA2121">&quot;.approval-&quot;</span>, <span style="color: #008000">dir</span><span style="color: #666">=</span>directory)
+</span><span id="ln-36" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-37" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">with</span> os<span style="color: #666">.</span>fdopen(fd, <span style="color: #BA2121">&quot;w&quot;</span>, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
+</span><span id="ln-38" style="padding-left:14ch;text-indent:-14ch">            json<span style="color: #666">.</span>dump(marker, handle)
+</span><span id="ln-39" style="padding-left:10ch;text-indent:-10ch">        os<span style="color: #666">.</span>chmod(staged, <span style="color: #666">0o600</span>)
+</span><span id="ln-40" style="padding-left:10ch;text-indent:-10ch">        os<span style="color: #666">.</span>replace(staged, MARKER)
+</span><span id="ln-41" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">finally</span>:
+</span><span id="ln-42" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>lexists(staged):
+</span><span id="ln-43" style="padding-left:14ch;text-indent:-14ch">            os<span style="color: #666">.</span>unlink(staged)
+</span><span id="ln-44" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;승인 마커 발급: </span><span style="color: #A45A77; font-weight: bold">{</span>MARKER<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> (TTL </span><span style="color: #A45A77; font-weight: bold">{</span>TTL_SECONDS<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">초)&quot;</span>)
+</span><span id="ln-45" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;지금 정확히 이 문자열로 실행해야 한다 — 한 글자라도 다르면 거부된다.&quot;</span>)
+</span><span id="ln-46" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-47" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-48" style="padding-left:2ch;text-indent:-2ch">main()
 </span></code></pre></div>
 
 <p>위 예제는 마커 파일의 생성·해시·만료·소비를 보여준다. 별도 영수증에 누가 승인했는지 써 두는 것만으로 그 신원이 인증되지는 않는다. 0600과 해시를 실제 승인 권한의 대체물로 취급하지 않는다.</p>
@@ -240,147 +240,147 @@ Claude Code에는 그 자리가 있다 — 도구 호출이 실제로 실행되�
 하드셋을 검사한다.</p>
 <p>이 파일은 <code>~/.claude/hooks/block_consequential.py</code>에 둔다(최소 버전을 이
 내용으로 덮어쓴다).</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
-</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;PreToolUse 훅 — Bash 호출 중 좁은 하드셋만 정규식으로 차단한다.</span>
-</span><span id="ln-3"><span style="color: #BA2121; font-style: italic">유효한 1회성 승인 마커가 있으면 정확히 그 명령 하나만 통과시킨다.</span>
-</span><span id="ln-4">
-</span><span id="ln-5"><span style="color: #BA2121; font-style: italic">기준: (1) 되돌릴 수 없는가 (2) 내 작업 범위를 벗어나 남에게 영향을 주는가.</span>
-</span><span id="ln-6"><span style="color: #BA2121; font-style: italic">둘 다 아니면 이 훅에 넣지 않는다.</span>
-</span><span id="ln-7">
-</span><span id="ln-8"><span style="color: #BA2121; font-style: italic">FAIL-OPEN: 파싱/로직 에러는 전부 허용(exit 0)으로 떨어진다. 이 훅의 버그가</span>
-</span><span id="ln-9"><span style="color: #BA2121; font-style: italic">작업 전체를 마비시켜서는 안 된다.</span>
-</span><span id="ln-10"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
-</span><span id="ln-11"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">hashlib</span>
-</span><span id="ln-12"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">json</span>
-</span><span id="ln-13"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
-</span><span id="ln-14"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
-</span><span id="ln-15"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">stat</span>
-</span><span id="ln-16"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
-</span><span id="ln-17"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">time</span>
-</span><span id="ln-18"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">tempfile</span>
-</span><span id="ln-19">
-</span><span id="ln-20">MARKER <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/.consequential_allow.json&quot;</span>)
-</span><span id="ln-21">TTL_SECONDS <span style="color: #666">=</span> <span style="color: #666">300</span>
-</span><span id="ln-22">
-</span><span id="ln-23">
-</span><span id="ln-24"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_consume_marker</span>(command: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
-</span><span id="ln-25"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;마커를 읽자마자 지운다 — 검증에 실패해도 다시 못 쓰게 만들기 위해서다.&quot;&quot;&quot;</span>
-</span><span id="ln-26">    raw <span style="color: #666">=</span> <span style="color: #BA2121">b&quot;&quot;</span>
-</span><span id="ln-27">    claimed <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-</span><span id="ln-28">    fd <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-</span><span id="ln-29">    <span style="color: #008000; font-weight: bold">try</span>:
-</span><span id="ln-30">        <span style="color: #3D7B7B; font-style: italic"># 같은 파일을 두 프로세스가 읽지 않도록 먼저 원자적으로 가져온다.</span>
-</span><span id="ln-31">        fd, claimed <span style="color: #666">=</span> tempfile<span style="color: #666">.</span>mkstemp(prefix<span style="color: #666">=</span><span style="color: #BA2121">&quot;.consumed-&quot;</span>, <span style="color: #008000">dir</span><span style="color: #666">=</span>os<span style="color: #666">.</span>path<span style="color: #666">.</span>dirname(MARKER))
-</span><span id="ln-32">        os<span style="color: #666">.</span>close(fd)
-</span><span id="ln-33">        fd <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-</span><span id="ln-34">        os<span style="color: #666">.</span>replace(MARKER, claimed)
-</span><span id="ln-35">        fd <span style="color: #666">=</span> os<span style="color: #666">.</span>open(claimed, os<span style="color: #666">.</span>O_RDONLY <span style="color: #666">|</span> os<span style="color: #666">.</span>O_NOFOLLOW <span style="color: #666">|</span> os<span style="color: #666">.</span>O_NONBLOCK)
-</span><span id="ln-36">        info <span style="color: #666">=</span> os<span style="color: #666">.</span>fstat(fd)
-</span><span id="ln-37">        <span style="color: #008000; font-weight: bold">if</span> (stat<span style="color: #666">.</span>S_ISREG(info<span style="color: #666">.</span>st_mode) <span style="color: #A2F; font-weight: bold">and</span> info<span style="color: #666">.</span>st_uid <span style="color: #666">==</span> os<span style="color: #666">.</span>getuid()
-</span><span id="ln-38">                <span style="color: #A2F; font-weight: bold">and</span> stat<span style="color: #666">.</span>S_IMODE(info<span style="color: #666">.</span>st_mode) <span style="color: #666">==</span> <span style="color: #666">0o600</span> <span style="color: #A2F; font-weight: bold">and</span> info<span style="color: #666">.</span>st_nlink <span style="color: #666">==</span> <span style="color: #666">1</span>):
-</span><span id="ln-39">            <span style="color: #008000; font-weight: bold">with</span> os<span style="color: #666">.</span>fdopen(fd, <span style="color: #BA2121">&quot;rb&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
-</span><span id="ln-40">                fd <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
-</span><span id="ln-41">                raw <span style="color: #666">=</span> handle<span style="color: #666">.</span>read(<span style="color: #666">8193</span>)
-</span><span id="ln-42">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(raw) <span style="color: #666">&gt;</span> <span style="color: #666">8192</span>:
-</span><span id="ln-43">            raw <span style="color: #666">=</span> <span style="color: #BA2121">b&quot;&quot;</span>
-</span><span id="ln-44">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">OSError</span>:
-</span><span id="ln-45">        raw <span style="color: #666">=</span> <span style="color: #BA2121">b&quot;&quot;</span>
-</span><span id="ln-46">    <span style="color: #008000; font-weight: bold">finally</span>:
-</span><span id="ln-47">        <span style="color: #008000; font-weight: bold">if</span> fd <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
-</span><span id="ln-48">            os<span style="color: #666">.</span>close(fd)
-</span><span id="ln-49">        <span style="color: #008000; font-weight: bold">if</span> claimed <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
-</span><span id="ln-50">            <span style="color: #008000; font-weight: bold">try</span>:
-</span><span id="ln-51">                os<span style="color: #666">.</span>unlink(claimed)
-</span><span id="ln-52">            <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">OSError</span>:
-</span><span id="ln-53">                raw <span style="color: #666">=</span> <span style="color: #BA2121">b&quot;&quot;</span>  <span style="color: #3D7B7B; font-style: italic"># 삭제 실패를 승인 성공으로 바꾸지 않는다</span>
-</span><span id="ln-54">
-</span><span id="ln-55">    <span style="color: #008000; font-weight: bold">try</span>:
-</span><span id="ln-56">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> raw:
-</span><span id="ln-57">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-</span><span id="ln-58">        marker <span style="color: #666">=</span> json<span style="color: #666">.</span>loads(raw)
-</span><span id="ln-59">        required <span style="color: #666">=</span> {<span style="color: #BA2121">&quot;schema_version&quot;</span>, <span style="color: #BA2121">&quot;command_sha256&quot;</span>, <span style="color: #BA2121">&quot;issued_at_epoch&quot;</span>, <span style="color: #BA2121">&quot;expires_at_epoch&quot;</span>}
-</span><span id="ln-60">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">set</span>(marker) <span style="color: #666">!=</span> required <span style="color: #A2F; font-weight: bold">or</span> marker[<span style="color: #BA2121">&quot;schema_version&quot;</span>] <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;1&quot;</span>:
-</span><span id="ln-61">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-</span><span id="ln-62">        <span style="color: #008000; font-weight: bold">if</span> marker[<span style="color: #BA2121">&quot;command_sha256&quot;</span>] <span style="color: #666">!=</span> hashlib<span style="color: #666">.</span>sha256(command<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>))<span style="color: #666">.</span>hexdigest():
-</span><span id="ln-63">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-</span><span id="ln-64">        issued <span style="color: #666">=</span> marker[<span style="color: #BA2121">&quot;issued_at_epoch&quot;</span>]
-</span><span id="ln-65">        expires <span style="color: #666">=</span> marker[<span style="color: #BA2121">&quot;expires_at_epoch&quot;</span>]
-</span><span id="ln-66">        now <span style="color: #666">=</span> <span style="color: #008000">int</span>(time<span style="color: #666">.</span>time())
-</span><span id="ln-67">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">type</span>(issued) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">type</span>(expires) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span>:
-</span><span id="ln-68">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-</span><span id="ln-69">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> (<span style="color: #666">0</span> <span style="color: #666">&lt;=</span> issued <span style="color: #666">&lt;=</span> now <span style="color: #666">&lt;</span> expires <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #666">0</span> <span style="color: #666">&lt;</span> expires <span style="color: #666">-</span> issued <span style="color: #666">&lt;=</span> TTL_SECONDS):
-</span><span id="ln-70">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-</span><span id="ln-71">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>
-</span><span id="ln-72">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
-</span><span id="ln-73">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
-</span><span id="ln-74">
-</span><span id="ln-75">
-</span><span id="ln-76"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_allow</span>():
-</span><span id="ln-77">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
-</span><span id="ln-78">
-</span><span id="ln-79">
-</span><span id="ln-80"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
-</span><span id="ln-81">    <span style="color: #008000; font-weight: bold">try</span>:
-</span><span id="ln-82">        data <span style="color: #666">=</span> json<span style="color: #666">.</span>load(sys<span style="color: #666">.</span>stdin)
-</span><span id="ln-83">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
-</span><span id="ln-84">        _allow()
-</span><span id="ln-85">
-</span><span id="ln-86">    <span style="color: #008000; font-weight: bold">try</span>:
-</span><span id="ln-87">        <span style="color: #008000; font-weight: bold">if</span> data<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;tool_name&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;Bash&quot;</span>:
-</span><span id="ln-88">            _allow()
-</span><span id="ln-89">        cmd <span style="color: #666">=</span> (data<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;tool_input&quot;</span>) <span style="color: #A2F; font-weight: bold">or</span> {})<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;command&quot;</span>, <span style="color: #BA2121">&quot;&quot;</span>)
-</span><span id="ln-90">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(cmd, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> cmd<span style="color: #666">.</span>strip():
-</span><span id="ln-91">            _allow()
-</span><span id="ln-92">
-</span><span id="ln-93">        <span style="color: #008000; font-weight: bold">if</span> _consume_marker(cmd):
-</span><span id="ln-94">            _allow()
-</span><span id="ln-95">
-</span><span id="ln-96">        blocks <span style="color: #666">=</span> []
-</span><span id="ln-97">
-</span><span id="ln-98">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\bgit\s+push\b&quot;</span>, cmd):
-</span><span id="ln-99">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\b(master|main)\b&quot;</span>, cmd):
-</span><span id="ln-100">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;master/main으로의 git push&quot;</span>)
-</span><span id="ln-101">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;--force(-with-lease)?\b|\s-f\b&quot;</span>, cmd):
-</span><span id="ln-102">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;git force-push&quot;</span>)
-</span><span id="ln-103">
-</span><span id="ln-104">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\bgit\s+reset\s+--hard\b&quot;</span>, cmd) <span style="color: #A2F; font-weight: bold">and</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\b(origin|upstream)/&quot;</span>, cmd):
-</span><span id="ln-105">            blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;원격 ref로의 git reset --hard&quot;</span>)
-</span><span id="ln-106">
-</span><span id="ln-107">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\brm\s+-\S*r\S*f|\brm\s+-\S*f\S*r|\brm\s+-rf|\brm\s+-fr&quot;</span>, cmd):
-</span><span id="ln-108">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;(^|\s)(/|~|\$HOME)(\s|$|</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">|&#39;)&quot;</span>, cmd):
-</span><span id="ln-109">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;홈/루트 대상 rm -rf&quot;</span>)
-</span><span id="ln-110">
-</span><span id="ln-111">        <span style="color: #008000; font-weight: bold">if</span> blocks:
-</span><span id="ln-112">            sys<span style="color: #666">.</span>stderr<span style="color: #666">.</span>write(
-</span><span id="ln-113">                <span style="color: #BA2121">&quot;BLOCKED by block_consequential.py: &quot;</span> <span style="color: #666">+</span> <span style="color: #BA2121">&quot;; &quot;</span><span style="color: #666">.</span>join(blocks) <span style="color: #666">+</span> <span style="color: #BA2121">&quot;. &quot;</span>
-</span><span id="ln-114">                <span style="color: #BA2121">&quot;정말 필요하면 오너가 검토한 뒤 신뢰된 발급 경로로 1회성 승인 &quot;</span>
-</span><span id="ln-115">                <span style="color: #BA2121">&quot;마커를 발급하고 다시 실행해라.</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>
-</span><span id="ln-116">            )
-</span><span id="ln-117">            sys<span style="color: #666">.</span>exit(<span style="color: #666">2</span>)
-</span><span id="ln-118">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
-</span><span id="ln-119">        _allow()
-</span><span id="ln-120">    _allow()
-</span><span id="ln-121">
-</span><span id="ln-122">
-</span><span id="ln-123">main()
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;PreToolUse 훅 — Bash 호출 중 좁은 하드셋만 정규식으로 차단한다.</span>
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">유효한 1회성 승인 마커가 있으면 정확히 그 명령 하나만 통과시킨다.</span>
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">기준: (1) 되돌릴 수 없는가 (2) 내 작업 범위를 벗어나 남에게 영향을 주는가.</span>
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">둘 다 아니면 이 훅에 넣지 않는다.</span>
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">FAIL-OPEN: 파싱/로직 에러는 전부 허용(exit 0)으로 떨어진다. 이 훅의 버그가</span>
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">작업 전체를 마비시켜서는 안 된다.</span>
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">hashlib</span>
+</span><span id="ln-12" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">json</span>
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">stat</span>
+</span><span id="ln-16" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-17" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">time</span>
+</span><span id="ln-18" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">tempfile</span>
+</span><span id="ln-19" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch">MARKER <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/.consequential_allow.json&quot;</span>)
+</span><span id="ln-21" style="padding-left:2ch;text-indent:-2ch">TTL_SECONDS <span style="color: #666">=</span> <span style="color: #666">300</span>
+</span><span id="ln-22" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-23" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-24" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_consume_marker</span>(command: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">bool</span>:
+</span><span id="ln-25" style="padding-left:6ch;text-indent:-6ch"><span style="color: #BBB">    </span><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;마커를 읽자마자 지운다 — 검증에 실패해도 다시 못 쓰게 만들기 위해서다.&quot;&quot;&quot;</span>
+</span><span id="ln-26" style="padding-left:6ch;text-indent:-6ch">    raw <span style="color: #666">=</span> <span style="color: #BA2121">b&quot;&quot;</span>
+</span><span id="ln-27" style="padding-left:6ch;text-indent:-6ch">    claimed <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+</span><span id="ln-28" style="padding-left:6ch;text-indent:-6ch">    fd <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+</span><span id="ln-29" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-30" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #3D7B7B; font-style: italic"># 같은 파일을 두 프로세스가 읽지 않도록 먼저 원자적으로 가져온다.</span>
+</span><span id="ln-31" style="padding-left:10ch;text-indent:-10ch">        fd, claimed <span style="color: #666">=</span> tempfile<span style="color: #666">.</span>mkstemp(prefix<span style="color: #666">=</span><span style="color: #BA2121">&quot;.consumed-&quot;</span>, <span style="color: #008000">dir</span><span style="color: #666">=</span>os<span style="color: #666">.</span>path<span style="color: #666">.</span>dirname(MARKER))
+</span><span id="ln-32" style="padding-left:10ch;text-indent:-10ch">        os<span style="color: #666">.</span>close(fd)
+</span><span id="ln-33" style="padding-left:10ch;text-indent:-10ch">        fd <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+</span><span id="ln-34" style="padding-left:10ch;text-indent:-10ch">        os<span style="color: #666">.</span>replace(MARKER, claimed)
+</span><span id="ln-35" style="padding-left:10ch;text-indent:-10ch">        fd <span style="color: #666">=</span> os<span style="color: #666">.</span>open(claimed, os<span style="color: #666">.</span>O_RDONLY <span style="color: #666">|</span> os<span style="color: #666">.</span>O_NOFOLLOW <span style="color: #666">|</span> os<span style="color: #666">.</span>O_NONBLOCK)
+</span><span id="ln-36" style="padding-left:10ch;text-indent:-10ch">        info <span style="color: #666">=</span> os<span style="color: #666">.</span>fstat(fd)
+</span><span id="ln-37" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> (stat<span style="color: #666">.</span>S_ISREG(info<span style="color: #666">.</span>st_mode) <span style="color: #A2F; font-weight: bold">and</span> info<span style="color: #666">.</span>st_uid <span style="color: #666">==</span> os<span style="color: #666">.</span>getuid()
+</span><span id="ln-38" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #A2F; font-weight: bold">and</span> stat<span style="color: #666">.</span>S_IMODE(info<span style="color: #666">.</span>st_mode) <span style="color: #666">==</span> <span style="color: #666">0o600</span> <span style="color: #A2F; font-weight: bold">and</span> info<span style="color: #666">.</span>st_nlink <span style="color: #666">==</span> <span style="color: #666">1</span>):
+</span><span id="ln-39" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">with</span> os<span style="color: #666">.</span>fdopen(fd, <span style="color: #BA2121">&quot;rb&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
+</span><span id="ln-40" style="padding-left:18ch;text-indent:-18ch">                fd <span style="color: #666">=</span> <span style="color: #008000; font-weight: bold">None</span>
+</span><span id="ln-41" style="padding-left:18ch;text-indent:-18ch">                raw <span style="color: #666">=</span> handle<span style="color: #666">.</span>read(<span style="color: #666">8193</span>)
+</span><span id="ln-42" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(raw) <span style="color: #666">&gt;</span> <span style="color: #666">8192</span>:
+</span><span id="ln-43" style="padding-left:14ch;text-indent:-14ch">            raw <span style="color: #666">=</span> <span style="color: #BA2121">b&quot;&quot;</span>
+</span><span id="ln-44" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">OSError</span>:
+</span><span id="ln-45" style="padding-left:10ch;text-indent:-10ch">        raw <span style="color: #666">=</span> <span style="color: #BA2121">b&quot;&quot;</span>
+</span><span id="ln-46" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">finally</span>:
+</span><span id="ln-47" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> fd <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-48" style="padding-left:14ch;text-indent:-14ch">            os<span style="color: #666">.</span>close(fd)
+</span><span id="ln-49" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> claimed <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000; font-weight: bold">None</span>:
+</span><span id="ln-50" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-51" style="padding-left:18ch;text-indent:-18ch">                os<span style="color: #666">.</span>unlink(claimed)
+</span><span id="ln-52" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">OSError</span>:
+</span><span id="ln-53" style="padding-left:18ch;text-indent:-18ch">                raw <span style="color: #666">=</span> <span style="color: #BA2121">b&quot;&quot;</span>  <span style="color: #3D7B7B; font-style: italic"># 삭제 실패를 승인 성공으로 바꾸지 않는다</span>
+</span><span id="ln-54" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-55" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-56" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> raw:
+</span><span id="ln-57" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-58" style="padding-left:10ch;text-indent:-10ch">        marker <span style="color: #666">=</span> json<span style="color: #666">.</span>loads(raw)
+</span><span id="ln-59" style="padding-left:10ch;text-indent:-10ch">        required <span style="color: #666">=</span> {<span style="color: #BA2121">&quot;schema_version&quot;</span>, <span style="color: #BA2121">&quot;command_sha256&quot;</span>, <span style="color: #BA2121">&quot;issued_at_epoch&quot;</span>, <span style="color: #BA2121">&quot;expires_at_epoch&quot;</span>}
+</span><span id="ln-60" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">set</span>(marker) <span style="color: #666">!=</span> required <span style="color: #A2F; font-weight: bold">or</span> marker[<span style="color: #BA2121">&quot;schema_version&quot;</span>] <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;1&quot;</span>:
+</span><span id="ln-61" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-62" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> marker[<span style="color: #BA2121">&quot;command_sha256&quot;</span>] <span style="color: #666">!=</span> hashlib<span style="color: #666">.</span>sha256(command<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>))<span style="color: #666">.</span>hexdigest():
+</span><span id="ln-63" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-64" style="padding-left:10ch;text-indent:-10ch">        issued <span style="color: #666">=</span> marker[<span style="color: #BA2121">&quot;issued_at_epoch&quot;</span>]
+</span><span id="ln-65" style="padding-left:10ch;text-indent:-10ch">        expires <span style="color: #666">=</span> marker[<span style="color: #BA2121">&quot;expires_at_epoch&quot;</span>]
+</span><span id="ln-66" style="padding-left:10ch;text-indent:-10ch">        now <span style="color: #666">=</span> <span style="color: #008000">int</span>(time<span style="color: #666">.</span>time())
+</span><span id="ln-67" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">type</span>(issued) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span> <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #008000">type</span>(expires) <span style="color: #A2F; font-weight: bold">is</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">int</span>:
+</span><span id="ln-68" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-69" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> (<span style="color: #666">0</span> <span style="color: #666">&lt;=</span> issued <span style="color: #666">&lt;=</span> now <span style="color: #666">&lt;</span> expires <span style="color: #A2F; font-weight: bold">and</span> <span style="color: #666">0</span> <span style="color: #666">&lt;</span> expires <span style="color: #666">-</span> issued <span style="color: #666">&lt;=</span> TTL_SECONDS):
+</span><span id="ln-70" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-71" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">True</span>
+</span><span id="ln-72" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
+</span><span id="ln-73" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000; font-weight: bold">False</span>
+</span><span id="ln-74" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-75" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-76" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">_allow</span>():
+</span><span id="ln-77" style="padding-left:6ch;text-indent:-6ch">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-78" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-79" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-80" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
+</span><span id="ln-81" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-82" style="padding-left:10ch;text-indent:-10ch">        data <span style="color: #666">=</span> json<span style="color: #666">.</span>load(sys<span style="color: #666">.</span>stdin)
+</span><span id="ln-83" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
+</span><span id="ln-84" style="padding-left:10ch;text-indent:-10ch">        _allow()
+</span><span id="ln-85" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-86" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-87" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> data<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;tool_name&quot;</span>) <span style="color: #666">!=</span> <span style="color: #BA2121">&quot;Bash&quot;</span>:
+</span><span id="ln-88" style="padding-left:14ch;text-indent:-14ch">            _allow()
+</span><span id="ln-89" style="padding-left:10ch;text-indent:-10ch">        cmd <span style="color: #666">=</span> (data<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;tool_input&quot;</span>) <span style="color: #A2F; font-weight: bold">or</span> {})<span style="color: #666">.</span>get(<span style="color: #BA2121">&quot;command&quot;</span>, <span style="color: #BA2121">&quot;&quot;</span>)
+</span><span id="ln-90" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> <span style="color: #008000">isinstance</span>(cmd, <span style="color: #008000">str</span>) <span style="color: #A2F; font-weight: bold">or</span> <span style="color: #A2F; font-weight: bold">not</span> cmd<span style="color: #666">.</span>strip():
+</span><span id="ln-91" style="padding-left:14ch;text-indent:-14ch">            _allow()
+</span><span id="ln-92" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-93" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> _consume_marker(cmd):
+</span><span id="ln-94" style="padding-left:14ch;text-indent:-14ch">            _allow()
+</span><span id="ln-95" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-96" style="padding-left:10ch;text-indent:-10ch">        blocks <span style="color: #666">=</span> []
+</span><span id="ln-97" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-98" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\bgit\s+push\b&quot;</span>, cmd):
+</span><span id="ln-99" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\b(master|main)\b&quot;</span>, cmd):
+</span><span id="ln-100" style="padding-left:18ch;text-indent:-18ch">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;master/main으로의 git push&quot;</span>)
+</span><span id="ln-101" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;--force(-with-lease)?\b|\s-f\b&quot;</span>, cmd):
+</span><span id="ln-102" style="padding-left:18ch;text-indent:-18ch">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;git force-push&quot;</span>)
+</span><span id="ln-103" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-104" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\bgit\s+reset\s+--hard\b&quot;</span>, cmd) <span style="color: #A2F; font-weight: bold">and</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\b(origin|upstream)/&quot;</span>, cmd):
+</span><span id="ln-105" style="padding-left:14ch;text-indent:-14ch">            blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;원격 ref로의 git reset --hard&quot;</span>)
+</span><span id="ln-106" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-107" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;\brm\s+-\S*r\S*f|\brm\s+-\S*f\S*r|\brm\s+-rf|\brm\s+-fr&quot;</span>, cmd):
+</span><span id="ln-108" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #008000; font-weight: bold">if</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">r&quot;(^|\s)(/|~|\$HOME)(\s|$|</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">|&#39;)&quot;</span>, cmd):
+</span><span id="ln-109" style="padding-left:18ch;text-indent:-18ch">                blocks<span style="color: #666">.</span>append(<span style="color: #BA2121">&quot;홈/루트 대상 rm -rf&quot;</span>)
+</span><span id="ln-110" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-111" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> blocks:
+</span><span id="ln-112" style="padding-left:14ch;text-indent:-14ch">            sys<span style="color: #666">.</span>stderr<span style="color: #666">.</span>write(
+</span><span id="ln-113" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;BLOCKED by block_consequential.py: &quot;</span> <span style="color: #666">+</span> <span style="color: #BA2121">&quot;; &quot;</span><span style="color: #666">.</span>join(blocks) <span style="color: #666">+</span> <span style="color: #BA2121">&quot;. &quot;</span>
+</span><span id="ln-114" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;정말 필요하면 오너가 검토한 뒤 신뢰된 발급 경로로 1회성 승인 &quot;</span>
+</span><span id="ln-115" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;마커를 발급하고 다시 실행해라.</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-116" style="padding-left:14ch;text-indent:-14ch">            )
+</span><span id="ln-117" style="padding-left:14ch;text-indent:-14ch">            sys<span style="color: #666">.</span>exit(<span style="color: #666">2</span>)
+</span><span id="ln-118" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
+</span><span id="ln-119" style="padding-left:10ch;text-indent:-10ch">        _allow()
+</span><span id="ln-120" style="padding-left:6ch;text-indent:-6ch">    _allow()
+</span><span id="ln-121" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-122" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-123" style="padding-left:2ch;text-indent:-2ch">main()
 </span></code></pre></div>
 
 <p>settings.json 배선은 최소 버전과 같다 — 스크립트 내용만 바뀌었다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">{
-</span><span id="ln-2"><span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>{
-</span><span id="ln-3"><span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">&quot;PreToolUse&quot;</span>:<span style="color: #BBB"> </span>[
-</span><span id="ln-4"><span style="color: #BBB">      </span>{
-</span><span id="ln-5"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;matcher&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;Bash&quot;</span>,
-</span><span id="ln-6"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>[
-</span><span id="ln-7"><span style="color: #BBB">          </span>{
-</span><span id="ln-8"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;type&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;command&quot;</span>,
-</span><span id="ln-9"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;command&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;python3 $HOME/.claude/hooks/block_consequential.py&quot;</span>
-</span><span id="ln-10"><span style="color: #BBB">          </span>}
-</span><span id="ln-11"><span style="color: #BBB">        </span>]
-</span><span id="ln-12"><span style="color: #BBB">      </span>}
-</span><span id="ln-13"><span style="color: #BBB">    </span>]
-</span><span id="ln-14"><span style="color: #BBB">  </span>}
-</span><span id="ln-15">}
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch">{
+</span><span id="ln-2" style="padding-left:4ch;text-indent:-4ch"><span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>{
+</span><span id="ln-3" style="padding-left:6ch;text-indent:-6ch"><span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">&quot;PreToolUse&quot;</span>:<span style="color: #BBB"> </span>[
+</span><span id="ln-4" style="padding-left:8ch;text-indent:-8ch"><span style="color: #BBB">      </span>{
+</span><span id="ln-5" style="padding-left:10ch;text-indent:-10ch"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;matcher&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;Bash&quot;</span>,
+</span><span id="ln-6" style="padding-left:10ch;text-indent:-10ch"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>[
+</span><span id="ln-7" style="padding-left:12ch;text-indent:-12ch"><span style="color: #BBB">          </span>{
+</span><span id="ln-8" style="padding-left:14ch;text-indent:-14ch"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;type&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;command&quot;</span>,
+</span><span id="ln-9" style="padding-left:14ch;text-indent:-14ch"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;command&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;python3 $HOME/.claude/hooks/block_consequential.py&quot;</span>
+</span><span id="ln-10" style="padding-left:12ch;text-indent:-12ch"><span style="color: #BBB">          </span>}
+</span><span id="ln-11" style="padding-left:10ch;text-indent:-10ch"><span style="color: #BBB">        </span>]
+</span><span id="ln-12" style="padding-left:8ch;text-indent:-8ch"><span style="color: #BBB">      </span>}
+</span><span id="ln-13" style="padding-left:6ch;text-indent:-6ch"><span style="color: #BBB">    </span>]
+</span><span id="ln-14" style="padding-left:4ch;text-indent:-4ch"><span style="color: #BBB">  </span>}
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch">}
 </span></code></pre></div>
 
 <h2 id="_5">직접 확인하는 법</h2>

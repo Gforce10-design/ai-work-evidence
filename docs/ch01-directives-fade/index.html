@@ -62,55 +62,55 @@ Claude가 테스트를 돌리지 않은 채로 커밋을 만든다. 그것도 "�
 컨텍스트"의 일부가 된다.</p>
 <p>최소 버전은 이 정도면 된다.</p>
 <p>이 파일은 <code>~/.claude/hooks/reinject_directives.py</code>에 둔다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
-</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;UserPromptSubmit 훅 — 매 턴마다 짧은 지시 파일을 다시 주입한다.&quot;&quot;&quot;</span>
-</span><span id="ln-3"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
-</span><span id="ln-4"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
-</span><span id="ln-5">
-</span><span id="ln-6">PATH <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/agent-directives.md&quot;</span>)
-</span><span id="ln-7">
-</span><span id="ln-8">
-</span><span id="ln-9"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
-</span><span id="ln-10">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>exists(PATH):
-</span><span id="ln-11">        sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
-</span><span id="ln-12">    <span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">open</span>(PATH, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
-</span><span id="ln-13">        text <span style="color: #666">=</span> handle<span style="color: #666">.</span>read()<span style="color: #666">.</span>strip()
-</span><span id="ln-14">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> text:
-</span><span id="ln-15">        sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
-</span><span id="ln-16">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;&lt;active-directives&gt;&quot;</span>)
-</span><span id="ln-17">    <span style="color: #008000">print</span>(text)
-</span><span id="ln-18">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;&lt;/active-directives&gt;&quot;</span>)
-</span><span id="ln-19">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
-</span><span id="ln-20">
-</span><span id="ln-21">
-</span><span id="ln-22">main()
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;UserPromptSubmit 훅 — 매 턴마다 짧은 지시 파일을 다시 주입한다.&quot;&quot;&quot;</span>
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch">PATH <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/agent-directives.md&quot;</span>)
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
+</span><span id="ln-10" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>exists(PATH):
+</span><span id="ln-11" style="padding-left:10ch;text-indent:-10ch">        sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-12" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">open</span>(PATH, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
+</span><span id="ln-13" style="padding-left:10ch;text-indent:-10ch">        text <span style="color: #666">=</span> handle<span style="color: #666">.</span>read()<span style="color: #666">.</span>strip()
+</span><span id="ln-14" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> text:
+</span><span id="ln-15" style="padding-left:10ch;text-indent:-10ch">        sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-16" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;&lt;active-directives&gt;&quot;</span>)
+</span><span id="ln-17" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(text)
+</span><span id="ln-18" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;&lt;/active-directives&gt;&quot;</span>)
+</span><span id="ln-19" style="padding-left:6ch;text-indent:-6ch">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-21" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-22" style="padding-left:2ch;text-indent:-2ch">main()
 </span></code></pre></div>
 
 <p>지시 파일은 이런 식으로 짧게 적는다. 이 파일은 <code>~/.claude/agent-directives.md</code>에 둔다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #000080; font-weight: bold"># 활성 지시 (매 턴 재주입됨)</span>
-</span><span id="ln-2">
-</span><span id="ln-3"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>커밋 전 반드시 빌드/테스트를 실제로 돌리고 통과를 확인한다. 실패한 채 커밋하지 않는다.
-</span><span id="ln-4"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>완료를 선언하기 전에는 검증 명령의 실행 결과를 근거로 든다. &quot;될 것 같다&quot;는 근거가 아니다.
-</span><span id="ln-5"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>서브에이전트 결과를 병합하기 전 diff를 반드시 읽는다. 요약만 보고 병합하지 않는다.
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #000080; font-weight: bold"># 활성 지시 (매 턴 재주입됨)</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>커밋 전 반드시 빌드/테스트를 실제로 돌리고 통과를 확인한다. 실패한 채 커밋하지 않는다.
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>완료를 선언하기 전에는 검증 명령의 실행 결과를 근거로 든다. &quot;될 것 같다&quot;는 근거가 아니다.
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>서브에이전트 결과를 병합하기 전 diff를 반드시 읽는다. 요약만 보고 병합하지 않는다.
 </span></code></pre></div>
 
 <p>settings.json 배선은 이렇게 한다. 프로젝트 전용이면 프로젝트 루트의
 <code>.claude/settings.json</code>에, 모든 프로젝트에 적용하고 싶으면 <code>~/.claude/settings.json</code>에
 둔다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">{
-</span><span id="ln-2"><span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>{
-</span><span id="ln-3"><span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">&quot;UserPromptSubmit&quot;</span>:<span style="color: #BBB"> </span>[
-</span><span id="ln-4"><span style="color: #BBB">      </span>{
-</span><span id="ln-5"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>[
-</span><span id="ln-6"><span style="color: #BBB">          </span>{
-</span><span id="ln-7"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;type&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;command&quot;</span>,
-</span><span id="ln-8"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;command&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;python3 $HOME/.claude/hooks/reinject_directives.py&quot;</span>
-</span><span id="ln-9"><span style="color: #BBB">          </span>}
-</span><span id="ln-10"><span style="color: #BBB">        </span>]
-</span><span id="ln-11"><span style="color: #BBB">      </span>}
-</span><span id="ln-12"><span style="color: #BBB">    </span>]
-</span><span id="ln-13"><span style="color: #BBB">  </span>}
-</span><span id="ln-14">}
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch">{
+</span><span id="ln-2" style="padding-left:4ch;text-indent:-4ch"><span style="color: #BBB">  </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>{
+</span><span id="ln-3" style="padding-left:6ch;text-indent:-6ch"><span style="color: #BBB">    </span><span style="color: #008000; font-weight: bold">&quot;UserPromptSubmit&quot;</span>:<span style="color: #BBB"> </span>[
+</span><span id="ln-4" style="padding-left:8ch;text-indent:-8ch"><span style="color: #BBB">      </span>{
+</span><span id="ln-5" style="padding-left:10ch;text-indent:-10ch"><span style="color: #BBB">        </span><span style="color: #008000; font-weight: bold">&quot;hooks&quot;</span>:<span style="color: #BBB"> </span>[
+</span><span id="ln-6" style="padding-left:12ch;text-indent:-12ch"><span style="color: #BBB">          </span>{
+</span><span id="ln-7" style="padding-left:14ch;text-indent:-14ch"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;type&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;command&quot;</span>,
+</span><span id="ln-8" style="padding-left:14ch;text-indent:-14ch"><span style="color: #BBB">            </span><span style="color: #008000; font-weight: bold">&quot;command&quot;</span>:<span style="color: #BBB"> </span><span style="color: #BA2121">&quot;python3 $HOME/.claude/hooks/reinject_directives.py&quot;</span>
+</span><span id="ln-9" style="padding-left:12ch;text-indent:-12ch"><span style="color: #BBB">          </span>}
+</span><span id="ln-10" style="padding-left:10ch;text-indent:-10ch"><span style="color: #BBB">        </span>]
+</span><span id="ln-11" style="padding-left:8ch;text-indent:-8ch"><span style="color: #BBB">      </span>}
+</span><span id="ln-12" style="padding-left:6ch;text-indent:-6ch"><span style="color: #BBB">    </span>]
+</span><span id="ln-13" style="padding-left:4ch;text-indent:-4ch"><span style="color: #BBB">  </span>}
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch">}
 </span></code></pre></div>
 
 <p><code>command</code>는 셸을 거쳐 실행되므로 <code>$HOME</code>이 정상적으로 확장된다. 이걸 걸어두고 나면
@@ -157,52 +157,52 @@ decides.</p>
 동작은 최소 버전과 같고 예산 관리 로직만 추가됐다.</p>
 <p>이 파일은 <code>~/.claude/hooks/reinject_directives.py</code>에 둔다(최소 버전을 이 내용으로
 덮어쓴다).</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
-</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;UserPromptSubmit 훅 — ~/.claude/agent-directives.md를 매 턴 다시 주입한다.</span>
-</span><span id="ln-3">
-</span><span id="ln-4"><span style="color: #BA2121; font-style: italic">목적: 사용자 프롬프트마다 짧은 지시를 다시 출력한다. CLAUDE.md의 재로딩과</span>
-</span><span id="ln-5"><span style="color: #BA2121; font-style: italic">별개인 보조 장치이며, 규칙 준수 효과는 실제 행동을 비교해 확인한다.</span>
-</span><span id="ln-6">
-</span><span id="ln-7"><span style="color: #BA2121; font-style: italic">예산: 최대 CAP 바이트만 원문에서 내보낸다. 태그·경고 문구는 별도다. 넘으면 잘라내고 그 사실을 표시한다 — 규칙</span>
-</span><span id="ln-8"><span style="color: #BA2121; font-style: italic">파일이 계속 길어지면 이 훅 자체가 새로운 희석 문제를 만들기 때문이다.</span>
-</span><span id="ln-9">
-</span><span id="ln-10"><span style="color: #BA2121; font-style: italic">안전장치: main 안에서 잡힌 실행 중 예외는 삼키고 exit 0으로 끝낸다.</span>
-</span><span id="ln-11"><span style="color: #BA2121; font-style: italic">문법 오류·인터프리터 실행 실패·강제 종료까지 이 코드가 처리하지는 않는다.</span>
-</span><span id="ln-12"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
-</span><span id="ln-13"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
-</span><span id="ln-14"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
-</span><span id="ln-15">
-</span><span id="ln-16">CAP <span style="color: #666">=</span> <span style="color: #666">4096</span>
-</span><span id="ln-17">PATH <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/agent-directives.md&quot;</span>)
-</span><span id="ln-18">
-</span><span id="ln-19">
-</span><span id="ln-20"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
-</span><span id="ln-21">    <span style="color: #008000; font-weight: bold">try</span>:
-</span><span id="ln-22">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>exists(PATH):
-</span><span id="ln-23">            sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
-</span><span id="ln-24">        <span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">open</span>(PATH, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>, errors<span style="color: #666">=</span><span style="color: #BA2121">&quot;ignore&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
-</span><span id="ln-25">            text <span style="color: #666">=</span> handle<span style="color: #666">.</span>read()<span style="color: #666">.</span>strip()
-</span><span id="ln-26">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> text:
-</span><span id="ln-27">            sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
-</span><span id="ln-28">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(text<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>)) <span style="color: #666">&gt;</span> CAP:
-</span><span id="ln-29">            text <span style="color: #666">=</span> text<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>)[:CAP]<span style="color: #666">.</span>decode(<span style="color: #BA2121">&quot;utf-8&quot;</span>, <span style="color: #BA2121">&quot;ignore&quot;</span>)<span style="color: #666">.</span>rstrip()
-</span><span id="ln-30">            text <span style="color: #666">+=</span> (
-</span><span id="ln-31">                <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">[...truncated at &quot;</span>
-</span><span id="ln-32">                <span style="color: #666">+</span> <span style="color: #008000">str</span>(CAP)
-</span><span id="ln-33">                <span style="color: #666">+</span> <span style="color: #BA2121">&quot; bytes — agent-directives.md가 너무 커졌다. &quot;</span>
-</span><span id="ln-34">                <span style="color: #BA2121">&quot;해소된 항목을 지우고 다시 줄여라.]&quot;</span>
-</span><span id="ln-35">            )
-</span><span id="ln-36">        sys<span style="color: #666">.</span>stdout<span style="color: #666">.</span>write(
-</span><span id="ln-37">            <span style="color: #BA2121">&quot;&lt;active-directives note=</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">매 턴 재주입됨. 지금 다시 확인하고 행동하라.</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">&gt;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>
-</span><span id="ln-38">            <span style="color: #666">+</span> text
-</span><span id="ln-39">            <span style="color: #666">+</span> <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&lt;/active-directives&gt;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>
-</span><span id="ln-40">        )
-</span><span id="ln-41">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
-</span><span id="ln-42">        <span style="color: #008000; font-weight: bold">pass</span>
-</span><span id="ln-43">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
-</span><span id="ln-44">
-</span><span id="ln-45">
-</span><span id="ln-46">main()
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;UserPromptSubmit 훅 — ~/.claude/agent-directives.md를 매 턴 다시 주입한다.</span>
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">목적: 사용자 프롬프트마다 짧은 지시를 다시 출력한다. CLAUDE.md의 재로딩과</span>
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">별개인 보조 장치이며, 규칙 준수 효과는 실제 행동을 비교해 확인한다.</span>
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">예산: 최대 CAP 바이트만 원문에서 내보낸다. 태그·경고 문구는 별도다. 넘으면 잘라내고 그 사실을 표시한다 — 규칙</span>
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">파일이 계속 길어지면 이 훅 자체가 새로운 희석 문제를 만들기 때문이다.</span>
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">안전장치: main 안에서 잡힌 실행 중 예외는 삼키고 exit 0으로 끝낸다.</span>
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">문법 오류·인터프리터 실행 실패·강제 종료까지 이 코드가 처리하지는 않는다.</span>
+</span><span id="ln-12" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">os</span>
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-16" style="padding-left:2ch;text-indent:-2ch">CAP <span style="color: #666">=</span> <span style="color: #666">4096</span>
+</span><span id="ln-17" style="padding-left:2ch;text-indent:-2ch">PATH <span style="color: #666">=</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>expanduser(<span style="color: #BA2121">&quot;~/.claude/agent-directives.md&quot;</span>)
+</span><span id="ln-18" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-19" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>():
+</span><span id="ln-21" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">try</span>:
+</span><span id="ln-22" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> os<span style="color: #666">.</span>path<span style="color: #666">.</span>exists(PATH):
+</span><span id="ln-23" style="padding-left:14ch;text-indent:-14ch">            sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-24" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">with</span> <span style="color: #008000">open</span>(PATH, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>, errors<span style="color: #666">=</span><span style="color: #BA2121">&quot;ignore&quot;</span>) <span style="color: #008000; font-weight: bold">as</span> handle:
+</span><span id="ln-25" style="padding-left:14ch;text-indent:-14ch">            text <span style="color: #666">=</span> handle<span style="color: #666">.</span>read()<span style="color: #666">.</span>strip()
+</span><span id="ln-26" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> text:
+</span><span id="ln-27" style="padding-left:14ch;text-indent:-14ch">            sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-28" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(text<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>)) <span style="color: #666">&gt;</span> CAP:
+</span><span id="ln-29" style="padding-left:14ch;text-indent:-14ch">            text <span style="color: #666">=</span> text<span style="color: #666">.</span>encode(<span style="color: #BA2121">&quot;utf-8&quot;</span>)[:CAP]<span style="color: #666">.</span>decode(<span style="color: #BA2121">&quot;utf-8&quot;</span>, <span style="color: #BA2121">&quot;ignore&quot;</span>)<span style="color: #666">.</span>rstrip()
+</span><span id="ln-30" style="padding-left:14ch;text-indent:-14ch">            text <span style="color: #666">+=</span> (
+</span><span id="ln-31" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">[...truncated at &quot;</span>
+</span><span id="ln-32" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #666">+</span> <span style="color: #008000">str</span>(CAP)
+</span><span id="ln-33" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #666">+</span> <span style="color: #BA2121">&quot; bytes — agent-directives.md가 너무 커졌다. &quot;</span>
+</span><span id="ln-34" style="padding-left:18ch;text-indent:-18ch">                <span style="color: #BA2121">&quot;해소된 항목을 지우고 다시 줄여라.]&quot;</span>
+</span><span id="ln-35" style="padding-left:14ch;text-indent:-14ch">            )
+</span><span id="ln-36" style="padding-left:10ch;text-indent:-10ch">        sys<span style="color: #666">.</span>stdout<span style="color: #666">.</span>write(
+</span><span id="ln-37" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #BA2121">&quot;&lt;active-directives note=</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">매 턴 재주입됨. 지금 다시 확인하고 행동하라.</span><span style="color: #AA5D1F; font-weight: bold">\&quot;</span><span style="color: #BA2121">&gt;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-38" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #666">+</span> text
+</span><span id="ln-39" style="padding-left:14ch;text-indent:-14ch">            <span style="color: #666">+</span> <span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&lt;/active-directives&gt;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span>
+</span><span id="ln-40" style="padding-left:10ch;text-indent:-10ch">        )
+</span><span id="ln-41" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #CB3F38; font-weight: bold">Exception</span>:
+</span><span id="ln-42" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">pass</span>
+</span><span id="ln-43" style="padding-left:6ch;text-indent:-6ch">    sys<span style="color: #666">.</span>exit(<span style="color: #666">0</span>)
+</span><span id="ln-44" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-45" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-46" style="padding-left:2ch;text-indent:-2ch">main()
 </span></code></pre></div>
 
 <p>settings.json 배선은 최소 버전과 동일하다 — 스크립트 파일 하나만 바뀌었을 뿐

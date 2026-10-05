@@ -52,79 +52,79 @@ diff에 없다. 그 정보를 남기는 전용 파일이 없으면 다음 세션
 <p>가장 단순한 해법은 파일 하나다. 작업 폴더 루트에 <code>SESSION.md</code>를 둔다. 다음 세션이
 <strong>다른 어떤 작업보다 먼저</strong> 읽는 문서는 이 파일 하나로 정한다. 처음엔 이렇게 짧아도 된다.</p>
 <p><code>~/project/SESSION.md</code>:</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #000080; font-weight: bold"># SESSION — 세션 이어가기 기록</span>
-</span><span id="ln-2">
-</span><span id="ln-3"><span style="color: #800080; font-weight: bold">## 목표</span>
-</span><span id="ln-4">(첫 세션 마감 때 채운다)
-</span><span id="ln-5">
-</span><span id="ln-6"><span style="color: #800080; font-weight: bold">## 현재 상태</span>
-</span><span id="ln-7">(아직 기록 없음)
-</span><span id="ln-8">
-</span><span id="ln-9"><span style="color: #800080; font-weight: bold">## 다음 단계</span>
-</span><span id="ln-10"><span style="color: #008000; font-weight: bold">1.</span> (아직 기록 없음)
-</span><span id="ln-11">
-</span><span id="ln-12"><span style="color: #800080; font-weight: bold">## 결정 기록</span>
-</span><span id="ln-13">
-</span><span id="ln-14"><span style="color: #800080; font-weight: bold">## 파일 흔적</span>
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #000080; font-weight: bold"># SESSION — 세션 이어가기 기록</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 목표</span>
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch">(첫 세션 마감 때 채운다)
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 현재 상태</span>
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch">(아직 기록 없음)
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 다음 단계</span>
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">1.</span> (아직 기록 없음)
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-12" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 결정 기록</span>
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 파일 흔적</span>
 </span></code></pre></div>
 
 <p>"먼저 읽는다"는 규율을 사람의 기억력에 맡기지 않으려고 세션을 열 때 돌리는 짧은
 스크립트를 하나 곁들인다. 파일이 없으면 템플릿으로 만들고, 있으면 핵심 세 섹션만
 요약해 화면에 띄운다.</p>
 <p><code>~/project/tools/session_open.py</code>:</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
-</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;세션 시작 의식 — SESSION.md 핵심 섹션을 출력한다.</span>
-</span><span id="ln-3"><span style="color: #BA2121; font-style: italic">출력은 모델이 읽거나 따랐다는 증거가 아니다. 없으면 템플릿에서 만든다.</span>
-</span><span id="ln-4">
-</span><span id="ln-5"><span style="color: #BA2121; font-style: italic">사용: python3 tools/session_open.py [SESSION.md 경로]</span>
-</span><span id="ln-6"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
-</span><span id="ln-7"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
-</span><span id="ln-8">
-</span><span id="ln-9"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
-</span><span id="ln-10"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
-</span><span id="ln-11"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
-</span><span id="ln-12">
-</span><span id="ln-13">TEMPLATE <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;&quot;# SESSION — 세션 이어가기 기록</span>
-</span><span id="ln-14">
-</span><span id="ln-15"><span style="color: #BA2121">## 목표</span>
-</span><span id="ln-16"><span style="color: #BA2121">(첫 세션 마감 때 채운다)</span>
-</span><span id="ln-17">
-</span><span id="ln-18"><span style="color: #BA2121">## 현재 상태</span>
-</span><span id="ln-19"><span style="color: #BA2121">(아직 기록 없음)</span>
-</span><span id="ln-20">
-</span><span id="ln-21"><span style="color: #BA2121">## 다음 단계</span>
-</span><span id="ln-22"><span style="color: #BA2121">1. (아직 기록 없음)</span>
-</span><span id="ln-23">
-</span><span id="ln-24"><span style="color: #BA2121">## 결정 기록</span>
-</span><span id="ln-25">
-</span><span id="ln-26"><span style="color: #BA2121">## 파일 흔적</span>
-</span><span id="ln-27"><span style="color: #BA2121">&quot;&quot;&quot;</span>
-</span><span id="ln-28">
-</span><span id="ln-29">
-</span><span id="ln-30"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">extract_section</span>(text: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
-</span><span id="ln-31">    text <span style="color: #666">=</span> re<span style="color: #666">.</span>sub(<span style="color: #BA2121">r&quot;&lt;!--.*?--&gt;&quot;</span>, <span style="color: #BA2121">&quot;&quot;</span>, text, flags<span style="color: #666">=</span>re<span style="color: #666">.</span>S)
-</span><span id="ln-32">    m <span style="color: #666">=</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">rf&quot;^## </span><span style="color: #A45A77; font-weight: bold">{</span>re<span style="color: #666">.</span>escape(name)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">\n(.*?)(?=\n## |\Z)&quot;</span>, text, flags<span style="color: #666">=</span>re<span style="color: #666">.</span>S <span style="color: #666">|</span> re<span style="color: #666">.</span>M)
-</span><span id="ln-33">    <span style="color: #008000; font-weight: bold">return</span> m<span style="color: #666">.</span>group(<span style="color: #666">1</span>)<span style="color: #666">.</span>strip() <span style="color: #008000; font-weight: bold">if</span> m <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;(섹션 없음)&quot;</span>
-</span><span id="ln-34">
-</span><span id="ln-35">
-</span><span id="ln-36"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
-</span><span id="ln-37">    path <span style="color: #666">=</span> Path(sys<span style="color: #666">.</span>argv[<span style="color: #666">1</span>] <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(sys<span style="color: #666">.</span>argv) <span style="color: #666">&gt;</span> <span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;SESSION.md&quot;</span>)
-</span><span id="ln-38">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> path<span style="color: #666">.</span>is_file():
-</span><span id="ln-39">        path<span style="color: #666">.</span>write_text(TEMPLATE, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
-</span><span id="ln-40">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[생성] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> — 템플릿으로 새로 만들었습니다. 첫 세션 마감 때 채우세요.&quot;</span>)
-</span><span id="ln-41">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
-</span><span id="ln-42">    text <span style="color: #666">=</span> path<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
-</span><span id="ln-43">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;=== </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 재정박 요약 ===&quot;</span>)
-</span><span id="ln-44">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">[목표]</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span> <span style="color: #666">+</span> extract_section(text, <span style="color: #BA2121">&quot;목표&quot;</span>))
-</span><span id="ln-45">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">[현재 상태]</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span> <span style="color: #666">+</span> extract_section(text, <span style="color: #BA2121">&quot;현재 상태&quot;</span>))
-</span><span id="ln-46">    next_steps <span style="color: #666">=</span> extract_section(text, <span style="color: #BA2121">&quot;다음 단계&quot;</span>)
-</span><span id="ln-47">    first_line <span style="color: #666">=</span> <span style="color: #008000">next</span>((ln <span style="color: #008000; font-weight: bold">for</span> ln <span style="color: #A2F; font-weight: bold">in</span> next_steps<span style="color: #666">.</span>splitlines() <span style="color: #008000; font-weight: bold">if</span> ln<span style="color: #666">.</span>strip()), <span style="color: #BA2121">&quot;(없음)&quot;</span>)
-</span><span id="ln-48">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">[다음 단계 — 첫 항목]</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span> <span style="color: #666">+</span> first_line)
-</span><span id="ln-49">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
-</span><span id="ln-50">
-</span><span id="ln-51">
-</span><span id="ln-52"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
-</span><span id="ln-53">    sys<span style="color: #666">.</span>exit(main())
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;세션 시작 의식 — SESSION.md 핵심 섹션을 출력한다.</span>
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">출력은 모델이 읽거나 따랐다는 증거가 아니다. 없으면 템플릿에서 만든다.</span>
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">사용: python3 tools/session_open.py [SESSION.md 경로]</span>
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">re</span>
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-12" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch">TEMPLATE <span style="color: #666">=</span> <span style="color: #BA2121">&quot;&quot;&quot;# SESSION — 세션 이어가기 기록</span>
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121">## 목표</span>
+</span><span id="ln-16" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121">(첫 세션 마감 때 채운다)</span>
+</span><span id="ln-17" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-18" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121">## 현재 상태</span>
+</span><span id="ln-19" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121">(아직 기록 없음)</span>
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-21" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121">## 다음 단계</span>
+</span><span id="ln-22" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121">1. (아직 기록 없음)</span>
+</span><span id="ln-23" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-24" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121">## 결정 기록</span>
+</span><span id="ln-25" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-26" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121">## 파일 흔적</span>
+</span><span id="ln-27" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121">&quot;&quot;&quot;</span>
+</span><span id="ln-28" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-29" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-30" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">extract_section</span>(text: <span style="color: #008000">str</span>, name: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+</span><span id="ln-31" style="padding-left:6ch;text-indent:-6ch">    text <span style="color: #666">=</span> re<span style="color: #666">.</span>sub(<span style="color: #BA2121">r&quot;&lt;!--.*?--&gt;&quot;</span>, <span style="color: #BA2121">&quot;&quot;</span>, text, flags<span style="color: #666">=</span>re<span style="color: #666">.</span>S)
+</span><span id="ln-32" style="padding-left:6ch;text-indent:-6ch">    m <span style="color: #666">=</span> re<span style="color: #666">.</span>search(<span style="color: #BA2121">rf&quot;^## </span><span style="color: #A45A77; font-weight: bold">{</span>re<span style="color: #666">.</span>escape(name)<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">\n(.*?)(?=\n## |\Z)&quot;</span>, text, flags<span style="color: #666">=</span>re<span style="color: #666">.</span>S <span style="color: #666">|</span> re<span style="color: #666">.</span>M)
+</span><span id="ln-33" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">return</span> m<span style="color: #666">.</span>group(<span style="color: #666">1</span>)<span style="color: #666">.</span>strip() <span style="color: #008000; font-weight: bold">if</span> m <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;(섹션 없음)&quot;</span>
+</span><span id="ln-34" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-35" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-36" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
+</span><span id="ln-37" style="padding-left:6ch;text-indent:-6ch">    path <span style="color: #666">=</span> Path(sys<span style="color: #666">.</span>argv[<span style="color: #666">1</span>] <span style="color: #008000; font-weight: bold">if</span> <span style="color: #008000">len</span>(sys<span style="color: #666">.</span>argv) <span style="color: #666">&gt;</span> <span style="color: #666">1</span> <span style="color: #008000; font-weight: bold">else</span> <span style="color: #BA2121">&quot;SESSION.md&quot;</span>)
+</span><span id="ln-38" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> path<span style="color: #666">.</span>is_file():
+</span><span id="ln-39" style="padding-left:10ch;text-indent:-10ch">        path<span style="color: #666">.</span>write_text(TEMPLATE, encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-40" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[생성] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> — 템플릿으로 새로 만들었습니다. 첫 세션 마감 때 채우세요.&quot;</span>)
+</span><span id="ln-41" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
+</span><span id="ln-42" style="padding-left:6ch;text-indent:-6ch">    text <span style="color: #666">=</span> path<span style="color: #666">.</span>read_text(encoding<span style="color: #666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span>)
+</span><span id="ln-43" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;=== </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 재정박 요약 ===&quot;</span>)
+</span><span id="ln-44" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">[목표]</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span> <span style="color: #666">+</span> extract_section(text, <span style="color: #BA2121">&quot;목표&quot;</span>))
+</span><span id="ln-45" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">[현재 상태]</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span> <span style="color: #666">+</span> extract_section(text, <span style="color: #BA2121">&quot;현재 상태&quot;</span>))
+</span><span id="ln-46" style="padding-left:6ch;text-indent:-6ch">    next_steps <span style="color: #666">=</span> extract_section(text, <span style="color: #BA2121">&quot;다음 단계&quot;</span>)
+</span><span id="ln-47" style="padding-left:6ch;text-indent:-6ch">    first_line <span style="color: #666">=</span> <span style="color: #008000">next</span>((ln <span style="color: #008000; font-weight: bold">for</span> ln <span style="color: #A2F; font-weight: bold">in</span> next_steps<span style="color: #666">.</span>splitlines() <span style="color: #008000; font-weight: bold">if</span> ln<span style="color: #666">.</span>strip()), <span style="color: #BA2121">&quot;(없음)&quot;</span>)
+</span><span id="ln-48" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">&quot;</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">[다음 단계 — 첫 항목]</span><span style="color: #AA5D1F; font-weight: bold">\n</span><span style="color: #BA2121">&quot;</span> <span style="color: #666">+</span> first_line)
+</span><span id="ln-49" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
+</span><span id="ln-50" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-51" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-52" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-53" style="padding-left:6ch;text-indent:-6ch">    sys<span style="color: #666">.</span>exit(main())
 </span></code></pre></div>
 
 <p>이걸 돌리면 다음 세션은 코드를 뒤지기 전에 "지금 무슨 작업 중이고 뭘 먼저 해야
@@ -167,112 +167,112 @@ diff에 없다. 그 정보를 남기는 전용 파일이 없으면 다음 세션
 쌓으면 세 번째 세션이 같은 삽질을 또 반복하는 걸 막는다.</p>
 <h2 id="_4">최종형</h2>
 <p><code>~/project/SESSION.md</code>(빈 상태로 시작해 첫 마감 때 채우는 템플릿):</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #000080; font-weight: bold"># SESSION — 세션 이어가기 기록</span>
-</span><span id="ln-2">
-</span><span id="ln-3">&lt;!-- 이 파일은 다음 세션이 어떤 작업보다도 먼저 읽는 유일한 문서다.
-</span><span id="ln-4">     섹션 5개는 고치거나 빼지 말 것. 갱신 규칙은 섹션마다 아래 주석으로 표시. --&gt;
-</span><span id="ln-5">
-</span><span id="ln-6"><span style="color: #800080; font-weight: bold">## 목표</span>
-</span><span id="ln-7">&lt;!-- 이 폴더에서 하는 일. 거의 고정 — 목표 자체가 바뀔 때만 명시적으로 수정한다.
-</span><span id="ln-8">     &quot;오늘 뭘 했는지&quot;를 적는 곳이 아니다. --&gt;
-</span><span id="ln-9">
-</span><span id="ln-10">(첫 세션 마감 때 채운다)
-</span><span id="ln-11">
-</span><span id="ln-12"><span style="color: #800080; font-weight: bold">## 현재 상태</span>
-</span><span id="ln-13">&lt;!-- 덮어쓰기. 항상 짧게 — 지금 어디까지 왔는지 스냅샷만 남긴다.
-</span><span id="ln-14">     상세 서술은 여기 쌓지 말고 결정 기록·파일 흔적으로 내려보낸다. --&gt;
-</span><span id="ln-15">
-</span><span id="ln-16">(아직 기록 없음)
-</span><span id="ln-17">
-</span><span id="ln-18"><span style="color: #800080; font-weight: bold">## 다음 단계</span>
-</span><span id="ln-19">&lt;!-- 덮어쓰기. 첫 항목 = 다음 세션이 망설임 없이 바로 집어들 일. --&gt;
-</span><span id="ln-20">
-</span><span id="ln-21"><span style="color: #008000; font-weight: bold">1.</span> (아직 기록 없음)
-</span><span id="ln-22">
-</span><span id="ln-23"><span style="color: #800080; font-weight: bold">## 결정 기록</span>
-</span><span id="ln-24">&lt;!-- 누적. 삭제 금지. 형식: - YYYY-MM-DD 한 줄, 이유 포함.
-</span><span id="ln-25">     뒤집힌 결정도 지우지 말고 &quot;YYYY-MM-DD 그 결정 뒤집음(사유)&quot;로 추가만 한다. --&gt;
-</span><span id="ln-26">
-</span><span id="ln-27"><span style="color: #800080; font-weight: bold">## 파일 흔적</span>
-</span><span id="ln-28">&lt;!-- 누적. 만든/고친 파일의 경로를 그대로 적는다. &quot;설정 파일 고침&quot; 같은 산문 금지.
-</span><span id="ln-29">     형식: - <span style="color: #BA2121">`경로`</span> 무엇을 (함수명·핵심 식별자 포함) --&gt;
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #000080; font-weight: bold"># SESSION — 세션 이어가기 기록</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">&lt;!-- 이 파일은 다음 세션이 어떤 작업보다도 먼저 읽는 유일한 문서다.
+</span><span id="ln-4" style="padding-left:7ch;text-indent:-7ch">     섹션 5개는 고치거나 빼지 말 것. 갱신 규칙은 섹션마다 아래 주석으로 표시. --&gt;
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 목표</span>
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch">&lt;!-- 이 폴더에서 하는 일. 거의 고정 — 목표 자체가 바뀔 때만 명시적으로 수정한다.
+</span><span id="ln-8" style="padding-left:7ch;text-indent:-7ch">     &quot;오늘 뭘 했는지&quot;를 적는 곳이 아니다. --&gt;
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch">(첫 세션 마감 때 채운다)
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-12" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 현재 상태</span>
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch">&lt;!-- 덮어쓰기. 항상 짧게 — 지금 어디까지 왔는지 스냅샷만 남긴다.
+</span><span id="ln-14" style="padding-left:7ch;text-indent:-7ch">     상세 서술은 여기 쌓지 말고 결정 기록·파일 흔적으로 내려보낸다. --&gt;
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-16" style="padding-left:2ch;text-indent:-2ch">(아직 기록 없음)
+</span><span id="ln-17" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-18" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 다음 단계</span>
+</span><span id="ln-19" style="padding-left:2ch;text-indent:-2ch">&lt;!-- 덮어쓰기. 첫 항목 = 다음 세션이 망설임 없이 바로 집어들 일. --&gt;
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-21" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">1.</span> (아직 기록 없음)
+</span><span id="ln-22" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-23" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 결정 기록</span>
+</span><span id="ln-24" style="padding-left:2ch;text-indent:-2ch">&lt;!-- 누적. 삭제 금지. 형식: - YYYY-MM-DD 한 줄, 이유 포함.
+</span><span id="ln-25" style="padding-left:7ch;text-indent:-7ch">     뒤집힌 결정도 지우지 말고 &quot;YYYY-MM-DD 그 결정 뒤집음(사유)&quot;로 추가만 한다. --&gt;
+</span><span id="ln-26" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-27" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 파일 흔적</span>
+</span><span id="ln-28" style="padding-left:2ch;text-indent:-2ch">&lt;!-- 누적. 만든/고친 파일의 경로를 그대로 적는다. &quot;설정 파일 고침&quot; 같은 산문 금지.
+</span><span id="ln-29" style="padding-left:7ch;text-indent:-7ch">     형식: - <span style="color: #BA2121">`경로`</span> 무엇을 (함수명·핵심 식별자 포함) --&gt;
 </span></code></pre></div>
 
 <p>채워진 예시 한 벌:</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #800080; font-weight: bold">## 목표</span>
-</span><span id="ln-2">결제 모듈의 재시도 로직 리팩터링 — 일시적 네트워크 오류로 인한 중복 청구를 없앤다.
-</span><span id="ln-3">
-</span><span id="ln-4"><span style="color: #800080; font-weight: bold">## 현재 상태</span>
-</span><span id="ln-5">2026-08-01 — 3단계 중 2단계까지 완료. <span style="color: #BA2121">`retry_charge()`</span> 타임아웃 버그는 재현했으나
-</span><span id="ln-6">아직 수정 안 함.
-</span><span id="ln-7">
-</span><span id="ln-8"><span style="color: #800080; font-weight: bold">## 다음 단계</span>
-</span><span id="ln-9"><span style="color: #008000; font-weight: bold">1.</span> <span style="color: #BA2121">`payments/gateway.py`</span>의 <span style="color: #BA2121">`retry_charge()`</span> — 타임아웃 후 재시도가 원 요청과
-</span><span id="ln-10">   같은 idempotency key를 안 쓰는 버그 수정
-</span><span id="ln-11"><span style="color: #008000; font-weight: bold">2.</span> 수정 후 <span style="color: #BA2121">`tests/test_gateway_retry.py`</span> 재실행
-</span><span id="ln-12"><span style="color: #008000; font-weight: bold">3.</span> 3단계(모니터링 대시보드 반영)는 2단계 통과 후 착수
-</span><span id="ln-13">
-</span><span id="ln-14"><span style="color: #800080; font-weight: bold">## 결정 기록</span>
-</span><span id="ln-15"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>2026-07-30 재시도 정책을 고정 간격에서 지수 백오프로 변경(사유: 3연속 실패 관측 시
-</span><span id="ln-16">  고정 간격이 상대 서버 부하를 못 줄였음)
-</span><span id="ln-17"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>2026-08-01 지수 백오프의 최대 대기를 30초로 상한(사유: 사용자 체감 타임아웃 30초 초과 민원)
-</span><span id="ln-18">
-</span><span id="ln-19"><span style="color: #800080; font-weight: bold">## 파일 흔적</span>
-</span><span id="ln-20"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span><span style="color: #BA2121">`payments/gateway.py`</span> <span style="color: #BA2121">`retry_charge()`</span>에 idempotency key 재사용 버그 재현 완료, 수정 전
-</span><span id="ln-21"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span><span style="color: #BA2121">`tests/test_gateway_retry.py`</span> 지수 백오프 상한 검증 케이스 추가
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 목표</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch">결제 모듈의 재시도 로직 리팩터링 — 일시적 네트워크 오류로 인한 중복 청구를 없앤다.
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 현재 상태</span>
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch">2026-08-01 — 3단계 중 2단계까지 완료. <span style="color: #BA2121">`retry_charge()`</span> 타임아웃 버그는 재현했으나
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch">아직 수정 안 함.
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 다음 단계</span>
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">1.</span> <span style="color: #BA2121">`payments/gateway.py`</span>의 <span style="color: #BA2121">`retry_charge()`</span> — 타임아웃 후 재시도가 원 요청과
+</span><span id="ln-10" style="padding-left:5ch;text-indent:-5ch">   같은 idempotency key를 안 쓰는 버그 수정
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">2.</span> 수정 후 <span style="color: #BA2121">`tests/test_gateway_retry.py`</span> 재실행
+</span><span id="ln-12" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">3.</span> 3단계(모니터링 대시보드 반영)는 2단계 통과 후 착수
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 결정 기록</span>
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>2026-07-30 재시도 정책을 고정 간격에서 지수 백오프로 변경(사유: 3연속 실패 관측 시
+</span><span id="ln-16" style="padding-left:4ch;text-indent:-4ch">  고정 간격이 상대 서버 부하를 못 줄였음)
+</span><span id="ln-17" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span>2026-08-01 지수 백오프의 최대 대기를 30초로 상한(사유: 사용자 체감 타임아웃 30초 초과 민원)
+</span><span id="ln-18" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-19" style="padding-left:2ch;text-indent:-2ch"><span style="color: #800080; font-weight: bold">## 파일 흔적</span>
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span><span style="color: #BA2121">`payments/gateway.py`</span> <span style="color: #BA2121">`retry_charge()`</span>에 idempotency key 재사용 버그 재현 완료, 수정 전
+</span><span id="ln-21" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">-</span><span style="color: #BBB"> </span><span style="color: #BA2121">`tests/test_gateway_retry.py`</span> 지수 백오프 상한 검증 케이스 추가
 </span></code></pre></div>
 
 <p>아래 신선도 검사기는 사람 기억에 기대지 않고 '방치'를 커밋 이력으로 잡는다.</p>
 <p><code>~/project/tools/session_stale_check.py</code>:</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
-</span><span id="ln-2"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;SESSION.md 방치 감지기.</span>
-</span><span id="ln-3">
-</span><span id="ln-4"><span style="color: #BA2121; font-style: italic">마감 신호 없이 세션이 끊기면 &#39;현재 상태&#39;가 낡은 채로 방치될 수 있다. 이 스크립트는</span>
-</span><span id="ln-5"><span style="color: #BA2121; font-style: italic">정답을 판정하지 않는다 — SESSION.md를 건드리지 않은 채 커밋이 N개 이상 쌓였다는</span>
-</span><span id="ln-6"><span style="color: #BA2121; font-style: italic">사실만 알린다. 최종 판단(낡았는지 아닌지)은 사람이 한다.</span>
-</span><span id="ln-7">
-</span><span id="ln-8"><span style="color: #BA2121; font-style: italic">사용: python3 tools/session_stale_check.py [--threshold N] [SESSION.md 경로]</span>
-</span><span id="ln-9"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
-</span><span id="ln-10"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
-</span><span id="ln-11">
-</span><span id="ln-12"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">argparse</span>
-</span><span id="ln-13"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">subprocess</span>
-</span><span id="ln-14"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
-</span><span id="ln-15"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
-</span><span id="ln-16">
-</span><span id="ln-17">
-</span><span id="ln-18"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run</span>(<span style="color: #666">*</span>args: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
-</span><span id="ln-19">    <span style="color: #008000; font-weight: bold">return</span> subprocess<span style="color: #666">.</span>run(args, capture_output<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, text<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, check<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)<span style="color: #666">.</span>stdout<span style="color: #666">.</span>strip()
-</span><span id="ln-20">
-</span><span id="ln-21">
-</span><span id="ln-22"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
-</span><span id="ln-23">    ap <span style="color: #666">=</span> argparse<span style="color: #666">.</span>ArgumentParser()
-</span><span id="ln-24">    ap<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&quot;path&quot;</span>, nargs<span style="color: #666">=</span><span style="color: #BA2121">&quot;?&quot;</span>, default<span style="color: #666">=</span><span style="color: #BA2121">&quot;SESSION.md&quot;</span>)
-</span><span id="ln-25">    ap<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&quot;--threshold&quot;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=5</span>)
-</span><span id="ln-26">    args <span style="color: #666">=</span> ap<span style="color: #666">.</span>parse_args()
-</span><span id="ln-27">
-</span><span id="ln-28">    path <span style="color: #666">=</span> Path(args<span style="color: #666">.</span>path)
-</span><span id="ln-29">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> path<span style="color: #666">.</span>is_file():
-</span><span id="ln-30">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[INFO] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 없음 — 아직 세션 인계 파일을 안 쓰는 폴더입니다.&quot;</span>)
-</span><span id="ln-31">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
-</span><span id="ln-32">
-</span><span id="ln-33">    last <span style="color: #666">=</span> run(<span style="color: #BA2121">&quot;git&quot;</span>, <span style="color: #BA2121">&quot;log&quot;</span>, <span style="color: #BA2121">&quot;-1&quot;</span>, <span style="color: #BA2121">&quot;--format=%H&quot;</span>, <span style="color: #BA2121">&quot;--&quot;</span>, <span style="color: #008000">str</span>(path))
-</span><span id="ln-34">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> last:
-</span><span id="ln-35">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[INFO] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 이 아직 커밋되지 않았습니다.&quot;</span>)
-</span><span id="ln-36">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
-</span><span id="ln-37">
-</span><span id="ln-38">    since <span style="color: #666">=</span> run(<span style="color: #BA2121">&quot;git&quot;</span>, <span style="color: #BA2121">&quot;rev-list&quot;</span>, <span style="color: #BA2121">&quot;--count&quot;</span>, <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>last<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">..HEAD&quot;</span>)
-</span><span id="ln-39">    n <span style="color: #666">=</span> <span style="color: #008000">int</span>(since)
-</span><span id="ln-40">    <span style="color: #008000; font-weight: bold">if</span> n <span style="color: #666">&gt;=</span> args<span style="color: #666">.</span>threshold:
-</span><span id="ln-41">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[WARN] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 갱신 이후 커밋 </span><span style="color: #A45A77; font-weight: bold">{</span>n<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">개 — 마감 신호 없이 세션이 끊겼을 가능성. &quot;</span>
-</span><span id="ln-42">              <span style="color: #BA2121">f&quot;&#39;현재 상태&#39;를 실물과 대조하세요.&quot;</span>)
-</span><span id="ln-43">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">1</span>
-</span><span id="ln-44">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[OK] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 갱신 이후 커밋 </span><span style="color: #A45A77; font-weight: bold">{</span>n<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">개 (임계 </span><span style="color: #A45A77; font-weight: bold">{</span>args<span style="color: #666">.</span>threshold<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)&quot;</span>)
-</span><span id="ln-45">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
-</span><span id="ln-46">
-</span><span id="ln-47">
-</span><span id="ln-48"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
-</span><span id="ln-49">    sys<span style="color: #666">.</span>exit(main())
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch"><span style="color: #3D7B7B; font-style: italic">#!/usr/bin/env python3</span>
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;SESSION.md 방치 감지기.</span>
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">마감 신호 없이 세션이 끊기면 &#39;현재 상태&#39;가 낡은 채로 방치될 수 있다. 이 스크립트는</span>
+</span><span id="ln-5" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">정답을 판정하지 않는다 — SESSION.md를 건드리지 않은 채 커밋이 N개 이상 쌓였다는</span>
+</span><span id="ln-6" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">사실만 알린다. 최종 판단(낡았는지 아닌지)은 사람이 한다.</span>
+</span><span id="ln-7" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-8" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">사용: python3 tools/session_stale_check.py [--threshold N] [SESSION.md 경로]</span>
+</span><span id="ln-9" style="padding-left:2ch;text-indent:-2ch"><span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
+</span><span id="ln-10" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">__future__</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> annotations
+</span><span id="ln-11" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-12" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">argparse</span>
+</span><span id="ln-13" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">subprocess</span>
+</span><span id="ln-14" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">import</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">sys</span>
+</span><span id="ln-15" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">from</span><span style="color: #BBB"> </span><span style="color: #00F; font-weight: bold">pathlib</span><span style="color: #BBB"> </span><span style="color: #008000; font-weight: bold">import</span> Path
+</span><span id="ln-16" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-17" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-18" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">run</span>(<span style="color: #666">*</span>args: <span style="color: #008000">str</span>) <span style="color: #666">-&gt;</span> <span style="color: #008000">str</span>:
+</span><span id="ln-19" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">return</span> subprocess<span style="color: #666">.</span>run(args, capture_output<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, text<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>, check<span style="color: #666">=</span><span style="color: #008000; font-weight: bold">True</span>)<span style="color: #666">.</span>stdout<span style="color: #666">.</span>strip()
+</span><span id="ln-20" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-21" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-22" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">def</span><span style="color: #BBB"> </span><span style="color: #00F">main</span>() <span style="color: #666">-&gt;</span> <span style="color: #008000">int</span>:
+</span><span id="ln-23" style="padding-left:6ch;text-indent:-6ch">    ap <span style="color: #666">=</span> argparse<span style="color: #666">.</span>ArgumentParser()
+</span><span id="ln-24" style="padding-left:6ch;text-indent:-6ch">    ap<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&quot;path&quot;</span>, nargs<span style="color: #666">=</span><span style="color: #BA2121">&quot;?&quot;</span>, default<span style="color: #666">=</span><span style="color: #BA2121">&quot;SESSION.md&quot;</span>)
+</span><span id="ln-25" style="padding-left:6ch;text-indent:-6ch">    ap<span style="color: #666">.</span>add_argument(<span style="color: #BA2121">&quot;--threshold&quot;</span>, <span style="color: #008000">type</span><span style="color: #666">=</span><span style="color: #008000">int</span>, default<span style="color: #666">=5</span>)
+</span><span id="ln-26" style="padding-left:6ch;text-indent:-6ch">    args <span style="color: #666">=</span> ap<span style="color: #666">.</span>parse_args()
+</span><span id="ln-27" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-28" style="padding-left:6ch;text-indent:-6ch">    path <span style="color: #666">=</span> Path(args<span style="color: #666">.</span>path)
+</span><span id="ln-29" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> path<span style="color: #666">.</span>is_file():
+</span><span id="ln-30" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[INFO] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 없음 — 아직 세션 인계 파일을 안 쓰는 폴더입니다.&quot;</span>)
+</span><span id="ln-31" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
+</span><span id="ln-32" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-33" style="padding-left:6ch;text-indent:-6ch">    last <span style="color: #666">=</span> run(<span style="color: #BA2121">&quot;git&quot;</span>, <span style="color: #BA2121">&quot;log&quot;</span>, <span style="color: #BA2121">&quot;-1&quot;</span>, <span style="color: #BA2121">&quot;--format=%H&quot;</span>, <span style="color: #BA2121">&quot;--&quot;</span>, <span style="color: #008000">str</span>(path))
+</span><span id="ln-34" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #A2F; font-weight: bold">not</span> last:
+</span><span id="ln-35" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[INFO] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 이 아직 커밋되지 않았습니다.&quot;</span>)
+</span><span id="ln-36" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
+</span><span id="ln-37" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-38" style="padding-left:6ch;text-indent:-6ch">    since <span style="color: #666">=</span> run(<span style="color: #BA2121">&quot;git&quot;</span>, <span style="color: #BA2121">&quot;rev-list&quot;</span>, <span style="color: #BA2121">&quot;--count&quot;</span>, <span style="color: #BA2121">f&quot;</span><span style="color: #A45A77; font-weight: bold">{</span>last<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">..HEAD&quot;</span>)
+</span><span id="ln-39" style="padding-left:6ch;text-indent:-6ch">    n <span style="color: #666">=</span> <span style="color: #008000">int</span>(since)
+</span><span id="ln-40" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">if</span> n <span style="color: #666">&gt;=</span> args<span style="color: #666">.</span>threshold:
+</span><span id="ln-41" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[WARN] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 갱신 이후 커밋 </span><span style="color: #A45A77; font-weight: bold">{</span>n<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">개 — 마감 신호 없이 세션이 끊겼을 가능성. &quot;</span>
+</span><span id="ln-42" style="padding-left:16ch;text-indent:-16ch">              <span style="color: #BA2121">f&quot;&#39;현재 상태&#39;를 실물과 대조하세요.&quot;</span>)
+</span><span id="ln-43" style="padding-left:10ch;text-indent:-10ch">        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">1</span>
+</span><span id="ln-44" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000">print</span>(<span style="color: #BA2121">f&quot;[OK] </span><span style="color: #A45A77; font-weight: bold">{</span>path<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121"> 갱신 이후 커밋 </span><span style="color: #A45A77; font-weight: bold">{</span>n<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">개 (임계 </span><span style="color: #A45A77; font-weight: bold">{</span>args<span style="color: #666">.</span>threshold<span style="color: #A45A77; font-weight: bold">}</span><span style="color: #BA2121">)&quot;</span>)
+</span><span id="ln-45" style="padding-left:6ch;text-indent:-6ch">    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #666">0</span>
+</span><span id="ln-46" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-47" style="padding-left:2ch;text-indent:-2ch">
+</span><span id="ln-48" style="padding-left:2ch;text-indent:-2ch"><span style="color: #008000; font-weight: bold">if</span> <span style="color: #19177C">__name__</span> <span style="color: #666">==</span> <span style="color: #BA2121">&quot;__main__&quot;</span>:
+</span><span id="ln-49" style="padding-left:6ch;text-indent:-6ch">    sys<span style="color: #666">.</span>exit(main())
 </span></code></pre></div>
 
 <p>이 검사기는 커밋 기준 신선도만 본다. 아직 커밋하지 않은 최신 수정, 실제 내용의 정확성, 다른 브랜치의 상태는 판정하지 않는다. 실제 저장소가 아닌 임시 저장소에서 아래 커밋 실습을 한다.</p>
@@ -286,10 +286,10 @@ diff에 없다. 그 정보를 남기는 전용 파일이 없으면 다음 세션
 깨진다.</p>
 <p><strong>2. 인계 파일을 갱신하지 않은 상태를 만든다 — 경고 확인.</strong> 로컬 git 저장소에서
 <code>SESSION.md</code>를 커밋한 뒤, 그 파일은 건드리지 않고 무관한 커밋을 5개 이상 쌓는다.</p>
-<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1">$ git add SESSION.md &amp;&amp; git commit -q -m &quot;session update&quot;
-</span><span id="ln-2">$ for i in 1 2 3 4 5; do echo &quot;x&quot; &gt;&gt; notes.txt; git add notes.txt; git commit -q -m &quot;unrelated $i&quot;; done
-</span><span id="ln-3">$ python3 tools/session_stale_check.py
-</span><span id="ln-4">[WARN] SESSION.md 갱신 이후 커밋 5개 — 마감 신호 없이 세션이 끊겼을 가능성. &#39;현재 상태&#39;를 실물과 대조하세요.
+<div class="codehilite" style="background: #f8f8f8"><pre style="line-height: 125%;"><span></span><code><span id="ln-1" style="padding-left:2ch;text-indent:-2ch">$ git add SESSION.md &amp;&amp; git commit -q -m &quot;session update&quot;
+</span><span id="ln-2" style="padding-left:2ch;text-indent:-2ch">$ for i in 1 2 3 4 5; do echo &quot;x&quot; &gt;&gt; notes.txt; git add notes.txt; git commit -q -m &quot;unrelated $i&quot;; done
+</span><span id="ln-3" style="padding-left:2ch;text-indent:-2ch">$ python3 tools/session_stale_check.py
+</span><span id="ln-4" style="padding-left:2ch;text-indent:-2ch">[WARN] SESSION.md 갱신 이후 커밋 5개 — 마감 신호 없이 세션이 끊겼을 가능성. &#39;현재 상태&#39;를 실물과 대조하세요.
 </span></code></pre></div>
 
 <p><code>WARN</code>이 안 뜨면 임계값이 너무 높거나 <code>git log -- &lt;경로&gt;</code>가 프로젝트의 실제 파일
