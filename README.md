@@ -160,6 +160,55 @@ echo "not json" | python3 block_consequential.py; echo $?    # 0 — fail-open �
 
 이 저장소에 올리기 전에 위 순서와 동시 호출 8개(통과 1), 다른 명령 문자열·만료·권한 0644 마커 거부, 문법 오류 복사본(종료코드 1)을 임시 폴더에서 실제로 돌려 책에 적힌 결과와 같은 것을 확인했다. 실제 위험 명령이나 운영 중인 승인 체계를 시험한 것은 아니다.
 
+## 7장 — 위임 증거 만들기
+
+| 파일 | 내용 |
+|---|---|
+| `ch07/tools/build_worker_snapshot.py` | 워커 스냅샷 생성기. `brief.md` 와 `sources/` 만 담고 1회성 nonce 를 `sources/source-access-proof.txt` 에 심는다. nonce 가 스냅샷 전체에서 정확히 한 번인지 확인한다 |
+| `ch07/tools/verify_source_access.py` | 응답의 첫 줄이 `SOURCE_ACCESS_PROOF:<값>` 과 글자 그대로 같은지 검사한다. 포함이 아니라 줄 전체 일치 |
+| `ch07/tools/write_view_handoff.py` | 읽기 전용 뷰(클론)의 경로를 스냅샷 루트 `repo-view-path.txt` 에 적어 넘기고, 넘겼는지 검증한다 |
+| `ch07/tools/challenge_response.py` | 뷰 전체에서 유일한 줄로 질문 3개를 만들고, 답은 저장값이 아니라 뷰에서 다시 읽어 판정한다(2정답 이상 통과) |
+
+작업 디렉터리를 스냅샷으로 바꾸는 것은 파일 배치일 뿐 접근 제한이 아니다. 격리는 별도 샌드박스·OS 권한으로 해야 한다. nonce 는 그 값을 알고 있다는 것만 증명한다. challenge-response 는 격리된 조건에서 나온 산출까지만 검증하며, OS 격리와 뷰의 커밋 고정은 이 코드가 구현하지 않는다.
+
+### 직접 확인하는 법
+
+임시 폴더에 `ch07/tools/` 를 복사해서 돌린다.
+
+```
+python3 tools/build_worker_snapshot.py snap                  # snapshot 생성 완료: snap (nonce는 출력하지 않음)
+N=$(cat snap/sources/source-access-proof.txt)
+printf 'SOURCE_ACCESS_PROOF:%s\n검토 완료.\n' "$N" > ok.txt
+python3 tools/verify_source_access.py snap ok.txt            # PASS
+printf '문제없음. 참고로 SOURCE_ACCESS_PROOF:%s도 확인함.\n' "$N" > buried.txt
+python3 tools/verify_source_access.py snap buried.txt        # FAIL — 값이 들어 있기만 해서는 통과하지 않는다
+python3 tools/build_worker_snapshot.py snap                  # FileExistsError — 있는 폴더는 덮어쓰지 않는다
+```
+
+이 저장소에 올리기 전에 위 순서와 책의 확인 여섯 가지(nonce 없는 응답, 문단에 파묻은 값, `repo-view-path.txt` 삭제, 두 파일에 겹치는 줄, 잘린 답, 3문 중 2문·1문)를 임시 폴더에서 실제로 돌려 책에 적힌 결과와 같은 것을 확인했다.
+
+## 8장 — 가드가 진짜 작동하는지 증명하기
+
+| 파일 | 내용 |
+|---|---|
+| `ch08/scripts/check_invariants.py` | 불변식 자가점검의 최소 예제. 이름에 review 가 든 서브에이전트 정의의 `tools` 가 `Read, Grep, Glob` 의 부분집합인지 본다. 누락·중복·다른 표기는 거부한다 |
+| `ch08/scripts/mutation_drill.py` | 뮤테이션 드릴. 가짜 리뷰어 정의를 임시 폴더에 만들고 불변식을 하나씩 깨뜨려, 심었을 때 빨간불과 치웠을 때 초록불을 둘 다 확인한다 |
+| `ch08/same_file.py` | 두 경로를 이름이 아니라 (device, inode) 로 비교하는 조각. 조회 실패는 `False` 가 아니라 예외(`UnmeasurablePath`)로 올린다 |
+
+검사기는 파일명에 review 가 있는 정의와 한 줄 쉼표 목록만 다룬다. 이름이 다른 리뷰 역할, 런타임 도구 주입, 훅·파일시스템 권한은 따로 점검해야 한다. 드릴이 전부 `caught` 로 나와도 목록에 적어 둔 변이에 대해서만 작동이 확인된 것이다. 같은 두 스크립트가 `pack/tools/` 에도 있다.
+
+### 직접 확인하는 법
+
+임시 폴더에 `ch08/scripts/` 를 복사해서 돌린다.
+
+```
+python3 scripts/mutation_drill.py     # caught 두 줄, 마지막 줄 2/2 캐치
+```
+
+`check_invariants.py` 의 `READ_TOOLS` 에 `"Write"` 를 넣어 검사를 망가뜨리고 다시 돌리면 Write 변이가 `MISSED` 로 바뀌고 마지막 줄이 `1/2 캐치`, 종료코드가 1 이 된다. 검사가 망가지면 드릴이 알아챈다는 뜻이다. 확인한 뒤 되돌린다.
+
+이 저장소에 올리기 전에 위 두 가지와 검사기의 경우들(깨끗한 정의 0건, Write·Bash 추가 1건, tools 누락·중복·YAML 목록 거부, 검사 대상 없음, 디렉터리 없음 종료코드 2)을 임시 폴더에서 실제로 돌려 책에 적힌 결과와 같은 것을 확인했다.
+
 ## 부록 — 템플릿 팩
 
 책의 장치들을 복사해서 바로 쓸 수 있게 묶은 것이다. `pack/` 에 있다.
